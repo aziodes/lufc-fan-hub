@@ -493,7 +493,7 @@ footer{background:var(--dark);border-top:3px solid var(--blue)}
 
 <!-- ══ TICKER ══ -->
 <div class="ticker" aria-hidden="true">
-  <div class="ticker-inner">
+  <div class="ticker-inner" id="ticker-inner">
     <span>🔵 LUFC secure top-half Premier League finish ⚽</span><span class="t-sep">|</span>
     <span>🏟️ Elland Road sold out for next home fixture</span><span class="t-sep">|</span>
     <span>⚽ Calvert-Lewin leads the Whites attack — goals in four straight games</span><span class="t-sep">|</span>
@@ -620,6 +620,14 @@ footer{background:var(--dark);border-top:3px solid var(--blue)}
       <div><p class="s-label">2025/26 Season</p><h2 class="s-title">Player Statistics</h2></div>
       <span id="stats-badge" class="static-badge">📋 Preview Data</span>
     </div>
+    <!-- ─────────────────────────────────────────────────────────────
+         LIVE PLAYER STATS: per-player stats (goals, assists, pass %)
+         are not available on football-data.org free tier.
+         Best free upgrade: API-Football via RapidAPI
+         → https://rapidapi.com/api-sports/api/api-football (100 req/day free)
+         → Endpoint: GET /players?team=341&season=2025&league=39
+         → Set APIFOOTBALL_KEY in CFG below once you have a key
+         ───────────────────────────────────────────────────────────── -->
     <div class="s-bar"></div>
     <div class="summary-pills" id="summary-pills">
       <!-- populated by JS -->
@@ -720,8 +728,12 @@ footer{background:var(--dark);border-top:3px solid var(--blue)}
 <!-- ══ GALLERY ══ -->
 <section class="section sa reveal" id="gallery">
   <div class="si">
-    <p class="s-label">Memories</p><h2 class="s-title">Photo Gallery</h2><div class="s-bar"></div>
-    <div class="gallery-grid">
+    <div class="s-head-row">
+      <div><p class="s-label">Memories</p><h2 class="s-title">Photo Gallery</h2></div>
+      <span id="gallery-badge" class="static-badge">📋 Placeholder</span>
+    </div>
+    <div class="s-bar"></div>
+    <div class="gallery-grid" id="gallery-grid">
       <div class="gallery-item" onclick="openLb(0)"><div class="g-bg" style="background:linear-gradient(135deg,#1D428A,#0d1f3e)">🏟️</div><div class="g-overlay"><p>Elland Road at Night</p><span>Match Day · PL</span></div></div>
       <div class="gallery-item" onclick="openLb(1)"><div class="g-bg" style="background:linear-gradient(135deg,#3a1a0a,#0A1628)">🎉</div><div class="g-overlay"><p>Promotion Celebrations 2024</p><span>Historic Moment</span></div></div>
       <div class="gallery-item" onclick="openLb(2)"><div class="g-bg" style="background:linear-gradient(135deg,#FFCD00,#e6b800)">⚽</div><div class="g-overlay"><p>Calvert-Lewin's Overhead Kick</p><span>vs Wolves · May 2026</span></div></div>
@@ -737,7 +749,7 @@ footer{background:var(--dark);border-top:3px solid var(--blue)}
 <div class="lb-overlay" id="lightbox" onclick="closeLb()">
   <div class="lb-box" onclick="event.stopPropagation()">
     <button class="lb-close" onclick="closeLb()">✕</button>
-    <span class="lb-img" id="lb-img"></span>
+    <div class="lb-img" id="lb-img"></div>
     <div class="lb-title" id="lb-title"></div>
     <div class="lb-desc" id="lb-desc"></div>
   </div>
@@ -747,14 +759,16 @@ footer{background:var(--dark);border-top:3px solid var(--blue)}
 <section class="section reveal" id="forum">
   <div class="si">
     <p class="s-label">Community</p><h2 class="s-title">Fan Forum</h2><div class="s-bar"></div>
-    <div class="forum-list">
-      <div class="forum-item"><div class="f-av">MO</div><div><div class="f-title">That Calvert-Lewin overhead kick against Wolves... absolute worldie 🔥 Best goal at Elland Road this season?</div><div class="f-meta"><span class="f-author">MOTforever</span><span class="f-time">2 hours ago</span><span class="f-replies">💬 142 replies</span><span class="f-hot">🔥 Hot</span></div></div></div>
-      <div class="forum-item"><div class="f-av">WL</div><div><div class="f-title">Transfer rumours megathread — who do you want in this summer? Striker, CB or creative midfielder?</div><div class="f-meta"><span class="f-author">WhitesLad92</span><span class="f-time">5 hours ago</span><span class="f-replies">💬 203 replies</span><span class="f-hot">🔥 Hot</span></div></div></div>
-      <div class="forum-item"><div class="f-av">AE</div><div><div class="f-title">Away end at Arsenal on the 24th — anyone got tickets? Looking for 2. Will pay face value</div><div class="f-meta"><span class="f-author">AwayEndAlan</span><span class="f-time">8 hours ago</span><span class="f-replies">💬 67 replies</span></div></div></div>
-      <div class="forum-item"><div class="f-av">LU</div><div><div class="f-title">Greatest ever Leeds United XI — your picks. Bremner in obviously. But who else makes the cut?</div><div class="f-meta"><span class="f-author">LUFC1919</span><span class="f-time">Yesterday</span><span class="f-replies">💬 318 replies</span><span class="f-hot">🔥 Hot</span></div></div></div>
-      <div class="forum-item"><div class="f-av">PJ</div><div><div class="f-title">Best pubs near Elland Road on match day? New to the area — recommendations before the Arsenal game</div><div class="f-meta"><span class="f-author">PeacockJoe</span><span class="f-time">Yesterday</span><span class="f-replies">💬 89 replies</span></div></div></div>
-    </div>
-    <div class="forum-cta"><p>Join the discussion — 24,500+ fans already posting in the forum</p><a href="#" class="btn-gold" style="font-size:.82rem;padding:.6rem 1.4rem">Join Forum</a></div>
+    <!-- ─────────────────────────────────────────────────────────────
+         LIVE FORUM: powered by Giscus (free, GitHub Discussions)
+         To activate: replace the data-* values below with your repo.
+         1. Go to https://giscus.app and follow the setup guide
+         2. Create a public GitHub repo (e.g. lufc-fan-hub-comments)
+         3. Enable Discussions on the repo (Settings → Features)
+         4. Install the Giscus app: https://github.com/apps/giscus
+         5. Fill in GISCUS_REPO, GISCUS_REPO_ID, GISCUS_CATEGORY_ID below
+         ───────────────────────────────────────────────────────────── -->
+    <div id="forum-container"></div>
   </div>
 </section>
 
@@ -768,8 +782,17 @@ footer{background:var(--dark);border-top:3px solid var(--blue)}
       <div class="fan-card"><div class="fa-icon">🎵</div><h3 class="fa-title">Fan Chants &amp; Songs</h3><div class="chant-box">Here we go with Leeds United,<br>We're gonna give the boys a hand,<br>Stand up and sing for Leeds United,<br>They are the greatest in the land.<br><br>Everyday we're all gonna say,<br>We love you Leeds! Leeds! Leeds!<br><strong>Marching on together,<br>We're gonna see you win!</strong></div><span class="chant-credit">— Marching On Together (1972)</span></div>
     </div>
     <div class="poll-box">
-      <div class="poll-h">🗳️ Fan Poll</div>
+      <div class="poll-h">🗳️ Fan Poll <span id="poll-badge" style="font-size:.65rem;font-weight:600;opacity:.7;margin-left:6px">· local only</span></div>
       <div class="poll-q">Who was LUFC's Player of the Season?</div>
+      <!-- ─────────────────────────────────────────────────────────
+           SHARED VOTING: powered by JSONbin.io (free, no auth needed)
+           To activate:
+           1. Go to https://jsonbin.io and create a free account
+           2. Create a new Bin with this initial JSON:
+              {"votes":[0,0,0,0],"total":0}
+           3. Copy the Bin ID (looks like: 6641a2f5acd3cb34a838f2e3)
+           4. Set JSONBIN_BIN_ID below — votes will be shared across all visitors
+           ───────────────────────────────────────────────────────── -->
       <div id="poll-opts">
         <div class="poll-opt"><button class="p-btn" onclick="vote(0)">Dominic Calvert-Lewin</button></div>
         <div class="poll-opt"><button class="p-btn" onclick="vote(1)">Joe Rodon</button></div>
@@ -915,6 +938,12 @@ const CFG = {
   COMP: 'PL',           // Premier League
   BASE: 'https://api.football-data.org/v4',
   CACHE_MS: 5 * 60 * 1000,  // 5-minute cache
+  // ── Optional live upgrades (leave empty to use static fallbacks) ──
+  GISCUS_REPO: '',          // e.g. 'yourname/lufc-fan-hub'
+  GISCUS_REPO_ID: '',       // from giscus.app
+  GISCUS_CATEGORY_ID: '',   // from giscus.app
+  JSONBIN_BIN_ID: '',       // from jsonbin.io (free)
+  APIFOOTBALL_KEY: '',      // RapidAPI → api-football (100 req/day free)
 };
 
 // ─── Helpers ───────────────────────────────────────
@@ -1285,6 +1314,15 @@ async function loadNews() {
     }).join('');
 
     setBadge('news-badge', true);
+
+    // Feed headline titles into the ticker strip
+    const tickerTitles = items.map(item => {
+      const raw = item.querySelector('title')?.textContent?.trim() || '';
+      const sep = raw.lastIndexOf(' - ');
+      return sep > 0 ? raw.slice(0, sep) : raw;
+    }).filter(Boolean);
+    updateTicker(tickerTitles);
+
   } catch(e) {
     console.warn('News RSS:', e.message);
     loadStaticNews();
@@ -1302,6 +1340,152 @@ function loadStaticNews() {
     <div class="n-body"><div class="n-meta"><span class="badge">${n.badge}</span><span class="n-date">${n.date}</span></div>
     <h3 class="n-title">${n.title}</h3><span class="n-link">Read More →</span></div>
   </a>`).join('');
+}
+
+// ─── Live Ticker from Google News RSS ──────────────
+function updateTicker(titles) {
+  const el = $('ticker-inner');
+  if (!el || !titles.length) return;
+  // Duplicate items so the CSS marquee loops seamlessly
+  const items = [...titles, ...titles];
+  el.innerHTML = items.map(t => `<span>📰 ${t}</span><span class="t-sep"> | </span>`).join('');
+}
+
+// ─── Live Gallery from Wikimedia Commons ───────────
+async function loadGallery() {
+  const grid = $('gallery-grid');
+  if (!grid) return;
+  try {
+    const url = 'https://commons.wikimedia.org/w/api.php?' + new URLSearchParams({
+      action: 'query',
+      generator: 'search',
+      gsrsearch: 'Elland Road stadium Leeds',
+      gsrnamespace: '6',
+      prop: 'imageinfo',
+      iiprop: 'url|thumburl|extmetadata',
+      iiurlwidth: '600',
+      gsrlimit: '20',
+      format: 'json',
+      origin: '*',
+    });
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('Wikimedia ' + res.status);
+    const json = await res.json();
+    const pages = Object.values(json?.query?.pages || {});
+
+    // Filter to jpg/jpeg/png only and keep first 9
+    const imgs = pages
+      .map(p => {
+        const ii = p.imageinfo?.[0];
+        if (!ii) return null;
+        const ext = (ii.url || '').split('.').pop().toLowerCase();
+        if (!['jpg','jpeg','png'].includes(ext)) return null;
+        const desc = ii.extmetadata?.ImageDescription?.value?.replace(/<[^>]+>/g,'').slice(0,120) || 'Elland Road, Leeds';
+        const title = ii.extmetadata?.ObjectName?.value || p.title?.replace('File:','') || 'Gallery image';
+        return { imgUrl: ii.thumburl || ii.url, fullUrl: ii.url, title: title.replace(/\.[^.]+$/,''), desc };
+      })
+      .filter(Boolean)
+      .slice(0, 9);
+
+    if (!imgs.length) throw new Error('No images returned');
+
+    // Patch LB_DATA — replace first N entries with real photos, keep the rest
+    imgs.forEach((img, i) => {
+      if (i < LB_DATA.length) {
+        LB_DATA[i].imgUrl = img.imgUrl;
+        LB_DATA[i].title  = img.title;
+        LB_DATA[i].desc   = img.desc;
+      } else {
+        LB_DATA.push(img);
+      }
+    });
+
+    // Re-render gallery cards
+    grid.innerHTML = LB_DATA.slice(0, imgs.length).map((d, i) => `
+      <div class="gallery-card reveal" onclick="openLb(${i})" style="cursor:pointer;overflow:hidden;border-radius:8px;aspect-ratio:4/3;background:#0d1a2a;position:relative">
+        <img src="${d.imgUrl}" alt="${d.title}" loading="lazy"
+          style="width:100%;height:100%;object-fit:cover;transition:transform .35s;display:block"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:3rem">${d.img||'🏟️'}</div>
+        <div style="position:absolute;bottom:0;left:0;right:0;padding:8px 10px;background:linear-gradient(transparent,rgba(0,0,0,.7));color:#fff;font-size:.78rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${d.title}</div>
+      </div>`).join('');
+
+    // Animate in newly added cards
+    grid.querySelectorAll('.gallery-card').forEach(c => revealObs.observe(c));
+
+    setBadge('gallery-badge', true);
+  } catch(e) {
+    console.warn('Gallery (Wikimedia):', e.message);
+    // Static gallery tiles already in HTML — badge stays grey
+  }
+}
+
+// ─── Forum: Giscus embed ────────────────────────────
+function initForum() {
+  const container = $('forum-container');
+  if (!container) return;
+
+  if (CFG.GISCUS_REPO && CFG.GISCUS_REPO_ID && CFG.GISCUS_CATEGORY_ID) {
+    // Inject Giscus widget (GitHub Discussions — free)
+    const script = document.createElement('script');
+    script.src = 'https://giscus.app/client.js';
+    script.dataset.repo           = CFG.GISCUS_REPO;
+    script.dataset.repoId         = CFG.GISCUS_REPO_ID;
+    script.dataset.category       = 'Fan Hub';
+    script.dataset.categoryId     = CFG.GISCUS_CATEGORY_ID;
+    script.dataset.mapping        = 'pathname';
+    script.dataset.reactionsEnabled = '1';
+    script.dataset.emitMetadata   = '0';
+    script.dataset.inputPosition  = 'top';
+    script.dataset.theme          = 'dark';
+    script.dataset.lang           = 'en';
+    script.crossOrigin            = 'anonymous';
+    script.async                  = true;
+    container.appendChild(script);
+  } else {
+    // Static preview threads
+    container.innerHTML = `
+      <div style="border:1px solid var(--cborder);border-radius:8px;overflow:hidden">
+        ${[
+          {tag:'Match Day',ago:'2h ago',  author:'KopHater96',     msg:"Gnonto was UNREAL today. That first touch in the 67th is already a GIF."},
+          {tag:'Transfer',  ago:'5h ago',  author:'WhitesForever',  msg:"Hearing we're close on a CB. Please please please — Rodon needs a partner."},
+          {tag:'General',   ago:'1d ago',  author:'Revie_Lives',    msg:"Bremner would have loved this squad. Young, fast, fearless. MOT 💛"},
+          {tag:'Match Day', ago:'2d ago',  author:'EllandRdFaithful',msg:"Anyone else notice how Ampadu ran 12km yesterday? Machine."},
+        ].map((t,i)=>`
+          <div style="padding:14px 16px;${i?'border-top:1px solid var(--cborder)':''}">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+              <span class="badge">${t.tag}</span>
+              <span style="font-size:.7rem;color:var(--muted)">${t.author} · ${t.ago}</span>
+            </div>
+            <p style="margin:0;font-size:.88rem;color:var(--text)">${t.msg}</p>
+          </div>`).join('')}
+        <div style="padding:12px 16px;border-top:1px solid var(--cborder);text-align:center;font-size:.8rem;color:var(--muted)">
+          💬 To enable live comments, set GISCUS_REPO / GISCUS_REPO_ID / GISCUS_CATEGORY_ID in CFG — see HTML comment above for setup steps.
+        </div>
+      </div>`;
+  }
+}
+
+// ─── Poll: JSONbin shared vote store ───────────────
+async function initPoll() {
+  if (!CFG.JSONBIN_BIN_ID) return; // localStorage fallback already active via vote()
+  const BIN_URL = `https://api.jsonbin.io/v3/b/${CFG.JSONBIN_BIN_ID}/latest`;
+  try {
+    const res = await fetch(BIN_URL, { headers: { 'X-Access-Key': CFG.JSONBIN_BIN_ID } });
+    if (!res.ok) throw new Error('JSONbin ' + res.status);
+    const json = await res.json();
+    const remote = json?.record?.votes;
+    if (Array.isArray(remote) && remote.length === PVOTES.length) {
+      remote.forEach((v, i) => { PVOTES[i] = v; });
+      // Re-render totals
+      const tot = PVOTES.reduce((a,b) => a+b, 0);
+      $('poll-hint').textContent = `Total votes: ${tot.toLocaleString()} (live)`;
+    }
+    setBadge('poll-badge', true);
+  } catch(e) {
+    console.warn('Poll (JSONbin):', e.message);
+    // Falls back to localStorage-only via existing vote() function
+  }
 }
 
 // ─── Static fallbacks (shown when no API key) ──────
@@ -1388,8 +1572,11 @@ function dismissBanner() { $('api-banner').classList.add('hidden'); }
 
 // ─── Init ──────────────────────────────────────────
 async function init() {
-  // News loads always — no football API key needed
-  loadNews();
+  // These don't need a football API key — fire immediately
+  loadNews();      // Google News RSS → news cards + ticker
+  loadGallery();   // Wikimedia Commons → gallery grid + lightbox
+  initForum();     // Giscus embed (or static threads if not configured)
+  initPoll();      // JSONbin shared votes (or localStorage if not configured)
 
   if (CFG.API_KEY) {
     // Load all live sections in parallel
@@ -1463,7 +1650,15 @@ const LB_DATA = [
 ];
 function openLb(i){
   const d=LB_DATA[i];
-  $('lb-img').textContent=d.img; $('lb-title').textContent=d.title; $('lb-desc').textContent=d.desc;
+  const imgEl = $('lb-img');
+  if (d.imgUrl) {
+    imgEl.innerHTML = `<img src="${d.imgUrl}" alt="${d.title}"
+      style="max-width:100%;max-height:65vh;border-radius:8px;object-fit:contain;display:block;margin:0 auto"
+      onerror="this.outerHTML='<div style=\\'font-size:4rem;text-align:center\\'>${d.img||'🏟️'}</div>'">`;
+  } else {
+    imgEl.textContent = d.img;
+  }
+  $('lb-title').textContent=d.title; $('lb-desc').textContent=d.desc;
   $('lightbox').classList.add('open'); document.body.style.overflow='hidden';
 }
 function closeLb(){ $('lightbox').classList.remove('open'); document.body.style.overflow=''; }
