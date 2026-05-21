@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>LUFC Fan Hub | Leeds United Supporters</title>
+<style>
+:root{
+  --blue:#1D428A;--gold:#FFCD00;--navy:#0A1628;--dark:#060f1e;
+  --mid:#0d1f3e;--white:#fff;--dim:rgba(255,255,255,.62);
+  --card:linear-gradient(160deg,#16274a,#1a2f55);
+  --cborder:rgba(29,66,138,.45);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--navy);color:var(--white);overflow-x:hidden}
+::-webkit-scrollbar{width:7px}::-webkit-scrollbar-track{background:var(--navy)}
+::-webkit-scrollbar-thumb{background:var(--blue);border-radius:4px}::-webkit-scrollbar-thumb:hover{background:var(--gold)}
+
+/* ── API CONFIG BANNER ── */
+#api-banner{background:linear-gradient(90deg,#1a3a1a,#0d2a0d);border-bottom:2px solid #22c55e;padding:.75rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+#api-banner.hidden{display:none}
+.ab-text{color:rgba(255,255,255,.85);font-size:.82rem;line-height:1.5}
+.ab-text strong{color:#22c55e}
+.ab-text a{color:var(--gold);text-decoration:underline}
+.ab-input-row{display:flex;gap:.5rem;align-items:center;flex-shrink:0}
+#api-key-input{background:rgba(255,255,255,.08);border:1px solid rgba(34,197,94,.4);color:#fff;font-size:.82rem;padding:.45rem .85rem;border-radius:4px;width:240px;outline:none}
+#api-key-input:focus{border-color:#22c55e}
+#api-key-input::placeholder{color:rgba(255,255,255,.3)}
+.ab-save{background:#22c55e;color:var(--dark);font-weight:800;font-size:.78rem;padding:.45rem .9rem;border-radius:4px;border:none;cursor:pointer;letter-spacing:.06em;text-transform:uppercase}
+.ab-save:hover{background:#16a34a}
+.ab-dismiss{background:none;border:none;color:rgba(255,255,255,.4);font-size:1.1rem;cursor:pointer;padding:.2rem .4rem;line-height:1}
+.ab-dismiss:hover{color:#fff}
+
+/* ── LIVE BADGE ── */
+.live-badge{display:inline-flex;align-items:center;gap:.35rem;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);color:#22c55e;font-size:.68rem;font-weight:700;padding:.2rem .55rem;border-radius:3px;letter-spacing:.08em;text-transform:uppercase;margin-left:.75rem;vertical-align:middle}
+.live-dot{width:6px;height:6px;border-radius:50%;background:#22c55e;animation:pulse 1.5s ease infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.static-badge{display:inline-flex;align-items:center;gap:.35rem;background:rgba(255,205,0,.1);border:1px solid rgba(255,205,0,.25);color:var(--gold);font-size:.68rem;font-weight:700;padding:.2rem .55rem;border-radius:3px;letter-spacing:.08em;text-transform:uppercase;margin-left:.75rem;vertical-align:middle}
+
+/* ── SKELETON LOADER ── */
+@keyframes shimmer{0%{background-position:-400px 0}100%{background-position:400px 0}}
+.skeleton{background:linear-gradient(90deg,rgba(29,66,138,.2) 25%,rgba(29,66,138,.4) 50%,rgba(29,66,138,.2) 75%);background-size:800px 100%;animation:shimmer 1.4s infinite;border-radius:4px}
+.sk-line{height:14px;margin-bottom:.6rem}
+.sk-line.sm{height:10px;width:60%}
+.sk-line.lg{height:18px;width:75%}
+.sk-block{height:72px;border-radius:6px;margin-bottom:.7rem}
+.sk-card{background:rgba(29,66,138,.12);border:1px solid var(--cborder);border-radius:8px;padding:1.25rem}
+
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:100;background:var(--dark);border-bottom:3px solid var(--gold)}
+.nav-inner{max-width:1280px;margin:0 auto;padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:64px}
+.nav-brand{display:flex;align-items:center;gap:.65rem;text-decoration:none}
+.badge-svg{width:34px;height:38px;flex-shrink:0}
+.brand-title{color:var(--gold);font-weight:900;font-size:1rem;letter-spacing:.1em;text-transform:uppercase;line-height:1}
+.brand-title b{color:var(--white)}
+.nav-links{display:flex;gap:1.4rem;align-items:center}
+.nav-links a{color:rgba(255,255,255,.7);font-weight:600;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:.3rem 0;border-bottom:2px solid transparent;transition:color .2s,border-color .2s}
+.nav-links a:hover{color:var(--gold);border-color:var(--gold)}
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:.4rem}
+.hamburger span{display:block;width:24px;height:2px;background:var(--gold)}
+#mob-menu{display:none;background:var(--dark);border-top:1px solid var(--blue);padding:1rem 1.5rem;flex-direction:column;gap:.9rem}
+#mob-menu.open{display:flex}
+#mob-menu a{color:rgba(255,255,255,.7);font-weight:600;font-size:.875rem;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;padding:.4rem 0}
+#mob-menu a:hover{color:var(--gold)}
+
+/* ── TICKER ── */
+.ticker{background:var(--gold);padding:.6rem 0;overflow:hidden;white-space:nowrap}
+@keyframes tick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ticker-inner{display:inline-flex;gap:0;animation:tick 32s linear infinite;white-space:nowrap}
+.ticker-inner span{color:var(--navy);font-weight:700;font-size:.83rem;padding:0 1.5rem}
+.t-sep{opacity:.3}
+
+/* ── HERO ── */
+#home{min-height:100vh;background:linear-gradient(135deg,var(--dark) 0%,var(--blue) 55%,var(--dark) 100%);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;text-align:center;padding:5rem 1.5rem 4rem}
+.hero-stripe{position:absolute;top:0;right:0;bottom:0;width:50%;background:linear-gradient(135deg,transparent 40%,rgba(255,205,0,.05) 40%,rgba(255,205,0,.05) 60%,transparent 60%);pointer-events:none}
+.h-circ1{position:absolute;top:-80px;left:-80px;width:340px;height:340px;border-radius:50%;background:rgba(255,205,0,.04);pointer-events:none}
+.h-circ2{position:absolute;bottom:-60px;right:12%;width:260px;height:260px;border-radius:50%;background:rgba(29,66,138,.28);pointer-events:none}
+.hero-content{position:relative;z-index:1;max-width:820px}
+@keyframes float{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-22px) rotate(18deg)}}
+.hero-ball{animation:float 3.8s ease-in-out infinite;font-size:4.5rem;display:block;margin-bottom:1.25rem}
+.hero-eyebrow{color:var(--gold);font-weight:700;letter-spacing:.25em;text-transform:uppercase;font-size:.82rem;margin-bottom:.9rem;opacity:.85}
+.hero-title{font-size:clamp(2.8rem,8vw,5.5rem);font-weight:900;color:var(--gold);letter-spacing:-.02em;line-height:1.05;margin-bottom:1.1rem;text-shadow:0 4px 30px rgba(255,205,0,.3);text-transform:uppercase}
+.hero-mgr{color:rgba(255,255,255,.5);font-size:.82rem;letter-spacing:.15em;text-transform:uppercase;margin-bottom:.5rem}
+.hero-sub{color:rgba(255,255,255,.75);font-size:clamp(1rem,2.5vw,1.2rem);margin-bottom:1.75rem;letter-spacing:.04em}
+.countdown-bar{background:rgba(10,22,40,.7);border:1px solid rgba(255,205,0,.25);border-radius:8px;padding:1.1rem 1.5rem;margin-bottom:2rem;display:inline-block;min-width:340px}
+.cd-label{color:var(--gold);font-size:.7rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;margin-bottom:.5rem}
+.cd-match{color:#fff;font-weight:800;font-size:.9rem;margin-bottom:.7rem}
+.cd-units{display:flex;gap:1.2rem;justify-content:center}
+.cd-unit{text-align:center}
+.cd-num{font-size:2rem;font-weight:900;color:var(--gold);line-height:1;min-width:2.5rem;display:block;font-variant-numeric:tabular-nums}
+.cd-txt{color:rgba(255,255,255,.45);font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;margin-top:.2rem}
+.cd-sep{color:var(--gold);font-size:2rem;font-weight:900;align-self:flex-start;margin-top:.05rem}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.btn-gold{background:var(--gold);color:var(--navy);font-weight:800;padding:.85rem 2rem;border-radius:4px;text-decoration:none;letter-spacing:.08em;text-transform:uppercase;font-size:.88rem;display:inline-block;transition:transform .15s,background .15s;border:none;cursor:pointer}
+.btn-gold:hover{background:#e6b800;transform:translateY(-3px)}
+.btn-outline{background:transparent;color:var(--gold);border:2px solid var(--gold);font-weight:800;padding:.85rem 2rem;border-radius:4px;text-decoration:none;letter-spacing:.08em;text-transform:uppercase;font-size:.88rem;display:inline-block;transition:all .15s;cursor:pointer}
+.btn-outline:hover{background:var(--gold);color:var(--navy);transform:translateY(-3px)}
+
+/* ── SECTION COMMONS ── */
+.section{padding:5rem 1.5rem}
+.si{max-width:1280px;margin:0 auto}
+.sa{background:linear-gradient(180deg,var(--mid) 0%,var(--navy) 100%)}
+.s-label{color:var(--gold);font-weight:700;letter-spacing:.2em;text-transform:uppercase;font-size:.78rem;margin-bottom:.45rem}
+.s-title{color:var(--white);font-weight:900;font-size:clamp(1.8rem,4vw,2.8rem);letter-spacing:-.02em;margin-bottom:.7rem}
+.s-bar{width:56px;height:4px;background:var(--gold);margin-bottom:2.75rem;border-radius:2px}
+.s-bar.c{margin-left:auto;margin-right:auto;margin-bottom:3.5rem}
+.reveal{opacity:0;transform:translateY(36px);transition:opacity .65s ease,transform .65s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* ── SECTION HEADER ROW ── */
+.s-head-row{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-bottom:2.75rem}
+.s-head-row .s-bar{margin-bottom:0}
+
+/* ── NEWS ── */
+.news-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.75rem}
+.news-img{height:170px;display:flex;align-items:center;justify-content:center;font-size:3rem;border-radius:8px 8px 0 0}
+.n-body{padding:1.25rem}
+.n-meta{display:flex;align-items:center;gap:.7rem;margin-bottom:.7rem}
+.badge{background:var(--gold);color:var(--navy);font-weight:700;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:.2rem .6rem;border-radius:3px}
+.n-date{color:rgba(255,255,255,.4);font-size:.76rem}
+.n-title{color:#fff;font-weight:800;font-size:.95rem;margin-bottom:.55rem;line-height:1.4}
+.n-excerpt{color:var(--dim);font-size:.86rem;line-height:1.6;margin-bottom:1rem}
+.n-link{color:var(--gold);font-weight:700;font-size:.86rem;cursor:pointer}
+.n-card:hover{transform:translateY(-6px);box-shadow:0 20px 40px rgba(0,0,0,.45)}
+
+/* ── MATCH REPORTS ── */
+.reports-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.4rem}
+.report-card{background:var(--card);border:1px solid var(--cborder);border-radius:8px;padding:1.35rem;display:flex;gap:1.2rem;align-items:flex-start;transition:transform .25s,box-shadow .25s}
+.report-card:hover{transform:translateY(-5px);box-shadow:0 20px 40px rgba(0,0,0,.4)}
+.report-score{text-align:center;flex-shrink:0;min-width:68px}
+.score-main{font-size:1.85rem;font-weight:900;color:var(--gold);line-height:1}
+.sr{display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;font-weight:800;font-size:.7rem;margin:.4rem auto 0}
+.sr.W{background:rgba(34,197,94,.15);color:#22c55e}
+.sr.D{background:rgba(255,205,0,.15);color:var(--gold)}
+.sr.L{background:rgba(239,68,68,.15);color:#ef4444}
+.report-info{}
+.report-title{color:#fff;font-weight:800;font-size:.88rem;margin-bottom:.35rem;line-height:1.4}
+.report-opp{color:rgba(255,255,255,.45);font-size:.76rem;margin-bottom:.45rem;letter-spacing:.04em}
+.report-excerpt{color:var(--dim);font-size:.81rem;line-height:1.55}
+.scorers{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.55rem}
+.scorer-chip{background:rgba(29,66,138,.35);color:rgba(255,255,255,.7);font-size:.69rem;padding:.18rem .48rem;border-radius:3px}
+
+/* ── FIXTURES ── */
+.fx-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2.5rem}
+.col-h{color:var(--gold);font-weight:800;font-size:.9rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:1.2rem;border-left:4px solid var(--gold);padding-left:.75rem}
+.fx-list{display:flex;flex-direction:column;gap:.7rem}
+.fx-item{background:rgba(29,66,138,.18);border:1px solid rgba(29,66,138,.4);border-radius:6px;padding:.85rem 1rem;display:flex;align-items:center;justify-content:space-between}
+.fx-name{color:#fff;font-weight:700;font-size:.88rem}
+.fx-vs{color:rgba(255,255,255,.35);margin:0 .3rem}
+.fx-date{color:rgba(255,255,255,.42);font-size:.74rem;margin-top:.2rem}
+.fx-badges{display:flex;gap:.35rem;align-items:center}
+.b-h{background:var(--blue);color:#fff;font-size:.67rem;font-weight:700;padding:.18rem .42rem;border-radius:3px}
+.b-a{background:rgba(255,255,255,.08);color:#fff;font-size:.67rem;font-weight:700;padding:.18rem .42rem;border-radius:3px}
+.b-c{background:rgba(255,205,0,.1);color:var(--gold);font-size:.67rem;font-weight:700;padding:.18rem .42rem;border-radius:3px}
+.rr{display:flex;align-items:center;gap:.85rem}
+.rb{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.7rem;flex-shrink:0}
+.rb.W{background:rgba(34,197,94,.15);color:#22c55e}
+.rb.D{background:rgba(255,205,0,.15);color:var(--gold)}
+.rb.L{background:rgba(239,68,68,.15);color:#ef4444}
+.rs{color:#fff;font-weight:900;font-size:1.05rem;letter-spacing:.05em}
+.fx-error{color:rgba(255,255,255,.45);font-size:.85rem;font-style:italic;padding:.5rem 0}
+
+/* ── STATS TABLE ── */
+.stats-table-wrap{overflow-x:auto;border-radius:8px;border:1px solid var(--cborder)}
+table{width:100%;border-collapse:collapse;min-width:640px}
+thead tr{background:var(--blue)}
+thead th{padding:.82rem 1rem;text-align:left;font-size:.73rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);white-space:nowrap}
+thead th:not(:first-child){text-align:center}
+tbody tr{border-bottom:1px solid rgba(29,66,138,.3);transition:background .15s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:rgba(29,66,138,.2)}
+tbody td{padding:.78rem 1rem;font-size:.87rem;vertical-align:middle}
+tbody td:not(:first-child){text-align:center}
+.t-player{display:flex;align-items:center;gap:.72rem}
+.t-num{background:var(--gold);color:var(--navy);font-weight:900;font-size:.7rem;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.t-name{color:#fff;font-weight:700;font-size:.87rem}
+.t-pos{color:var(--gold);font-size:.66rem;font-weight:700;margin-top:.1rem}
+.t-g{color:#22c55e;font-weight:800}
+.t-a{color:#60a5fa;font-weight:700}
+.t-y{color:var(--gold)}
+.t-r{color:#ef4444}
+.summary-pills{display:flex;gap:.9rem;flex-wrap:wrap;margin-bottom:2.5rem}
+.pill{background:rgba(29,66,138,.25);border:1px solid rgba(29,66,138,.5);border-radius:6px;padding:.6rem 1.1rem;text-align:center;flex:1;min-width:90px}
+.pill-n{font-size:1.45rem;font-weight:900;color:var(--gold);line-height:1}
+.pill-l{color:rgba(255,255,255,.48);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;margin-top:.22rem}
+
+/* ── SQUAD ── */
+.squad-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.35rem}
+.player-card{background:var(--card);border:1px solid var(--cborder);border-radius:8px;padding:1.35rem;position:relative;overflow:hidden;transition:transform .25s,box-shadow .25s}
+.player-card:hover{transform:translateY(-7px);box-shadow:0 24px 48px rgba(0,0,0,.45)}
+.p-wm{position:absolute;right:-8px;top:-8px;font-size:5rem;font-weight:900;color:rgba(29,66,138,.18);line-height:1;user-select:none;pointer-events:none}
+.p-top{display:flex;align-items:center;gap:.85rem;margin-bottom:.95rem}
+.p-num{width:44px;height:44px;border-radius:50%;background:var(--gold);color:var(--navy);font-weight:900;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.p-name{color:#fff;font-weight:800;font-size:.88rem;line-height:1.3}
+.p-meta{display:flex;align-items:center;gap:.35rem;margin-top:.22rem}
+.p-flag{font-size:.76rem}
+.p-pos{background:rgba(29,66,138,.5);color:var(--gold);font-size:.65rem;font-weight:700;padding:.14rem .4rem;border-radius:3px;letter-spacing:.06em}
+.form-lbl{display:flex;justify-content:space-between;margin-bottom:.3rem}
+.form-t{color:rgba(255,255,255,.42);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase}
+.form-v{color:var(--gold);font-weight:800;font-size:.76rem}
+.form-track{background:rgba(255,255,255,.08);border-radius:3px;height:6px;overflow:hidden}
+.form-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--gold),#e6b800)}
+
+/* ── SHOP ── */
+.shop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1.4rem}
+.merch-card{background:var(--card);border:1px solid var(--cborder);border-radius:8px;overflow:hidden;transition:transform .25s,box-shadow .25s}
+.merch-card:hover{transform:translateY(-7px);box-shadow:0 24px 48px rgba(0,0,0,.45)}
+.merch-img{height:170px;display:flex;align-items:center;justify-content:center;font-size:3.8rem;position:relative}
+.mi-kh{background:linear-gradient(135deg,#fff,#e8e8e8)}
+.mi-ka{background:linear-gradient(135deg,#FFCD00,#e6b800)}
+.mi-sc{background:linear-gradient(135deg,var(--blue),var(--dark))}
+.mi-jk{background:linear-gradient(135deg,#1a3a6a,var(--dark))}
+.mi-rt{background:linear-gradient(135deg,#2a1a5a,var(--dark))}
+.mi-ht{background:linear-gradient(135deg,var(--blue),var(--dark))}
+.m-tag{position:absolute;top:.55rem;right:.55rem;background:var(--gold);color:var(--navy);font-size:.63rem;font-weight:800;padding:.18rem .48rem;border-radius:3px;text-transform:uppercase;letter-spacing:.06em}
+.m-body{padding:1rem}
+.m-name{color:#fff;font-weight:800;font-size:.9rem;margin-bottom:.28rem}
+.m-cat{color:rgba(255,255,255,.38);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.7rem}
+.m-footer{display:flex;align-items:center;justify-content:space-between}
+.m-price{color:var(--gold);font-weight:900;font-size:1.05rem}
+.m-btn{background:var(--blue);color:#fff;border:none;font-weight:700;font-size:.73rem;padding:.38rem .85rem;border-radius:3px;cursor:pointer;letter-spacing:.05em;text-transform:uppercase;transition:background .2s}
+.m-btn:hover{background:var(--gold);color:var(--navy)}
+
+/* ── HISTORY ── */
+.tl-container{position:relative;max-width:900px;margin:0 auto}
+.tl-container::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,var(--gold),var(--blue));transform:translateX(-50%)}
+.tl-item{display:flex;margin-bottom:2.3rem;position:relative}
+.tl-item.right{justify-content:flex-end}
+.tl-year{position:absolute;left:50%;top:1.2rem;transform:translate(-50%,-50%);background:var(--gold);color:var(--navy);font-weight:900;font-size:.71rem;padding:.3rem .62rem;border-radius:20px;z-index:2;white-space:nowrap;letter-spacing:.04em}
+.tl-card{width:calc(50% - 2.8rem);background:rgba(29,66,138,.18);border:1px solid var(--cborder);border-radius:8px;padding:1.15rem;margin-top:.5rem}
+.tl-icon{font-size:1.3rem;margin-bottom:.4rem}
+.tl-title{color:var(--gold);font-weight:800;font-size:.9rem;margin-bottom:.32rem}
+.tl-desc{color:var(--dim);font-size:.82rem;line-height:1.55}
+
+/* ── ELLAND ROAD ── */
+#elland-road{background:linear-gradient(135deg,var(--dark) 0%,var(--blue) 50%,var(--dark) 100%);padding:5rem 1.5rem;position:relative;overflow:hidden}
+.er-texture{position:absolute;inset:0;background-image:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,205,0,.015) 40px,rgba(255,205,0,.015) 80px);pointer-events:none}
+.er-inner{max-width:1040px;margin:0 auto;position:relative;z-index:1;text-align:center}
+.er-title{color:#fff;font-weight:900;font-size:clamp(1.8rem,5vw,3.2rem);letter-spacing:-.02em;text-transform:uppercase;line-height:1.1;margin-bottom:2.75rem}
+.er-title span{color:var(--gold)}
+.er-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));border-radius:8px;overflow:hidden;border:1px solid rgba(255,205,0,.2);margin-bottom:3rem;background:rgba(10,22,40,.6)}
+.er-cell{padding:1.35rem;text-align:center;border-right:1px solid rgba(255,205,0,.15)}
+.er-cell:last-child{border-right:none}
+.er-num{font-size:2.3rem;font-weight:900;color:var(--gold);line-height:1;font-variant-numeric:tabular-nums}
+.er-label{color:rgba(255,255,255,.5);font-weight:600;font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;margin-top:.42rem}
+.er-quote{color:rgba(255,255,255,.7);font-size:.97rem;line-height:1.75;max-width:700px;margin:0 auto 2.5rem;font-style:italic}
+
+/* ── GALLERY ── */
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:.9rem}
+.gallery-item{border-radius:6px;overflow:hidden;position:relative;cursor:pointer;aspect-ratio:4/3}
+.gallery-item:hover .g-overlay{opacity:1}
+.g-bg{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3.2rem;transition:transform .3s}
+.gallery-item:hover .g-bg{transform:scale(1.06)}
+.g-overlay{position:absolute;inset:0;background:rgba(10,22,40,.82);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transition:opacity .3s;padding:1rem;text-align:center}
+.g-overlay p{color:#fff;font-weight:700;font-size:.8rem;margin-bottom:.25rem}
+.g-overlay span{color:var(--gold);font-size:.7rem}
+.lb-overlay{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:999;display:flex;align-items:center;justify-content:center;padding:2rem;opacity:0;pointer-events:none;transition:opacity .25s}
+.lb-overlay.open{opacity:1;pointer-events:all}
+.lb-box{background:var(--mid);border:1px solid var(--cborder);border-radius:10px;padding:2rem;max-width:540px;width:100%;text-align:center;position:relative}
+.lb-close{position:absolute;top:.75rem;right:.75rem;background:none;border:none;color:#fff;font-size:1.4rem;cursor:pointer;opacity:.6}
+.lb-close:hover{opacity:1;color:var(--gold)}
+.lb-img{font-size:5.5rem;margin-bottom:.9rem;display:block}
+.lb-title{color:#fff;font-weight:800;font-size:1rem;margin-bottom:.38rem}
+.lb-desc{color:var(--dim);font-size:.85rem;line-height:1.6}
+
+/* ── FORUM ── */
+.forum-list{display:flex;flex-direction:column;gap:.85rem}
+.forum-item{background:var(--card);border:1px solid var(--cborder);border-radius:8px;padding:1.05rem 1.25rem;display:flex;align-items:flex-start;gap:.95rem;transition:transform .2s,box-shadow .2s}
+.forum-item:hover{transform:translateX(4px);box-shadow:-4px 0 0 var(--gold),0 8px 24px rgba(0,0,0,.3)}
+.f-av{width:38px;height:38px;border-radius:50%;background:var(--gold);color:var(--navy);font-weight:900;font-size:.85rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.f-title{color:#fff;font-weight:800;font-size:.88rem;margin-bottom:.28rem;line-height:1.4}
+.f-meta{display:flex;gap:.9rem;align-items:center;flex-wrap:wrap}
+.f-author{color:var(--gold);font-size:.74rem;font-weight:700}
+.f-time{color:rgba(255,255,255,.35);font-size:.72rem}
+.f-replies{color:rgba(255,255,255,.52);font-size:.74rem}
+.f-hot{background:rgba(239,68,68,.15);color:#ef4444;font-size:.63rem;font-weight:700;padding:.14rem .38rem;border-radius:3px;text-transform:uppercase;letter-spacing:.06em}
+.forum-cta{display:flex;align-items:center;justify-content:space-between;margin-top:1.7rem;background:rgba(29,66,138,.15);border:1px dashed rgba(29,66,138,.5);border-radius:8px;padding:.9rem 1.2rem;flex-wrap:wrap;gap:.75rem}
+.forum-cta p{color:var(--dim);font-size:.85rem}
+
+/* ── FAN ZONE ── */
+.fan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(275px,1fr));gap:1.7rem;margin-bottom:2.4rem}
+.fan-card{background:var(--card);border:1px solid var(--cborder);border-radius:8px;padding:1.65rem;transition:transform .25s,box-shadow .25s}
+.fan-card:hover{transform:translateY(-7px);box-shadow:0 24px 48px rgba(0,0,0,.45)}
+.fa-icon{font-size:2.3rem;margin-bottom:.85rem}
+.fa-title{color:var(--gold);font-weight:800;font-size:.97rem;margin-bottom:.42rem}
+.fa-text{color:var(--dim);font-size:.85rem;line-height:1.6;margin-bottom:.9rem}
+.away-tip{background:rgba(29,66,138,.25);padding:.42rem .68rem;border-radius:4px;border-left:3px solid var(--gold);margin-bottom:.38rem}
+.at-n{color:var(--gold);font-weight:700;font-size:.77rem}
+.at-i{color:var(--dim);font-size:.77rem}
+.chant-box{background:rgba(10,22,40,.5);border:1px solid rgba(255,205,0,.2);border-radius:6px;padding:.85rem .95rem;font-style:italic;color:rgba(255,255,255,.75);font-size:.85rem;line-height:1.8;margin-bottom:.65rem}
+.chant-box strong{color:var(--gold)}
+.chant-credit{color:rgba(255,255,255,.28);font-size:.72rem}
+.poll-box{background:rgba(29,66,138,.2);border:1px solid var(--cborder);border-radius:8px;padding:1.4rem}
+.poll-h{color:var(--gold);font-weight:800;font-size:.86rem;margin-bottom:.85rem;text-transform:uppercase;letter-spacing:.08em}
+.poll-q{color:#fff;font-weight:700;font-size:.91rem;margin-bottom:1.15rem}
+.poll-opt{margin-bottom:.85rem}
+.p-btn{background:none;border:none;color:rgba(255,255,255,.77);cursor:pointer;font-weight:500;font-size:.85rem;padding:0;text-align:left;display:block;transition:color .2s}
+.p-btn:hover{color:var(--gold)}
+.p-btn.voted{color:var(--gold);font-weight:700}
+.p-row{display:flex;justify-content:space-between;margin-bottom:.36rem}
+.p-pct{color:var(--gold);font-weight:700;font-size:.82rem}
+.p-track{background:rgba(255,255,255,.08);border-radius:5px;height:9px;overflow:hidden}
+.p-fill{height:100%;border-radius:5px;transition:width .9s cubic-bezier(.25,.46,.45,.94);min-width:4px}
+.pf-s{background:var(--gold)}
+.pf-o{background:var(--blue)}
+.poll-hint{color:rgba(255,255,255,.36);font-size:.75rem;margin-top:.4rem}
+
+/* ── FOOTER ── */
+footer{background:var(--dark);border-top:3px solid var(--blue)}
+.fi{max-width:1280px;margin:0 auto;padding:4rem 1.5rem 2rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:3rem}
+.f-brand-row{display:flex;align-items:center;gap:.62rem;margin-bottom:.95rem}
+.f-bname{color:var(--gold);font-weight:900;font-size:.97rem;letter-spacing:.1em;text-transform:uppercase}
+.f-bname b{color:#fff}
+.f-tag{color:var(--gold);font-weight:800;font-size:1rem;font-style:italic;margin-bottom:.65rem}
+.f-desc{color:rgba(255,255,255,.38);font-size:.79rem;line-height:1.6}
+.fc h4{color:#fff;font-weight:800;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:1.15rem}
+.fl{display:grid;grid-template-columns:1fr 1fr;gap:.42rem}
+.fl a{color:rgba(255,255,255,.48);font-size:.85rem;text-decoration:none;transition:color .2s}
+.fl a:hover{color:var(--gold)}
+.soc-row{display:flex;gap:.65rem;flex-wrap:wrap}
+.soc-btn{width:41px;height:41px;border-radius:50%;background:var(--gold);color:var(--navy);border:none;cursor:pointer;font-size:.97rem;display:flex;align-items:center;justify-content:center;transition:transform .15s,background .15s}
+.soc-btn:hover{transform:scale(1.12);background:#fff}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.07);padding:1.15rem 1.5rem;text-align:center;color:rgba(255,255,255,.27);font-size:.75rem;line-height:1.7}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .nav-links{display:none}.hamburger{display:flex}
+  .tl-container::before{left:12px}
+  .tl-item,.tl-item.right{justify-content:flex-start;padding-left:3rem}
+  .tl-card{width:100%}
+  .tl-year{left:12px;top:1.5rem;transform:translateX(-50%)}
+}
+@media(max-width:540px){
+  .hero-btns{flex-direction:column;align-items:center}
+  .btn-gold,.btn-outline{width:225px;text-align:center}
+  .er-stats{grid-template-columns:1fr 1fr}
+  .er-cell:nth-child(2){border-right:none}
+  .er-cell:nth-child(3){border-right:1px solid rgba(255,205,0,.15)}
+  .cd-num{font-size:1.6rem;min-width:2rem}
+  .countdown-bar{min-width:0;width:100%}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ API CONFIG BANNER ══ -->
+<div id="api-banner">
+  <div class="ab-text">
+    <strong>⚡ Connect Live Data</strong> — Enter your free API key from
+    <a href="https://www.football-data.org/client/register" target="_blank">football-data.org</a>
+    to pull real fixtures, results, squad &amp; standings automatically.
+  </div>
+  <div class="ab-input-row">
+    <input id="api-key-input" type="text" placeholder="Paste your API key here…" autocomplete="off"/>
+    <button class="ab-save" onclick="saveApiKey()">Save &amp; Connect</button>
+    <button class="ab-dismiss" onclick="dismissBanner()" title="Dismiss">✕</button>
+  </div>
+</div>
+
+<!-- ══ NAV ══ -->
+<nav>
+  <div class="nav-inner">
+    <a href="#home" class="nav-brand">
+      <svg class="badge-svg" width="44" height="44" viewBox="0 0 2500 2500" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:2.613;">
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M96.79,181.59C96.79,181.59 47.507,154.084 33.181,104.802C22.293,67.553 30.889,42.339 30.889,42.339C30.889,42.339 60.114,10.821 96.79,10.821C132.891,10.821 162.118,42.339 162.118,42.339C162.118,42.339 170.141,66.98 159.825,104.802C146.072,154.084 96.79,181.59 96.79,181.59Z" style="fill:rgb(242,227,66);"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M95.641,183.598C95.499,183.517 45.558,155.645 30.966,105.445C19.873,67.493 28.667,41.69 28.692,41.615L28.857,41.127L29.216,40.746C29.3,40.656 59.11,8.504 96.79,8.504C133.895,8.504 163.706,40.656 163.791,40.746L164.164,41.139L164.324,41.651C164.345,41.723 172.551,66.933 162.058,105.408L162.048,105.417C148.034,155.638 98.079,183.517 97.937,183.598L96.789,184.252L95.641,183.598ZM35.396,104.158C48.193,148.179 89.398,174.478 96.796,178.905C104.195,174.474 145.316,148.186 157.597,104.196L157.591,104.194C166.884,70.118 161.111,47.173 160.07,43.541C156.617,39.967 129.595,13.138 96.789,13.138C63.45,13.138 36.399,39.966 32.941,43.541C31.865,47.095 25.562,70.509 35.396,104.158Z" style="fill:rgb(53,116,181);fill-rule:nonzero;"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M85.328,76.148L107.678,76.148L107.678,152.314C101.03,157.6 96.217,160.386 96.217,160.386C96.217,160.386 91.677,157.706 85.329,152.627L85.329,76.148L85.328,76.148Z" style="fill:white;"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M45.208,76.722L79.598,76.722L79.598,147.772C68.608,137.904 55.164,122.509 49.226,102.509C46.499,92.771 45.433,84.025 45.208,76.722Z" style="fill:rgb(242,227,66);"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M75.891,76.722L50.18,105.482C49.842,104.497 49.524,103.506 49.226,102.508C48.502,99.918 47.871,97.303 47.335,94.668L63.378,76.721L75.891,76.721L75.891,76.722ZM79.598,124.1L68.518,136.496C66.373,134.021 64.338,131.453 62.419,128.798L79.597,109.903L79.597,124.1L79.598,124.1ZM73.844,142.269L79.597,135.834L79.597,147.772C77.624,145.997 75.705,144.161 73.844,142.269ZM52.999,76.722L45.77,84.686C45.481,82.04 45.293,79.383 45.208,76.722L52.999,76.722ZM79.598,98.642L57.975,122.065C56.254,119.221 54.692,116.284 53.296,113.267L79.597,84.289L79.597,98.642L79.598,98.642Z" style="fill:rgb(53,116,181);"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M113.408,76.722L147.808,76.722C147.583,84.025 146.507,92.772 143.779,102.509C137.898,122.324 124.494,137.614 113.408,147.491L113.408,76.722Z" style="fill:rgb(242,227,66);"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M117.115,76.722L142.832,105.49C143.168,104.507 143.482,103.515 143.779,102.51C144.505,99.924 145.139,97.314 145.681,94.684L129.626,76.723L117.115,76.723L117.115,76.722ZM113.408,124.1L124.41,136.41C126.584,133.927 128.644,131.346 130.584,128.676L113.408,109.463L113.408,124.1ZM119.283,141.921L113.408,135.46L113.408,147.491C115.425,145.697 117.384,143.839 119.283,141.921ZM140.008,76.722L147.252,84.704C147.559,81.884 147.732,79.222 147.809,76.722L140.008,76.722ZM113.408,98.168L135.035,121.995C136.754,119.173 138.313,116.256 139.705,113.259L113.408,84.289L113.408,98.168ZM147.781,69.845L45.233,69.845C45.634,59.765 47.507,53.8 47.507,53.8C47.507,53.8 69.283,29.732 96.216,29.732C123.722,29.732 145.498,53.8 145.498,53.8C145.498,53.8 147.381,59.765 147.781,69.845ZM95.07,83.599L97.362,84.172C97.362,84.172 99.083,79.587 101.374,79.014C104.239,78.441 105.386,80.16 104.813,81.306C104.813,82.452 103.092,84.172 101.948,84.744C100.921,85.1 99.655,85.317 99.655,85.317L97.936,88.755C97.362,89.901 95.644,92.767 95.644,92.767C95.644,92.767 98.509,93.913 100.227,93.913C103.666,93.913 105.385,91.621 105.385,91.621L105.957,92.767C105.957,92.767 103.092,95.632 100.227,96.205C97.936,96.205 95.07,94.486 95.07,94.486C95.07,94.486 93.351,96.205 91.632,96.205C89.913,96.778 88.194,96.205 88.194,94.486C88.194,93.34 89.913,92.194 91.059,92.194C92.778,91.621 93.924,92.767 93.924,92.767L95.643,89.329C96.216,88.183 96.789,85.317 96.789,85.317L95.069,84.744L95.069,83.599L95.07,83.599ZM93.351,93.34C93.351,93.34 93.351,94.486 91.631,95.059C89.912,95.632 89.912,94.486 89.912,94.486C89.912,94.486 91.058,92.767 91.631,92.767C92.778,92.768 93.351,93.34 93.351,93.34ZM99.654,84.172C99.654,84.172 100.8,80.16 102.519,80.16C104.281,80.043 104.128,80.972 103.665,81.879C103.092,83.599 99.654,84.172 99.654,84.172Z" style="fill:rgb(53,116,181);"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M96.79,33.17C96.79,33.17 97.362,33.743 97.362,34.316C97.711,35.032 97.907,35.812 97.936,36.608C102.52,34.889 109.397,38.327 109.969,44.63L111.69,44.63C112.835,44.63 113.409,45.203 113.409,45.203L112.263,46.349C111.117,46.922 110.544,47.495 110.544,47.495C112.835,51.507 111.69,58.956 105.958,61.248C105.958,61.248 106.532,62.394 106.532,62.967C107.104,64.113 107.104,64.686 107.104,64.686C107.104,64.686 105.958,64.686 105.385,64.113C104.239,63.54 103.666,62.394 103.666,62.394C100.801,66.405 93.351,67.552 89.339,62.967C89.339,62.967 88.766,63.54 87.62,64.113C87.047,64.686 85.9,64.686 85.9,64.686C85.9,64.686 86.473,63.54 86.473,62.967C86.473,61.821 87.046,61.248 87.046,61.248C82.462,59.529 79.023,52.652 82.462,47.495C82.462,47.495 81.316,46.922 80.743,46.349L79.597,45.203C79.597,45.203 80.743,44.63 81.889,44.63L83.608,44.63C83.608,40.046 89.338,34.888 95.069,36.034C95.069,36.034 95.069,34.888 95.642,34.315C96.216,33.17 96.79,33.17 96.79,33.17Z" style="fill:white;"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M96.216,50.361C96.216,50.361 96.789,48.069 96.216,46.35C96.216,44.63 97.361,38.327 96.216,37.181C94.496,35.461 92.778,37.181 92.204,38.327C91.631,38.9 91.058,40.047 89.912,40.62C88.766,41.766 88.193,41.766 86.474,42.339C85.328,42.912 83.609,43.485 84.755,45.777C85.328,46.923 87.621,46.923 89.913,48.069C92.033,48.778 94.135,49.543 96.216,50.361Z" style="fill:none;fill-rule:nonzero;stroke:rgb(53,116,181);stroke-width:0.32px;"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M96.79,33.743C96.79,33.743 97.936,36.608 97.362,36.608C96.79,37.181 96.79,40.046 96.79,41.765C97.362,42.911 97.362,42.911 97.362,43.485C96.79,44.058 96.79,44.631 96.79,44.631C96.79,44.631 96.217,44.631 96.217,44.058C95.644,43.485 95.644,42.912 96.217,41.766C96.79,41.193 96.79,37.182 96.217,36.609C95.07,36.608 96.79,33.743 96.79,33.743ZM86.474,41.192C86.474,41.192 87.62,39.473 88.766,38.9C89.339,38.9 91.631,37.181 91.631,37.181C91.631,37.181 90.485,38.9 88.766,40.046C87.621,40.62 86.474,41.192 86.474,41.192Z" style="fill:rgb(53,116,181);"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M96.79,50.361C96.79,50.361 94.497,49.788 92.778,49.215C91.059,49.215 85.328,46.35 84.182,46.923C81.89,48.069 83.036,49.788 83.609,50.934C84.182,51.507 84.755,52.653 85.328,53.799C85.901,55.518 85.901,56.091 85.901,57.237C85.901,58.956 85.901,60.675 88.193,60.675C89.912,60.102 90.485,57.81 92.204,56.091L96.79,50.361Z" style="fill:none;fill-rule:nonzero;stroke:rgb(53,116,181);stroke-width:0.32px;"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M80.744,45.204C80.744,45.204 83.609,44.631 83.609,45.777C84.182,45.777 86.474,47.496 88.193,47.496C89.912,47.496 89.912,46.923 90.485,47.496C90.485,48.069 91.058,48.642 91.058,48.642C91.058,48.642 90.485,48.642 89.912,49.215C89.339,49.215 89.339,49.215 88.193,48.069C87.62,47.496 84.182,46.35 83.609,46.923C83.036,47.496 80.744,45.204 80.744,45.204Z" style="fill:rgb(53,116,181);"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M96.79,50.361C96.79,50.361 95.07,52.081 94.497,53.799C93.351,55.518 88.767,60.103 89.34,61.249C89.34,63.541 92.205,63.541 92.778,62.968C93.924,62.968 95.07,62.395 96.216,62.395C97.935,62.395 98.508,62.395 99.654,62.968C101.373,63.541 103.092,63.541 103.666,61.249C103.666,60.103 101.947,58.384 100.227,56.092L96.79,50.361Z" style="fill:none;fill-rule:nonzero;stroke:rgb(53,116,181);stroke-width:0.32px;"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M87.047,64.115C87.047,64.115 87.047,61.25 88.193,61.25C88.193,61.25 90.485,58.958 91.058,57.239C91.631,56.093 91.058,56.093 92.204,55.52L92.777,55.52C92.777,55.52 93.35,55.52 93.35,56.093C93.35,56.666 92.777,57.239 91.63,57.812C91.057,57.812 88.765,61.25 88.765,61.824C89.339,62.396 87.047,64.115 87.047,64.115Z" style="fill:rgb(53,116,181);"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M96.79,50.361C96.79,50.361 97.936,52.653 99.082,53.799C100.227,54.945 103.092,60.675 104.812,60.675C107.103,61.248 107.103,58.956 107.103,57.81C107.103,57.237 107.103,55.518 107.677,54.372C108.249,53.226 108.249,52.653 109.396,50.934C109.968,49.788 111.115,48.642 108.824,47.496C107.678,46.35 105.957,48.069 103.092,48.642C99.654,49.789 96.79,50.361 96.79,50.361Z" style="fill:none;fill-rule:nonzero;stroke:rgb(53,116,181);stroke-width:0.32px;"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M106.531,64.115C106.531,64.115 103.666,62.969 104.238,61.823C104.238,61.25 102.519,58.958 101.373,57.811C100.227,57.238 100.227,57.238 100.227,56.092C99.655,56.092 100.227,55.519 100.227,55.519L100.801,55.519C101.373,55.519 101.947,56.092 101.947,57.238C101.947,57.811 104.238,61.249 104.812,61.249C105.957,61.25 106.531,64.115 106.531,64.115Z" style="fill:rgb(53,116,181);"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M96.79,50.361L100.227,49.215C101.948,48.642 108.25,47.495 108.825,45.777C109.97,44.058 107.679,42.912 107.104,42.339C105.958,42.339 104.813,41.766 103.666,41.193C102.52,40.047 101.947,40.047 101.373,38.328C100.227,37.182 99.082,36.036 97.361,37.755C96.216,38.328 96.789,41.193 96.789,43.486L96.79,50.361Z" style="fill:none;fill-rule:nonzero;stroke:rgb(53,116,181);stroke-width:0.32px;"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M112.262,45.204C112.262,45.204 110.543,47.496 109.969,46.923C109.397,46.35 106.531,47.496 104.813,48.069C103.667,48.642 104.239,49.215 103.092,49.215C102.52,49.215 102.52,48.642 102.52,48.642C102.52,48.642 101.948,48.642 102.52,48.069C103.092,47.496 103.666,47.496 104.813,47.496C105.385,47.496 108.825,46.35 109.397,45.777C109.396,45.204 112.262,45.204 112.262,45.204ZM84.755,57.238C84.755,57.238 83.609,55.519 83.036,54.373C83.036,53.8 82.463,50.935 82.463,50.935C82.463,50.935 83.609,52.654 84.182,54.373C84.755,56.092 84.755,57.238 84.755,57.238ZM99.654,64.115L92.778,64.115C92.778,64.115 94.497,63.542 96.216,63.542C97.936,63.542 99.654,64.115 99.654,64.115ZM109.969,52.081L109.969,54.946C109.397,55.519 108.25,58.384 108.25,58.384C108.25,58.384 108.25,56.092 108.824,54.373L109.969,52.081ZM101.947,37.754C101.947,37.754 104.238,38.9 104.812,39.473C105.384,40.046 107.677,41.765 107.677,41.765C107.677,41.765 105.384,41.192 104.238,40.046L101.947,37.754Z" style="fill:rgb(53,116,181);"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M90.486,50.361C90.486,46.923 93.351,44.631 96.79,44.631C100.227,44.631 102.52,46.923 102.52,50.361C102.52,53.799 100.227,56.092 96.79,56.092C93.351,56.092 90.486,53.8 90.486,50.361Z" style="fill:white;"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M93.924,53.8L95.643,52.081M97.936,52.081L99.655,54.373M98.508,49.216L101.373,48.643M96.79,45.777L96.79,48.069M94.497,49.216L92.205,48.643" style="fill:none;fill-rule:nonzero;stroke:rgb(53,116,181);stroke-width:0.32px;"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M90.589,49.272L90.616,49.125L90.625,49.094C90.857,48.051 91.396,47.1 92.173,46.366L92.204,46.35L92.777,49.215L91.058,50.934L90.51,49.84C90.526,49.644 90.556,49.457 90.589,49.272Z" style="fill:rgb(242,227,66);"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M90.589,49.272L90.616,49.125L90.625,49.094M92.173,46.366L92.204,46.35L92.777,49.215L91.058,50.934L90.51,49.84" style="fill:none;fill-rule:nonzero;stroke:rgb(53,116,181);stroke-width:0.32px;"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M95.07,52.081L98.508,52.081L99.082,49.216L96.79,47.496L94.497,49.216L95.07,52.081Z" style="fill:rgb(242,227,66);"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M95.07,52.081L98.508,52.081L99.082,49.216L96.79,47.496L94.497,49.216L95.07,52.081" style="fill:none;fill-rule:nonzero;stroke:rgb(53,116,181);stroke-width:0.32px;"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M91.631,53.752L91.631,53.227L93.923,53.8L95.566,55.991C93.958,55.722 92.552,54.928 91.631,53.752Z" style="fill:rgb(242,227,66);"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M91.631,53.752L91.631,53.227L93.924,53.8L95.566,55.991" style="fill:none;fill-rule:nonzero;stroke:rgb(53,116,181);stroke-width:0.32px;"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M97.984,55.991L99.082,53.8L101.873,53.242C101.121,54.705 99.756,55.688 97.984,55.991Z" style="fill:rgb(242,227,66);"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M97.984,55.991L99.082,53.8L101.873,53.242" style="fill:none;fill-rule:nonzero;stroke:rgb(53,116,181);stroke-width:0.32px;"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M102.504,50.915L100.801,48.643L100.801,46.351L101.309,46.606C102.086,47.573 102.52,48.862 102.52,50.362C102.52,50.551 102.518,50.734 102.504,50.915Z" style="fill:rgb(242,227,66);"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M102.504,50.915L100.801,48.643L100.801,46.351L101.309,46.605" style="fill:none;fill-rule:nonzero;stroke:rgb(53,116,181);stroke-width:0.32px;"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M98.795,44.918L99.082,45.204L96.79,46.35L94.497,45.204L94.626,44.949C95.327,44.735 96.057,44.628 96.79,44.631C97.51,44.631 98.186,44.728 98.795,44.918Z" style="fill:rgb(242,227,66);"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M98.795,44.918L99.082,45.204L96.79,46.35L94.497,45.204L94.626,44.949M90.486,50.361C90.486,46.923 93.351,44.631 96.79,44.631C100.227,44.631 102.52,46.923 102.52,50.361C102.52,53.799 100.227,56.092 96.79,56.092C93.351,56.092 90.486,53.8 90.486,50.361Z" style="fill:none;fill-rule:nonzero;stroke:rgb(53,116,181);stroke-width:0.32px;"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M93.351,93.34C93.351,93.34 93.351,94.486 91.631,95.059C89.912,95.632 89.912,95.059 89.912,94.486C89.912,93.913 91.058,92.767 91.631,92.767C92.778,92.768 93.351,93.34 93.351,93.34Z" style="fill:white;"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M92.205,102.509L91.632,101.937C91.632,101.937 92.778,100.217 93.924,99.644C95.643,99.644 97.936,100.79 97.362,103.082C96.79,104.802 92.205,111.678 92.205,113.397C92.205,114.543 93.351,115.116 95.07,113.969C96.79,113.397 97.362,111.104 98.508,109.385C99.082,107.666 102.52,100.216 102.52,100.216L104.813,100.216L99.655,111.677C99.655,111.677 98.509,113.969 99.655,114.542C101.948,115.688 101.948,112.823 101.948,112.823L102.52,112.823C102.52,112.823 102.52,114.542 101.948,115.115C101.374,116.834 99.655,116.834 98.509,115.688C97.363,115.115 96.791,113.968 96.791,113.968C96.791,113.968 95.071,116.261 92.779,116.261C91.06,116.261 89.914,115.688 89.914,113.396C89.341,112.823 90.487,111.103 90.487,111.103L94.498,103.654C94.498,103.654 95.644,101.362 95.071,100.789C93.924,100.217 92.205,102.509 92.205,102.509ZM105.385,119.128L105.957,119.128C105.957,119.128 105.957,120.274 104.812,121.42C103.666,122.566 99.654,121.993 99.654,121.993C99.654,121.993 99.654,123.712 99.082,124.858C99.082,126.004 97.936,130.015 97.361,131.734C96.216,134.026 95.069,136.891 91.631,136.319C88.766,135.746 89.339,133.454 89.339,133.454L90.485,133.454C90.485,133.454 89.912,135.746 91.631,135.173C93.351,135.173 95.069,131.735 95.643,128.869C96.216,125.431 97.361,121.993 97.361,121.993L94.496,121.993C93.923,121.993 93.923,122.565 93.35,123.139C93.35,124.285 94.496,124.285 94.496,124.285L93.923,124.858C93.923,124.858 91.631,124.858 91.631,122.565C92.204,120.846 93.923,120.273 95.069,120.273L102.519,120.273C104.812,120.273 105.385,119.128 105.385,119.128Z" style="fill:rgb(53,116,181);"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M93.351,130.589C93.351,130.589 92.778,128.869 93.924,128.869C95.643,128.869 98.508,129.442 100.227,129.442C102.52,128.869 102.52,126.577 102.52,126.577L101.948,126.004C101.948,126.004 101.948,127.724 100.227,127.724C99.082,127.724 94.497,126.578 93.352,127.724C91.632,128.87 92.779,130.589 92.779,130.589L93.351,130.589ZM90.486,148.353C90.486,142.623 96.216,135.747 101.947,136.892C101.947,136.892 103.092,136.892 103.092,138.612C103.666,139.758 103.092,140.331 103.092,140.331L102.52,140.331C103.092,138.039 101.948,137.466 101.374,137.466C97.936,137.466 93.352,143.77 93.352,148.928C93.352,150.074 93.352,151.793 95.071,152.366C97.363,152.939 99.655,148.928 99.655,148.928L100.227,149.5C100.227,149.5 98.508,154.085 95.07,153.512C92.205,153.511 90.486,151.218 90.486,148.353Z" style="fill:rgb(53,116,181);"/>
+    </g>
+</svg>
+      <div class="brand-title">LUFC <b>Fan Hub</b></div>
+    </a>
+    <div class="nav-links">
+      <a href="#home">Home</a><a href="#news">News</a>
+      <a href="#fixtures">Fixtures</a><a href="#squad">Squad</a>
+      <a href="#stats">Stats</a><a href="#history">History</a>
+      <a href="#shop">Shop</a><a href="#gallery">Gallery</a>
+      <a href="#forum">Forum</a><a href="#fan-zone">Fan Zone</a>
+    </div>
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div id="mob-menu">
+    <a href="#home" onclick="toggleMenu()">Home</a><a href="#news" onclick="toggleMenu()">News</a>
+    <a href="#fixtures" onclick="toggleMenu()">Fixtures</a><a href="#squad" onclick="toggleMenu()">Squad</a>
+    <a href="#stats" onclick="toggleMenu()">Stats</a><a href="#history" onclick="toggleMenu()">History</a>
+    <a href="#shop" onclick="toggleMenu()">Shop</a><a href="#gallery" onclick="toggleMenu()">Gallery</a>
+    <a href="#forum" onclick="toggleMenu()">Forum</a><a href="#fan-zone" onclick="toggleMenu()">Fan Zone</a>
+  </div>
+</nav>
+
+<!-- ══ TICKER ══ -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-inner">
+    <span>🔵 LUFC secure top-half Premier League finish ⚽</span><span class="t-sep">|</span>
+    <span>🏟️ Elland Road sold out for next home fixture</span><span class="t-sep">|</span>
+    <span>⚽ Calvert-Lewin leads the Whites attack — goals in four straight games</span><span class="t-sep">|</span>
+    <span>🌟 Farke signs new two-year contract extension</span><span class="t-sep">|</span>
+    <span>📰 Three new signings expected this summer</span><span class="t-sep">|</span>
+    <span>💛 Season tickets for 2026/27 on sale — grab yours now</span><span class="t-sep">|</span>
+    <span>🔵 LUFC secure top-half Premier League finish ⚽</span><span class="t-sep">|</span>
+    <span>🏟️ Elland Road sold out for next home fixture</span><span class="t-sep">|</span>
+    <span>⚽ Calvert-Lewin leads the Whites attack — goals in four straight games</span><span class="t-sep">|</span>
+    <span>🌟 Farke signs new two-year contract extension</span><span class="t-sep">|</span>
+    <span>📰 Three new signings expected this summer</span><span class="t-sep">|</span>
+    <span>💛 Season tickets for 2026/27 on sale — grab yours now</span><span class="t-sep">|</span>
+  </div>
+</div>
+
+<!-- ══ HERO ══ -->
+<section id="home">
+  <div class="hero-stripe"></div><div class="h-circ1"></div><div class="h-circ2"></div>
+  <div class="hero-content">
+    <span class="hero-ball">⚽</span>
+    <p class="hero-eyebrow">Leeds United FC — Premier League</p>
+    <h1 class="hero-title">Marching On<br>Together</h1>
+    <p class="hero-mgr">Manager: Daniel Farke &nbsp;·&nbsp; Elland Road, Leeds &nbsp;·&nbsp; Est. 1919</p>
+    <p class="hero-sub">The Pride of Yorkshire — The Whites — Forever Leeds</p>
+    <div class="countdown-bar">
+      <div class="cd-label" id="cd-label">⚡ Next Match</div>
+      <div class="cd-match" id="cd-match">Loading next fixture…</div>
+      <div class="cd-units">
+        <div class="cd-unit"><span class="cd-num" id="cd-d">--</span><div class="cd-txt">Days</div></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-unit"><span class="cd-num" id="cd-h">--</span><div class="cd-txt">Hrs</div></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-unit"><span class="cd-num" id="cd-m">--</span><div class="cd-txt">Mins</div></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-unit"><span class="cd-num" id="cd-s">--</span><div class="cd-txt">Secs</div></div>
+      </div>
+    </div>
+    <div class="hero-btns">
+      <a href="#fixtures" class="btn-gold">Our Fixtures</a>
+      <a href="#fan-zone" class="btn-outline">Join the Fan Zone</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ LATEST NEWS ══ -->
+<section class="section reveal" id="news">
+  <div class="si">
+    <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.45rem">
+      <p class="s-label" style="margin-bottom:0">Latest Headlines</p>
+      <span id="news-badge" class="static-badge">📋 Preview</span>
+    </div>
+    <h2 class="s-title">Leeds United News</h2>
+    <div class="s-bar"></div>
+    <div class="news-grid" id="news-grid">
+      <a href="#" class="n-card" style="background:var(--card);border:1px solid var(--cborder);border-radius:8px;overflow:hidden;transition:transform .25s,box-shadow .25s;text-decoration:none;display:block">
+        <div class="news-img" style="background:linear-gradient(135deg,#1D428A,#0d1f3e)">📰</div>
+        <div class="n-body"><div class="n-meta"><span class="badge">Club News</span><span class="n-date">19 May 2026</span></div><h3 class="n-title">Season Review: Building on Our Premier League Return</h3><span class="n-link">Read More →</span></div>
+      </a>
+      <a href="#" class="n-card" style="background:var(--card);border:1px solid var(--cborder);border-radius:8px;overflow:hidden;transition:transform .25s,box-shadow .25s;text-decoration:none;display:block">
+        <div class="news-img" style="background:linear-gradient(135deg,#0d3a1a,#0A1628)">🔄</div>
+        <div class="n-body"><div class="n-meta"><span class="badge">Transfers</span><span class="n-date">15 May 2026</span></div><h3 class="n-title">Summer 2026: Targets Identified as Whites Eye Improvement</h3><span class="n-link">Read More →</span></div>
+      </a>
+      <a href="#" class="n-card" style="background:var(--card);border:1px solid var(--cborder);border-radius:8px;overflow:hidden;transition:transform .25s,box-shadow .25s;text-decoration:none;display:block">
+        <div class="news-img" style="background:linear-gradient(135deg,#3a1a0a,#0A1628)">🌍</div>
+        <div class="n-body"><div class="n-meta"><span class="badge">Premier League</span><span class="n-date">10 May 2026</span></div><h3 class="n-title">Farke Plots Push for European Places in 2026/27</h3><span class="n-link">Read More →</span></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ MATCH REPORTS ══ -->
+<section class="section sa reveal" id="reports">
+  <div class="si">
+    <div class="s-head-row">
+      <div><p class="s-label">Post-Match</p><h2 class="s-title">Match Reports</h2></div>
+      <span id="reports-badge" class="static-badge">📋 Preview Data</span>
+    </div>
+    <div class="s-bar"></div>
+    <div class="reports-grid" id="reports-grid">
+      <div class="report-card"><div class="report-score"><div class="score-main">2–1</div><div class="sr W">W</div><div style="color:rgba(255,255,255,.38);font-size:.7rem;margin-top:.4rem">vs Wolves</div></div><div class="report-info"><div class="report-title">Calvert-Lewin Double Seals Season Finale</div><div class="report-opp">HOME · PREMIER LEAGUE · 17 May 2026</div><div class="report-excerpt">A fitting end to the 2025/26 campaign — DCL's brace sealed the points and sent Elland Road into raptures.</div></div></div>
+      <div class="report-card"><div class="report-score"><div class="score-main">3–0</div><div class="sr W">W</div><div style="color:rgba(255,255,255,.38);font-size:.7rem;margin-top:.4rem">vs Southampton</div></div><div class="report-info"><div class="report-title">Whites Cruise Past Saints in Clinical Display</div><div class="report-opp">HOME · PREMIER LEAGUE · 10 May 2026</div><div class="report-excerpt">A professional performance from start to finish — three goals, a clean sheet and a Elland Road standing ovation.</div></div></div>
+      <div class="report-card"><div class="report-score"><div class="score-main">1–1</div><div class="sr D">D</div><div style="color:rgba(255,255,255,.38);font-size:.7rem;margin-top:.4rem">vs Bournemouth</div></div><div class="report-info"><div class="report-title">Rodon Header Rescues Late Draw on South Coast</div><div class="report-opp">AWAY · PREMIER LEAGUE · 3 May 2026</div><div class="report-excerpt">A late equaliser rescued a hard-fought point in a competitive away fixture.</div></div></div>
+      <div class="report-card"><div class="report-score"><div class="score-main">2–0</div><div class="sr W">W</div><div style="color:rgba(255,255,255,.38);font-size:.7rem;margin-top:.4rem">vs Ipswich</div></div><div class="report-info"><div class="report-title">Ampadu &amp; Gnonto Fire Leeds to Comfortable Win</div><div class="report-opp">AWAY · PREMIER LEAGUE · 26 Apr 2026</div><div class="report-excerpt">Two second-half goals sealed the points in an assured away performance.</div></div></div>
+      <div class="report-card"><div class="report-score"><div class="score-main">0–1</div><div class="sr L">L</div><div style="color:rgba(255,255,255,.38);font-size:.7rem;margin-top:.4rem">vs Crystal Palace</div></div><div class="report-info"><div class="report-title">Palace Snatch It Late at Elland Road</div><div class="report-opp">HOME · PREMIER LEAGUE · 19 Apr 2026</div><div class="report-excerpt">A frustrating afternoon — a resolute display undone by a late goal.</div></div></div>
+      <div class="report-card"><div class="report-score"><div class="score-main">3–1</div><div class="sr W">W</div><div style="color:rgba(255,255,255,.38);font-size:.7rem;margin-top:.4rem">vs Leicester</div></div><div class="report-info"><div class="report-title">Dominant Whites Put Four Past Leicester</div><div class="report-opp">HOME · PREMIER LEAGUE · 12 Apr 2026</div><div class="report-excerpt">An emphatic home performance with Elland Road rocking from start to finish.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FIXTURES & RESULTS ══ -->
+<section class="section reveal" id="fixtures">
+  <div class="si">
+    <div class="s-head-row">
+      <div><p class="s-label">This Season</p><h2 class="s-title">Fixtures &amp; Results</h2></div>
+      <span id="fx-badge" class="static-badge">📋 Preview Data</span>
+    </div>
+    <div class="s-bar"></div>
+    <div class="fx-grid">
+      <div>
+        <div class="col-h">Upcoming Fixtures</div>
+        <div class="fx-list" id="fixtures-list">
+          <!-- populated by JS -->
+          <div class="sk-card"><div class="skeleton sk-line lg"></div><div class="skeleton sk-line sm"></div></div>
+          <div class="sk-card"><div class="skeleton sk-line lg"></div><div class="skeleton sk-line sm"></div></div>
+          <div class="sk-card"><div class="skeleton sk-line lg"></div><div class="skeleton sk-line sm"></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="col-h">Recent Results</div>
+        <div class="fx-list" id="results-list">
+          <div class="sk-card"><div class="skeleton sk-line lg"></div><div class="skeleton sk-line sm"></div></div>
+          <div class="sk-card"><div class="skeleton sk-line lg"></div><div class="skeleton sk-line sm"></div></div>
+          <div class="sk-card"><div class="skeleton sk-line lg"></div><div class="skeleton sk-line sm"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PLAYER STATS ══ -->
+<section class="section sa reveal" id="stats">
+  <div class="si">
+    <div class="s-head-row">
+      <div><p class="s-label">2025/26 Season</p><h2 class="s-title">Player Statistics</h2></div>
+      <span id="stats-badge" class="static-badge">📋 Preview Data</span>
+    </div>
+    <div class="s-bar"></div>
+    <div class="summary-pills" id="summary-pills">
+      <!-- populated by JS -->
+      <div class="pill"><div class="pill-n skeleton" style="height:1.5rem;width:3rem;margin:0 auto .3rem"></div><div class="pill-l">Played</div></div>
+      <div class="pill"><div class="pill-n skeleton" style="height:1.5rem;width:3rem;margin:0 auto .3rem"></div><div class="pill-l">Won</div></div>
+      <div class="pill"><div class="pill-n skeleton" style="height:1.5rem;width:3rem;margin:0 auto .3rem"></div><div class="pill-l">Drawn</div></div>
+      <div class="pill"><div class="pill-n skeleton" style="height:1.5rem;width:3rem;margin:0 auto .3rem"></div><div class="pill-l">Lost</div></div>
+      <div class="pill"><div class="pill-n skeleton" style="height:1.5rem;width:3rem;margin:0 auto .3rem"></div><div class="pill-l">Goals For</div></div>
+      <div class="pill"><div class="pill-n skeleton" style="height:1.5rem;width:3rem;margin:0 auto .3rem"></div><div class="pill-l">Goals Against</div></div>
+      <div class="pill"><div class="pill-n skeleton" style="height:1.5rem;width:3rem;margin:0 auto .3rem"></div><div class="pill-l">Points</div></div>
+      <div class="pill"><div class="pill-n skeleton" style="height:1.5rem;width:3rem;margin:0 auto .3rem"></div><div class="pill-l">Position</div></div>
+    </div>
+    <div class="stats-table-wrap">
+      <table>
+        <thead><tr><th>Player</th><th>Apps</th><th>Goals</th><th>Assists</th><th>Shots</th><th>Pass %</th><th>Yellow</th><th>Red</th></tr></thead>
+        <tbody>
+          <tr><td><div class="t-player"><div class="t-num">9</div><div><div class="t-name">D. Calvert-Lewin</div><div class="t-pos">ST</div></div></div></td><td>32</td><td class="t-g">14</td><td class="t-a">5</td><td>71</td><td>73%</td><td class="t-y">2</td><td class="t-r">0</td></tr>
+          <tr><td><div class="t-player"><div class="t-num">10</div><div><div class="t-name">J. Piroe</div><div class="t-pos">CF</div></div></div></td><td>30</td><td class="t-g">11</td><td class="t-a">7</td><td>62</td><td>76%</td><td class="t-y">1</td><td class="t-r">0</td></tr>
+          <tr><td><div class="t-player"><div class="t-num">29</div><div><div class="t-name">W. Gnonto</div><div class="t-pos">LW</div></div></div></td><td>35</td><td class="t-g">9</td><td class="t-a">8</td><td>79</td><td>78%</td><td class="t-y">3</td><td class="t-r">0</td></tr>
+          <tr><td><div class="t-player"><div class="t-num">7</div><div><div class="t-name">D. James</div><div class="t-pos">RW</div></div></div></td><td>33</td><td class="t-g">7</td><td class="t-a">9</td><td>64</td><td>81%</td><td class="t-y">4</td><td class="t-r">0</td></tr>
+          <tr><td><div class="t-player"><div class="t-num">4</div><div><div class="t-name">E. Ampadu ©</div><div class="t-pos">DM</div></div></div></td><td>37</td><td class="t-g">2</td><td class="t-a">6</td><td>43</td><td>92%</td><td class="t-y">5</td><td class="t-r">0</td></tr>
+          <tr><td><div class="t-player"><div class="t-num">22</div><div><div class="t-name">A. Tanaka</div><div class="t-pos">CM</div></div></div></td><td>31</td><td class="t-g">3</td><td class="t-a">5</td><td>47</td><td>89%</td><td class="t-y">3</td><td class="t-r">0</td></tr>
+          <tr><td><div class="t-player"><div class="t-num">6</div><div><div class="t-name">J. Rodon</div><div class="t-pos">CB</div></div></div></td><td>35</td><td class="t-g">3</td><td class="t-a">1</td><td>21</td><td>89%</td><td class="t-y">4</td><td class="t-r">0</td></tr>
+          <tr><td><div class="t-player"><div class="t-num">1</div><div><div class="t-name">L. Perri</div><div class="t-pos">GK</div></div></div></td><td>38</td><td class="t-g">0</td><td class="t-a">0</td><td>—</td><td>73%</td><td class="t-y">1</td><td class="t-r">0</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SQUAD ══ -->
+<section class="section reveal" id="squad">
+  <div class="si">
+    <div class="s-head-row">
+      <div><p class="s-label">2025/26 Season</p><h2 class="s-title">The Squad</h2></div>
+      <span id="squad-badge" class="static-badge">📋 Preview Data</span>
+    </div>
+    <div class="s-bar"></div>
+    <div class="squad-grid" id="squad-grid">
+      <!-- skeleton -->
+      <div class="sk-card"><div class="skeleton sk-line lg"></div><div class="skeleton sk-line"></div><div class="skeleton sk-line sm"></div></div>
+      <div class="sk-card"><div class="skeleton sk-line lg"></div><div class="skeleton sk-line"></div><div class="skeleton sk-line sm"></div></div>
+      <div class="sk-card"><div class="skeleton sk-line lg"></div><div class="skeleton sk-line"></div><div class="skeleton sk-line sm"></div></div>
+      <div class="sk-card"><div class="skeleton sk-line lg"></div><div class="skeleton sk-line"></div><div class="skeleton sk-line sm"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SHOP ══ -->
+<section class="section sa reveal" id="shop">
+  <div class="si">
+    <p class="s-label">Official Store</p><h2 class="s-title">Merchandise Shop</h2><div class="s-bar"></div>
+    <div class="shop-grid">
+      <div class="merch-card"><div class="merch-img mi-kh"><span>👕</span><span class="m-tag">New</span></div><div class="m-body"><div class="m-name">Home Kit 2025/26</div><div class="m-cat">Kits &amp; Shirts</div><div class="m-footer"><span class="m-price">£75.00</span><button class="m-btn" onclick="addToCart(this)">Add to Cart</button></div></div></div>
+      <div class="merch-card"><div class="merch-img mi-ka"><span>👕</span><span class="m-tag">New</span></div><div class="m-body"><div class="m-name">Away Kit 2025/26</div><div class="m-cat">Kits &amp; Shirts</div><div class="m-footer"><span class="m-price">£75.00</span><button class="m-btn" onclick="addToCart(this)">Add to Cart</button></div></div></div>
+      <div class="merch-card"><div class="merch-img mi-sc"><span>🧣</span></div><div class="m-body"><div class="m-name">LUFC Woven Scarf</div><div class="m-cat">Accessories</div><div class="m-footer"><span class="m-price">£18.00</span><button class="m-btn" onclick="addToCart(this)">Add to Cart</button></div></div></div>
+      <div class="merch-card"><div class="merch-img mi-jk"><span>🧥</span><span class="m-tag">Sale</span></div><div class="m-body"><div class="m-name">Training Jacket</div><div class="m-cat">Training Wear</div><div class="m-footer"><span class="m-price">£55.00</span><button class="m-btn" onclick="addToCart(this)">Add to Cart</button></div></div></div>
+      <div class="merch-card"><div class="merch-img mi-rt"><span>⭐</span><span class="m-tag">Retro</span></div><div class="m-body"><div class="m-name">1992 Champions Shirt</div><div class="m-cat">Retro Collection</div><div class="m-footer"><span class="m-price">£65.00</span><button class="m-btn" onclick="addToCart(this)">Add to Cart</button></div></div></div>
+      <div class="merch-card"><div class="merch-img mi-ht"><span>🧢</span></div><div class="m-body"><div class="m-name">LUFC Bobble Hat</div><div class="m-cat">Accessories</div><div class="m-footer"><span class="m-price">£20.00</span><button class="m-btn" onclick="addToCart(this)">Add to Cart</button></div></div></div>
+    </div>
+    <div id="cart-toast" style="display:none;position:fixed;bottom:2rem;right:2rem;background:var(--gold);color:var(--navy);font-weight:800;padding:.85rem 1.5rem;border-radius:6px;z-index:200;font-size:.87rem;box-shadow:0 8px 24px rgba(0,0,0,.4)"></div>
+  </div>
+</section>
+
+<!-- ══ HISTORY ══ -->
+<section class="section reveal" id="history">
+  <div class="si" style="text-align:center"><p class="s-label">Est. 1919</p><h2 class="s-title">Our Story</h2><div class="s-bar c"></div></div>
+  <div class="tl-container">
+    <div class="tl-item"><div class="tl-year">1919</div><div class="tl-card"><div class="tl-icon">⚽</div><div class="tl-title">Leeds United Founded</div><div class="tl-desc">The club rises from the ashes of Leeds City, beginning a new era for football in Yorkshire.</div></div></div>
+    <div class="tl-item right"><div class="tl-year">1969</div><div class="tl-card"><div class="tl-icon">🏆</div><div class="tl-title">First Division Champions</div><div class="tl-desc">Don Revie's legendary side — Bremner, Hunter, Charlton, Lorimer — claim the First Division title in style.</div></div></div>
+    <div class="tl-item"><div class="tl-year">1972</div><div class="tl-card"><div class="tl-icon">🥇</div><div class="tl-title">FA Cup Winners</div><div class="tl-desc">The Centenary FA Cup Final at Wembley. Allan Clarke's diving header secures the trophy.</div></div></div>
+    <div class="tl-item right"><div class="tl-year">1974</div><div class="tl-card"><div class="tl-icon">🏅</div><div class="tl-title">Division One Champions Again</div><div class="tl-desc">Revie's last great triumph as the Whites reclaim the title in his final season at the helm.</div></div></div>
+    <div class="tl-item"><div class="tl-year">1992</div><div class="tl-card"><div class="tl-icon">🏆</div><div class="tl-title">Division One Champions</div><div class="tl-desc">Howard Wilkinson leads Leeds to the final First Division title before the Premier League era begins.</div></div></div>
+    <div class="tl-item right"><div class="tl-year">2001</div><div class="tl-card"><div class="tl-icon">⭐</div><div class="tl-title">Champions League Semi-Finalists</div><div class="tl-desc">David O'Leary's young guns stun Europe, reaching the semis with wins over Lazio, Deportivo &amp; AC Milan.</div></div></div>
+    <div class="tl-item"><div class="tl-year">2020</div><div class="tl-card"><div class="tl-icon">🎉</div><div class="tl-title">Back in the Premier League!</div><div class="tl-desc">Marcelo Bielsa's remarkable Leeds promoted after 16 years away. The whole city erupts.</div></div></div>
+    <div class="tl-item right"><div class="tl-year">2022</div><div class="tl-card"><div class="tl-icon">💪</div><div class="tl-title">Premier League Survival</div><div class="tl-desc">Jesse Marsch leads Leeds to final-day safety in one of the most dramatic conclusions in club history.</div></div></div>
+    <div class="tl-item"><div class="tl-year">2024</div><div class="tl-card"><div class="tl-icon">🚀</div><div class="tl-title">Return to the Top Flight</div><div class="tl-desc">Promotion back to the Premier League under Daniel Farke. Forever Leeds, forever bouncing back.</div></div></div>
+  </div>
+</section>
+
+<!-- ══ ELLAND ROAD ══ -->
+<section id="elland-road" class="reveal">
+  <div class="er-texture"></div>
+  <div class="er-inner">
+    <p class="s-label" style="text-align:center">LS11 7DJ</p>
+    <h2 class="er-title">Elland Road —<br><span>Our Fortress</span></h2>
+    <div class="er-stats">
+      <div class="er-cell"><div class="er-num" data-target="37890" data-suffix="">0</div><div class="er-label">Capacity</div></div>
+      <div class="er-cell"><div class="er-num" data-target="1919" data-suffix="">0</div><div class="er-label">Year Established</div></div>
+      <div class="er-cell"><div class="er-num" data-target="4" data-suffix="">0</div><div class="er-label">Stands</div></div>
+      <div class="er-cell" style="border-right:none"><div class="er-num" data-target="100" data-suffix="+">0</div><div class="er-label">Years of History</div></div>
+    </div>
+    <p class="er-quote">"Elland Road is more than a stadium — it's the beating heart of Leeds. When 37,000 voices rise as one, belting out 'Marching On Together', there is nowhere on earth like it. Built on passion, powered by loyalty, our fortress has stood for over a century."</p>
+    <a href="#" class="btn-gold">Get Tickets</a>
+  </div>
+</section>
+
+<!-- ══ GALLERY ══ -->
+<section class="section sa reveal" id="gallery">
+  <div class="si">
+    <p class="s-label">Memories</p><h2 class="s-title">Photo Gallery</h2><div class="s-bar"></div>
+    <div class="gallery-grid">
+      <div class="gallery-item" onclick="openLb(0)"><div class="g-bg" style="background:linear-gradient(135deg,#1D428A,#0d1f3e)">🏟️</div><div class="g-overlay"><p>Elland Road at Night</p><span>Match Day · PL</span></div></div>
+      <div class="gallery-item" onclick="openLb(1)"><div class="g-bg" style="background:linear-gradient(135deg,#3a1a0a,#0A1628)">🎉</div><div class="g-overlay"><p>Promotion Celebrations 2024</p><span>Historic Moment</span></div></div>
+      <div class="gallery-item" onclick="openLb(2)"><div class="g-bg" style="background:linear-gradient(135deg,#FFCD00,#e6b800)">⚽</div><div class="g-overlay"><p>Calvert-Lewin's Overhead Kick</p><span>vs Wolves · May 2026</span></div></div>
+      <div class="gallery-item" onclick="openLb(3)"><div class="g-bg" style="background:linear-gradient(135deg,#0d3a1a,#0A1628)">👑</div><div class="g-overlay"><p>Don Revie's Champions</p><span>Archive · 1969</span></div></div>
+      <div class="gallery-item" onclick="openLb(4)"><div class="g-bg" style="background:linear-gradient(135deg,#2a1a5a,#0A1628)">🏆</div><div class="g-overlay"><p>1992 Title Celebrations</p><span>Howard Wilkinson</span></div></div>
+      <div class="gallery-item" onclick="openLb(5)"><div class="g-bg" style="background:linear-gradient(135deg,#1a3a1a,#0A1628)">🏴󠁧󠁢󠁥󠁮󠁧󠁿</div><div class="g-overlay"><p>Billy Bremner — The Legend</p><span>Archive · Club Icon</span></div></div>
+      <div class="gallery-item" onclick="openLb(6)"><div class="g-bg" style="background:linear-gradient(135deg,#3a2a0a,#0A1628)">🧣</div><div class="g-overlay"><p>South Stand In Full Voice</p><span>Match Day · PL</span></div></div>
+      <div class="gallery-item" onclick="openLb(7)"><div class="g-bg" style="background:linear-gradient(135deg,#1a0a3a,#0A1628)">🌙</div><div class="g-overlay"><p>Champions League Night</p><span>Archive · 2001</span></div></div>
+      <div class="gallery-item" onclick="openLb(8)"><div class="g-bg" style="background:linear-gradient(135deg,#0a2a3a,#0A1628)">🚀</div><div class="g-overlay"><p>Bielsa Era — Pure Football</p><span>Archive · 2020</span></div></div>
+    </div>
+  </div>
+</section>
+<div class="lb-overlay" id="lightbox" onclick="closeLb()">
+  <div class="lb-box" onclick="event.stopPropagation()">
+    <button class="lb-close" onclick="closeLb()">✕</button>
+    <span class="lb-img" id="lb-img"></span>
+    <div class="lb-title" id="lb-title"></div>
+    <div class="lb-desc" id="lb-desc"></div>
+  </div>
+</div>
+
+<!-- ══ FORUM ══ -->
+<section class="section reveal" id="forum">
+  <div class="si">
+    <p class="s-label">Community</p><h2 class="s-title">Fan Forum</h2><div class="s-bar"></div>
+    <div class="forum-list">
+      <div class="forum-item"><div class="f-av">MO</div><div><div class="f-title">That Calvert-Lewin overhead kick against Wolves... absolute worldie 🔥 Best goal at Elland Road this season?</div><div class="f-meta"><span class="f-author">MOTforever</span><span class="f-time">2 hours ago</span><span class="f-replies">💬 142 replies</span><span class="f-hot">🔥 Hot</span></div></div></div>
+      <div class="forum-item"><div class="f-av">WL</div><div><div class="f-title">Transfer rumours megathread — who do you want in this summer? Striker, CB or creative midfielder?</div><div class="f-meta"><span class="f-author">WhitesLad92</span><span class="f-time">5 hours ago</span><span class="f-replies">💬 203 replies</span><span class="f-hot">🔥 Hot</span></div></div></div>
+      <div class="forum-item"><div class="f-av">AE</div><div><div class="f-title">Away end at Arsenal on the 24th — anyone got tickets? Looking for 2. Will pay face value</div><div class="f-meta"><span class="f-author">AwayEndAlan</span><span class="f-time">8 hours ago</span><span class="f-replies">💬 67 replies</span></div></div></div>
+      <div class="forum-item"><div class="f-av">LU</div><div><div class="f-title">Greatest ever Leeds United XI — your picks. Bremner in obviously. But who else makes the cut?</div><div class="f-meta"><span class="f-author">LUFC1919</span><span class="f-time">Yesterday</span><span class="f-replies">💬 318 replies</span><span class="f-hot">🔥 Hot</span></div></div></div>
+      <div class="forum-item"><div class="f-av">PJ</div><div><div class="f-title">Best pubs near Elland Road on match day? New to the area — recommendations before the Arsenal game</div><div class="f-meta"><span class="f-author">PeacockJoe</span><span class="f-time">Yesterday</span><span class="f-replies">💬 89 replies</span></div></div></div>
+    </div>
+    <div class="forum-cta"><p>Join the discussion — 24,500+ fans already posting in the forum</p><a href="#" class="btn-gold" style="font-size:.82rem;padding:.6rem 1.4rem">Join Forum</a></div>
+  </div>
+</section>
+
+<!-- ══ FAN ZONE ══ -->
+<section class="section sa reveal" id="fan-zone">
+  <div class="si">
+    <p class="s-label">Fan Zone</p><h2 class="s-title">Join the Fan Zone</h2><div class="s-bar"></div>
+    <div class="fan-grid">
+      <div class="fan-card"><div class="fa-icon">👥</div><h3 class="fa-title">Supporters' Club</h3><p class="fa-text">Join over <strong style="color:#fff">24,500</strong> members worldwide. Match tickets, merchandise discounts, and exclusive events.</p><a href="#" class="btn-gold" style="font-size:.82rem;padding:.6rem 1.5rem">Join Now</a></div>
+      <div class="fan-card"><div class="fa-icon">🚌</div><h3 class="fa-title">Away Day Guides</h3><p class="fa-text">Fan-written guides covering travel, pubs, parking, and ground info for every Premier League ground.</p><div class="away-tip"><span class="at-n">Anfield: </span><span class="at-i">Lime St → Kirkdale, 20 min walk</span></div><div class="away-tip"><span class="at-n">Old Trafford: </span><span class="at-i">Metrolink to Old Trafford tram stop</span></div></div>
+      <div class="fan-card"><div class="fa-icon">🎵</div><h3 class="fa-title">Fan Chants &amp; Songs</h3><div class="chant-box">Here we go with Leeds United,<br>We're gonna give the boys a hand,<br>Stand up and sing for Leeds United,<br>They are the greatest in the land.<br><br>Everyday we're all gonna say,<br>We love you Leeds! Leeds! Leeds!<br><strong>Marching on together,<br>We're gonna see you win!</strong></div><span class="chant-credit">— Marching On Together (1972)</span></div>
+    </div>
+    <div class="poll-box">
+      <div class="poll-h">🗳️ Fan Poll</div>
+      <div class="poll-q">Who was LUFC's Player of the Season?</div>
+      <div id="poll-opts">
+        <div class="poll-opt"><button class="p-btn" onclick="vote(0)">Dominic Calvert-Lewin</button></div>
+        <div class="poll-opt"><button class="p-btn" onclick="vote(1)">Joe Rodon</button></div>
+        <div class="poll-opt"><button class="p-btn" onclick="vote(2)">Willy Gnonto</button></div>
+        <div class="poll-opt"><button class="p-btn" onclick="vote(3)">Lucas Perri</button></div>
+      </div>
+      <p class="poll-hint" id="poll-hint">Click a name to cast your vote</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="fi">
+    <div>
+      <div class="f-brand-row">
+        <svg width="30" height="30" viewBox="0 0 2500 2500" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:2.613;">
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M96.79,181.59C96.79,181.59 47.507,154.084 33.181,104.802C22.293,67.553 30.889,42.339 30.889,42.339C30.889,42.339 60.114,10.821 96.79,10.821C132.891,10.821 162.118,42.339 162.118,42.339C162.118,42.339 170.141,66.98 159.825,104.802C146.072,154.084 96.79,181.59 96.79,181.59Z" style="fill:rgb(242,227,66);"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M95.641,183.598C95.499,183.517 45.558,155.645 30.966,105.445C19.873,67.493 28.667,41.69 28.692,41.615L28.857,41.127L29.216,40.746C29.3,40.656 59.11,8.504 96.79,8.504C133.895,8.504 163.706,40.656 163.791,40.746L164.164,41.139L164.324,41.651C164.345,41.723 172.551,66.933 162.058,105.408L162.048,105.417C148.034,155.638 98.079,183.517 97.937,183.598L96.789,184.252L95.641,183.598ZM35.396,104.158C48.193,148.179 89.398,174.478 96.796,178.905C104.195,174.474 145.316,148.186 157.597,104.196L157.591,104.194C166.884,70.118 161.111,47.173 160.07,43.541C156.617,39.967 129.595,13.138 96.789,13.138C63.45,13.138 36.399,39.966 32.941,43.541C31.865,47.095 25.562,70.509 35.396,104.158Z" style="fill:rgb(53,116,181);fill-rule:nonzero;"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M85.328,76.148L107.678,76.148L107.678,152.314C101.03,157.6 96.217,160.386 96.217,160.386C96.217,160.386 91.677,157.706 85.329,152.627L85.329,76.148L85.328,76.148Z" style="fill:white;"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M45.208,76.722L79.598,76.722L79.598,147.772C68.608,137.904 55.164,122.509 49.226,102.509C46.499,92.771 45.433,84.025 45.208,76.722Z" style="fill:rgb(242,227,66);"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M75.891,76.722L50.18,105.482C49.842,104.497 49.524,103.506 49.226,102.508C48.502,99.918 47.871,97.303 47.335,94.668L63.378,76.721L75.891,76.721L75.891,76.722ZM79.598,124.1L68.518,136.496C66.373,134.021 64.338,131.453 62.419,128.798L79.597,109.903L79.597,124.1L79.598,124.1ZM73.844,142.269L79.597,135.834L79.597,147.772C77.624,145.997 75.705,144.161 73.844,142.269ZM52.999,76.722L45.77,84.686C45.481,82.04 45.293,79.383 45.208,76.722L52.999,76.722ZM79.598,98.642L57.975,122.065C56.254,119.221 54.692,116.284 53.296,113.267L79.597,84.289L79.597,98.642L79.598,98.642Z" style="fill:rgb(53,116,181);"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M113.408,76.722L147.808,76.722C147.583,84.025 146.507,92.772 143.779,102.509C137.898,122.324 124.494,137.614 113.408,147.491L113.408,76.722Z" style="fill:rgb(242,227,66);"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M117.115,76.722L142.832,105.49C143.168,104.507 143.482,103.515 143.779,102.51C144.505,99.924 145.139,97.314 145.681,94.684L129.626,76.723L117.115,76.723L117.115,76.722ZM113.408,124.1L124.41,136.41C126.584,133.927 128.644,131.346 130.584,128.676L113.408,109.463L113.408,124.1ZM119.283,141.921L113.408,135.46L113.408,147.491C115.425,145.697 117.384,143.839 119.283,141.921ZM140.008,76.722L147.252,84.704C147.559,81.884 147.732,79.222 147.809,76.722L140.008,76.722ZM113.408,98.168L135.035,121.995C136.754,119.173 138.313,116.256 139.705,113.259L113.408,84.289L113.408,98.168ZM147.781,69.845L45.233,69.845C45.634,59.765 47.507,53.8 47.507,53.8C47.507,53.8 69.283,29.732 96.216,29.732C123.722,29.732 145.498,53.8 145.498,53.8C145.498,53.8 147.381,59.765 147.781,69.845ZM95.07,83.599L97.362,84.172C97.362,84.172 99.083,79.587 101.374,79.014C104.239,78.441 105.386,80.16 104.813,81.306C104.813,82.452 103.092,84.172 101.948,84.744C100.921,85.1 99.655,85.317 99.655,85.317L97.936,88.755C97.362,89.901 95.644,92.767 95.644,92.767C95.644,92.767 98.509,93.913 100.227,93.913C103.666,93.913 105.385,91.621 105.385,91.621L105.957,92.767C105.957,92.767 103.092,95.632 100.227,96.205C97.936,96.205 95.07,94.486 95.07,94.486C95.07,94.486 93.351,96.205 91.632,96.205C89.913,96.778 88.194,96.205 88.194,94.486C88.194,93.34 89.913,92.194 91.059,92.194C92.778,91.621 93.924,92.767 93.924,92.767L95.643,89.329C96.216,88.183 96.789,85.317 96.789,85.317L95.069,84.744L95.069,83.599L95.07,83.599ZM93.351,93.34C93.351,93.34 93.351,94.486 91.631,95.059C89.912,95.632 89.912,94.486 89.912,94.486C89.912,94.486 91.058,92.767 91.631,92.767C92.778,92.768 93.351,93.34 93.351,93.34ZM99.654,84.172C99.654,84.172 100.8,80.16 102.519,80.16C104.281,80.043 104.128,80.972 103.665,81.879C103.092,83.599 99.654,84.172 99.654,84.172Z" style="fill:rgb(53,116,181);"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M96.79,33.17C96.79,33.17 97.362,33.743 97.362,34.316C97.711,35.032 97.907,35.812 97.936,36.608C102.52,34.889 109.397,38.327 109.969,44.63L111.69,44.63C112.835,44.63 113.409,45.203 113.409,45.203L112.263,46.349C111.117,46.922 110.544,47.495 110.544,47.495C112.835,51.507 111.69,58.956 105.958,61.248C105.958,61.248 106.532,62.394 106.532,62.967C107.104,64.113 107.104,64.686 107.104,64.686C107.104,64.686 105.958,64.686 105.385,64.113C104.239,63.54 103.666,62.394 103.666,62.394C100.801,66.405 93.351,67.552 89.339,62.967C89.339,62.967 88.766,63.54 87.62,64.113C87.047,64.686 85.9,64.686 85.9,64.686C85.9,64.686 86.473,63.54 86.473,62.967C86.473,61.821 87.046,61.248 87.046,61.248C82.462,59.529 79.023,52.652 82.462,47.495C82.462,47.495 81.316,46.922 80.743,46.349L79.597,45.203C79.597,45.203 80.743,44.63 81.889,44.63L83.608,44.63C83.608,40.046 89.338,34.888 95.069,36.034C95.069,36.034 95.069,34.888 95.642,34.315C96.216,33.17 96.79,33.17 96.79,33.17Z" style="fill:white;"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M96.216,50.361C96.216,50.361 96.789,48.069 96.216,46.35C96.216,44.63 97.361,38.327 96.216,37.181C94.496,35.461 92.778,37.181 92.204,38.327C91.631,38.9 91.058,40.047 89.912,40.62C88.766,41.766 88.193,41.766 86.474,42.339C85.328,42.912 83.609,43.485 84.755,45.777C85.328,46.923 87.621,46.923 89.913,48.069C92.033,48.778 94.135,49.543 96.216,50.361Z" style="fill:none;fill-rule:nonzero;stroke:rgb(53,116,181);stroke-width:0.32px;"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M96.79,33.743C96.79,33.743 97.936,36.608 97.362,36.608C96.79,37.181 96.79,40.046 96.79,41.765C97.362,42.911 97.362,42.911 97.362,43.485C96.79,44.058 96.79,44.631 96.79,44.631C96.79,44.631 96.217,44.631 96.217,44.058C95.644,43.485 95.644,42.912 96.217,41.766C96.79,41.193 96.79,37.182 96.217,36.609C95.07,36.608 96.79,33.743 96.79,33.743ZM86.474,41.192C86.474,41.192 87.62,39.473 88.766,38.9C89.339,38.9 91.631,37.181 91.631,37.181C91.631,37.181 90.485,38.9 88.766,40.046C87.621,40.62 86.474,41.192 86.474,41.192Z" style="fill:rgb(53,116,181);"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M96.79,50.361C96.79,50.361 94.497,49.788 92.778,49.215C91.059,49.215 85.328,46.35 84.182,46.923C81.89,48.069 83.036,49.788 83.609,50.934C84.182,51.507 84.755,52.653 85.328,53.799C85.901,55.518 85.901,56.091 85.901,57.237C85.901,58.956 85.901,60.675 88.193,60.675C89.912,60.102 90.485,57.81 92.204,56.091L96.79,50.361Z" style="fill:none;fill-rule:nonzero;stroke:rgb(53,116,181);stroke-width:0.32px;"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M80.744,45.204C80.744,45.204 83.609,44.631 83.609,45.777C84.182,45.777 86.474,47.496 88.193,47.496C89.912,47.496 89.912,46.923 90.485,47.496C90.485,48.069 91.058,48.642 91.058,48.642C91.058,48.642 90.485,48.642 89.912,49.215C89.339,49.215 89.339,49.215 88.193,48.069C87.62,47.496 84.182,46.35 83.609,46.923C83.036,47.496 80.744,45.204 80.744,45.204Z" style="fill:rgb(53,116,181);"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M96.79,50.361C96.79,50.361 95.07,52.081 94.497,53.799C93.351,55.518 88.767,60.103 89.34,61.249C89.34,63.541 92.205,63.541 92.778,62.968C93.924,62.968 95.07,62.395 96.216,62.395C97.935,62.395 98.508,62.395 99.654,62.968C101.373,63.541 103.092,63.541 103.666,61.249C103.666,60.103 101.947,58.384 100.227,56.092L96.79,50.361Z" style="fill:none;fill-rule:nonzero;stroke:rgb(53,116,181);stroke-width:0.32px;"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M87.047,64.115C87.047,64.115 87.047,61.25 88.193,61.25C88.193,61.25 90.485,58.958 91.058,57.239C91.631,56.093 91.058,56.093 92.204,55.52L92.777,55.52C92.777,55.52 93.35,55.52 93.35,56.093C93.35,56.666 92.777,57.239 91.63,57.812C91.057,57.812 88.765,61.25 88.765,61.824C89.339,62.396 87.047,64.115 87.047,64.115Z" style="fill:rgb(53,116,181);"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M96.79,50.361C96.79,50.361 97.936,52.653 99.082,53.799C100.227,54.945 103.092,60.675 104.812,60.675C107.103,61.248 107.103,58.956 107.103,57.81C107.103,57.237 107.103,55.518 107.677,54.372C108.249,53.226 108.249,52.653 109.396,50.934C109.968,49.788 111.115,48.642 108.824,47.496C107.678,46.35 105.957,48.069 103.092,48.642C99.654,49.789 96.79,50.361 96.79,50.361Z" style="fill:none;fill-rule:nonzero;stroke:rgb(53,116,181);stroke-width:0.32px;"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M106.531,64.115C106.531,64.115 103.666,62.969 104.238,61.823C104.238,61.25 102.519,58.958 101.373,57.811C100.227,57.238 100.227,57.238 100.227,56.092C99.655,56.092 100.227,55.519 100.227,55.519L100.801,55.519C101.373,55.519 101.947,56.092 101.947,57.238C101.947,57.811 104.238,61.249 104.812,61.249C105.957,61.25 106.531,64.115 106.531,64.115Z" style="fill:rgb(53,116,181);"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M96.79,50.361L100.227,49.215C101.948,48.642 108.25,47.495 108.825,45.777C109.97,44.058 107.679,42.912 107.104,42.339C105.958,42.339 104.813,41.766 103.666,41.193C102.52,40.047 101.947,40.047 101.373,38.328C100.227,37.182 99.082,36.036 97.361,37.755C96.216,38.328 96.789,41.193 96.789,43.486L96.79,50.361Z" style="fill:none;fill-rule:nonzero;stroke:rgb(53,116,181);stroke-width:0.32px;"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M112.262,45.204C112.262,45.204 110.543,47.496 109.969,46.923C109.397,46.35 106.531,47.496 104.813,48.069C103.667,48.642 104.239,49.215 103.092,49.215C102.52,49.215 102.52,48.642 102.52,48.642C102.52,48.642 101.948,48.642 102.52,48.069C103.092,47.496 103.666,47.496 104.813,47.496C105.385,47.496 108.825,46.35 109.397,45.777C109.396,45.204 112.262,45.204 112.262,45.204ZM84.755,57.238C84.755,57.238 83.609,55.519 83.036,54.373C83.036,53.8 82.463,50.935 82.463,50.935C82.463,50.935 83.609,52.654 84.182,54.373C84.755,56.092 84.755,57.238 84.755,57.238ZM99.654,64.115L92.778,64.115C92.778,64.115 94.497,63.542 96.216,63.542C97.936,63.542 99.654,64.115 99.654,64.115ZM109.969,52.081L109.969,54.946C109.397,55.519 108.25,58.384 108.25,58.384C108.25,58.384 108.25,56.092 108.824,54.373L109.969,52.081ZM101.947,37.754C101.947,37.754 104.238,38.9 104.812,39.473C105.384,40.046 107.677,41.765 107.677,41.765C107.677,41.765 105.384,41.192 104.238,40.046L101.947,37.754Z" style="fill:rgb(53,116,181);"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M90.486,50.361C90.486,46.923 93.351,44.631 96.79,44.631C100.227,44.631 102.52,46.923 102.52,50.361C102.52,53.799 100.227,56.092 96.79,56.092C93.351,56.092 90.486,53.8 90.486,50.361Z" style="fill:white;"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M93.924,53.8L95.643,52.081M97.936,52.081L99.655,54.373M98.508,49.216L101.373,48.643M96.79,45.777L96.79,48.069M94.497,49.216L92.205,48.643" style="fill:none;fill-rule:nonzero;stroke:rgb(53,116,181);stroke-width:0.32px;"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M90.589,49.272L90.616,49.125L90.625,49.094C90.857,48.051 91.396,47.1 92.173,46.366L92.204,46.35L92.777,49.215L91.058,50.934L90.51,49.84C90.526,49.644 90.556,49.457 90.589,49.272Z" style="fill:rgb(242,227,66);"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M90.589,49.272L90.616,49.125L90.625,49.094M92.173,46.366L92.204,46.35L92.777,49.215L91.058,50.934L90.51,49.84" style="fill:none;fill-rule:nonzero;stroke:rgb(53,116,181);stroke-width:0.32px;"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M95.07,52.081L98.508,52.081L99.082,49.216L96.79,47.496L94.497,49.216L95.07,52.081Z" style="fill:rgb(242,227,66);"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M95.07,52.081L98.508,52.081L99.082,49.216L96.79,47.496L94.497,49.216L95.07,52.081" style="fill:none;fill-rule:nonzero;stroke:rgb(53,116,181);stroke-width:0.32px;"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M91.631,53.752L91.631,53.227L93.923,53.8L95.566,55.991C93.958,55.722 92.552,54.928 91.631,53.752Z" style="fill:rgb(242,227,66);"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M91.631,53.752L91.631,53.227L93.924,53.8L95.566,55.991" style="fill:none;fill-rule:nonzero;stroke:rgb(53,116,181);stroke-width:0.32px;"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M97.984,55.991L99.082,53.8L101.873,53.242C101.121,54.705 99.756,55.688 97.984,55.991Z" style="fill:rgb(242,227,66);"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M97.984,55.991L99.082,53.8L101.873,53.242" style="fill:none;fill-rule:nonzero;stroke:rgb(53,116,181);stroke-width:0.32px;"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M102.504,50.915L100.801,48.643L100.801,46.351L101.309,46.606C102.086,47.573 102.52,48.862 102.52,50.362C102.52,50.551 102.518,50.734 102.504,50.915Z" style="fill:rgb(242,227,66);"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M102.504,50.915L100.801,48.643L100.801,46.351L101.309,46.605" style="fill:none;fill-rule:nonzero;stroke:rgb(53,116,181);stroke-width:0.32px;"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M98.795,44.918L99.082,45.204L96.79,46.35L94.497,45.204L94.626,44.949C95.327,44.735 96.057,44.628 96.79,44.631C97.51,44.631 98.186,44.728 98.795,44.918Z" style="fill:rgb(242,227,66);"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M98.795,44.918L99.082,45.204L96.79,46.35L94.497,45.204L94.626,44.949M90.486,50.361C90.486,46.923 93.351,44.631 96.79,44.631C100.227,44.631 102.52,46.923 102.52,50.361C102.52,53.799 100.227,56.092 96.79,56.092C93.351,56.092 90.486,53.8 90.486,50.361Z" style="fill:none;fill-rule:nonzero;stroke:rgb(53,116,181);stroke-width:0.32px;"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M93.351,93.34C93.351,93.34 93.351,94.486 91.631,95.059C89.912,95.632 89.912,95.059 89.912,94.486C89.912,93.913 91.058,92.767 91.631,92.767C92.778,92.768 93.351,93.34 93.351,93.34Z" style="fill:white;"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M92.205,102.509L91.632,101.937C91.632,101.937 92.778,100.217 93.924,99.644C95.643,99.644 97.936,100.79 97.362,103.082C96.79,104.802 92.205,111.678 92.205,113.397C92.205,114.543 93.351,115.116 95.07,113.969C96.79,113.397 97.362,111.104 98.508,109.385C99.082,107.666 102.52,100.216 102.52,100.216L104.813,100.216L99.655,111.677C99.655,111.677 98.509,113.969 99.655,114.542C101.948,115.688 101.948,112.823 101.948,112.823L102.52,112.823C102.52,112.823 102.52,114.542 101.948,115.115C101.374,116.834 99.655,116.834 98.509,115.688C97.363,115.115 96.791,113.968 96.791,113.968C96.791,113.968 95.071,116.261 92.779,116.261C91.06,116.261 89.914,115.688 89.914,113.396C89.341,112.823 90.487,111.103 90.487,111.103L94.498,103.654C94.498,103.654 95.644,101.362 95.071,100.789C93.924,100.217 92.205,102.509 92.205,102.509ZM105.385,119.128L105.957,119.128C105.957,119.128 105.957,120.274 104.812,121.42C103.666,122.566 99.654,121.993 99.654,121.993C99.654,121.993 99.654,123.712 99.082,124.858C99.082,126.004 97.936,130.015 97.361,131.734C96.216,134.026 95.069,136.891 91.631,136.319C88.766,135.746 89.339,133.454 89.339,133.454L90.485,133.454C90.485,133.454 89.912,135.746 91.631,135.173C93.351,135.173 95.069,131.735 95.643,128.869C96.216,125.431 97.361,121.993 97.361,121.993L94.496,121.993C93.923,121.993 93.923,122.565 93.35,123.139C93.35,124.285 94.496,124.285 94.496,124.285L93.923,124.858C93.923,124.858 91.631,124.858 91.631,122.565C92.204,120.846 93.923,120.273 95.069,120.273L102.519,120.273C104.812,120.273 105.385,119.128 105.385,119.128Z" style="fill:rgb(53,116,181);"/>
+    </g>
+    <g transform="matrix(12.969765,0,0,12.969765,0,0)">
+        <path d="M93.351,130.589C93.351,130.589 92.778,128.869 93.924,128.869C95.643,128.869 98.508,129.442 100.227,129.442C102.52,128.869 102.52,126.577 102.52,126.577L101.948,126.004C101.948,126.004 101.948,127.724 100.227,127.724C99.082,127.724 94.497,126.578 93.352,127.724C91.632,128.87 92.779,130.589 92.779,130.589L93.351,130.589ZM90.486,148.353C90.486,142.623 96.216,135.747 101.947,136.892C101.947,136.892 103.092,136.892 103.092,138.612C103.666,139.758 103.092,140.331 103.092,140.331L102.52,140.331C103.092,138.039 101.948,137.466 101.374,137.466C97.936,137.466 93.352,143.77 93.352,148.928C93.352,150.074 93.352,151.793 95.071,152.366C97.363,152.939 99.655,148.928 99.655,148.928L100.227,149.5C100.227,149.5 98.508,154.085 95.07,153.512C92.205,153.511 90.486,151.218 90.486,148.353Z" style="fill:rgb(53,116,181);"/>
+    </g>
+</svg>
+        <div class="f-bname">LUFC <b>Fan Hub</b></div>
+      </div>
+      <p class="f-tag">Forever Leeds.</p>
+      <p class="f-desc">The online home for Leeds United fans worldwide. We bleed blue and gold. MOT.</p>
+    </div>
+    <div class="fc"><h4>Quick Links</h4><div class="fl"><a href="#home">Home</a><a href="#news">News</a><a href="#fixtures">Fixtures</a><a href="#squad">Squad</a><a href="#stats">Stats</a><a href="#history">History</a><a href="#shop">Shop</a><a href="#gallery">Gallery</a><a href="#forum">Forum</a><a href="#fan-zone">Fan Zone</a></div></div>
+    <div class="fc"><h4>Follow Us</h4><div class="soc-row"><button class="soc-btn" title="Twitter/X">𝕏</button><button class="soc-btn" title="Instagram">📸</button><button class="soc-btn" title="Facebook">📘</button><button class="soc-btn" title="YouTube">▶</button></div></div>
+  </div>
+  <div class="footer-bottom"><p>This is an unofficial fan site. Not affiliated with Leeds United AFC.</p><p>© 2026 LUFC Fan Hub · All rights reserved · MOT 🔵💛</p></div>
+</footer>
+
+<script>
+// ═══════════════════════════════════════════════════
+//  ⚙️  CONFIGURATION — paste your API key below
+// ═══════════════════════════════════════════════════
+const CFG = {
+  API_KEY: 'REDACTED_ROTATE_ME',
+  TEAM_ID: 341,         // Leeds United FC
+  TEAM_NAME: 'Leeds United FC',
+  COMP: 'PL',           // Premier League
+  BASE: 'https://api.football-data.org/v4',
+  CACHE_MS: 5 * 60 * 1000,  // 5-minute cache
+};
+
+// ─── Helpers ───────────────────────────────────────
+const $ = id => document.getElementById(id);
+
+// Cache version — bump this string any time the squad/data needs a forced refresh
+const CACHE_VER = 'v2026a';
+// Wipe all stored entries if the version has changed (catches stale squad data)
+(function(){try{if(localStorage.getItem('lufc_cache_ver')!==CACHE_VER){['fixtures','fixtures_timed','results','standings_PL','standings_ELC','squad'].forEach(k=>localStorage.removeItem('lufc_'+k));localStorage.setItem('lufc_cache_ver',CACHE_VER);}}catch{}})();
+
+const CACHE = {
+  get(k){try{const v=JSON.parse(localStorage.getItem('lufc_'+k));return v&&Date.now()<v.exp?v.d:null}catch{return null}},
+  set(k,d){try{localStorage.setItem('lufc_'+k,JSON.stringify({d,exp:Date.now()+CFG.CACHE_MS}))}catch{}}
+};
+
+async function apiFetch(path, cacheKey) {
+  const cached = CACHE.get(cacheKey);
+  if (cached) return cached;
+  const res = await fetch(CFG.BASE + path, {headers:{'X-Auth-Token': CFG.API_KEY}});
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const data = await res.json();
+  CACHE.set(cacheKey, data);
+  return data;
+}
+
+function shortName(n) {
+  const m = {
+    'Leeds United FC':'Leeds Utd','Arsenal FC':'Arsenal','Chelsea FC':'Chelsea',
+    'Manchester City FC':'Man City','Manchester United FC':'Man Utd',
+    'Liverpool FC':'Liverpool','Tottenham Hotspur FC':'Tottenham',
+    'Newcastle United FC':'Newcastle Utd','Aston Villa FC':'Aston Villa',
+    'West Ham United FC':'West Ham','Brighton & Hove Albion FC':'Brighton',
+    'Wolverhampton Wanderers FC':'Wolves','Fulham FC':'Fulham',
+    'Brentford FC':'Brentford','Crystal Palace FC':'Crystal Palace',
+    'Nottingham Forest FC':"Nott'm Forest",'Everton FC':'Everton',
+    'Leicester City FC':'Leicester','Ipswich Town FC':'Ipswich Town',
+    'Southampton FC':'Southampton','AFC Bournemouth':'Bournemouth',
+    'Luton Town FC':'Luton Town','Burnley FC':'Burnley',
+    'Sheffield United FC':'Sheffield Utd',
+  };
+  return m[n] || n.replace(/ FC$/,'').replace(/ AFC$/,'');
+}
+
+function fmtDate(iso) {
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})
+       + ' · ' + d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+}
+
+function compCode(c) {
+  const m = {'PL':'PL','Premier League':'PL','FAC':'FA Cup','FA Cup':'FA Cup',
+    'ELC':'Champ.','League Cup':'EFL Cup','EFL Cup':'EFL Cup','EC':'UECL','UEL':'UEL','UCL':'UCL'};
+  return m[c?.code] || m[c?.name] || c?.code || 'Cup';
+}
+
+const FLAGS = {
+  'England':'🏴󠁧󠁢󠁥󠁮󠁧󠁿','Scotland':'🏴󠁧󠁢󠁳󠁣󠁴󠁿','Wales':'🏴󠁧󠁢󠁷󠁬󠁳󠁿','France':'🇫🇷','Spain':'🇪🇸',
+  'Germany':'🇩🇪','Netherlands':'🇳🇱','Belgium':'🇧🇪','Portugal':'🇵🇹','Italy':'🇮🇹',
+  'United States':'🇺🇸','Brazil':'🇧🇷','Argentina':'🇦🇷','Denmark':'🇩🇰','Sweden':'🇸🇪',
+  'Norway':'🇳🇴','Poland':'🇵🇱','Republic of Ireland':'🇮🇪','Ireland':'🇮🇪','Ghana':'🇬🇭',
+  'Nigeria':'🇳🇬','Senegal':'🇸🇳','Jamaica':'🇯🇲','Australia':'🇦🇺','Canada':'🇨🇦',
+  'Japan':'🇯🇵','South Korea':'🇰🇷','Serbia':'🇷🇸','Croatia':'🇭🇷','Austria':'🇦🇹',
+  'Switzerland':'🇨🇭','Morocco':'🇲🇦','Cameroon':'🇨🇲','Algeria':'🇩🇿','Turkey':'🇹🇷',
+  'Greece':'🇬🇷','Hungary':'🇭🇺','Czech Republic':'🇨🇿','Slovakia':'🇸🇰','Romania':'🇷🇴',
+  'Finland':'🇫🇮','Iceland':'🇮🇸','Kosovo':'🇽🇰','Albania':'🇦🇱','Slovenia':'🇸🇮',
+  'Ukraine':'🇺🇦','Montenegro':'🇲🇪','North Macedonia':'🇲🇰','Bosnia-Herzegovina':'🇧🇦',
+  'Uruguay':'🇺🇾','Colombia':'🇨🇴','Chile':'🇨🇱','Mexico':'🇲🇽','Egypt':'🇪🇬',
+  'Ivory Coast':'🇨🇮','Tunisia':'🇹🇳',
+};
+
+const POS_MAP = {
+  'Goalkeeper':'GK','Defender':'DEF','Centre-Back':'CB','Left-Back':'LB','Right-Back':'RB',
+  'Midfielder':'MF','Central Midfield':'CM','Defensive Midfield':'DM','Attacking Midfield':'AM',
+  'Forward':'FW','Left Winger':'LW','Right Winger':'RW','Centre-Forward':'CF','Striker':'ST',
+  'Offence':'FW','Defence':'DEF','Midfield':'MF',
+};
+
+// ─── Fixtures & Results ────────────────────────────
+async function loadFixtures() {
+  try {
+    // Try SCHEDULED first; if empty (end-of-season gap) fall back to TIMED
+    let data = await apiFetch(`/teams/${CFG.TEAM_ID}/matches?status=SCHEDULED&limit=10`, 'fixtures');
+    let matches = (data.matches || []).slice(0, 5);
+    if (!matches.length) {
+      data = await apiFetch(`/teams/${CFG.TEAM_ID}/matches?status=TIMED&limit=10`, 'fixtures_timed');
+      matches = (data.matches || []).slice(0, 5);
+    }
+    if (!matches.length) throw new Error('No fixtures');
+
+    $('fixtures-list').innerHTML = matches.map(m => {
+      const isHome = m.homeTeam.id === CFG.TEAM_ID;
+      const opp = shortName(isHome ? m.awayTeam.name : m.homeTeam.name);
+      const home = shortName(m.homeTeam.name);
+      const away = shortName(m.awayTeam.name);
+      return `<div class="fx-item">
+        <div>
+          <div class="fx-name">${home} <span class="fx-vs">vs</span> ${away}</div>
+          <div class="fx-date">${fmtDate(m.utcDate)}</div>
+        </div>
+        <div class="fx-badges">
+          <span class="${isHome?'b-h':'b-a'}">${isHome?'HOME':'AWAY'}</span>
+          <span class="b-c">${compCode(m.competition)}</span>
+        </div>
+      </div>`;
+    }).join('');
+
+    // Update countdown to first fixture
+    setCountdown(matches[0]);
+    setBadge('fx-badge', true);
+  } catch(e) {
+    console.warn('Fixtures API:', e.message);
+    loadStaticFixtures();
+  }
+}
+
+async function loadResults() {
+  try {
+    const data = await apiFetch(
+      `/teams/${CFG.TEAM_ID}/matches?status=FINISHED&limit=6`,
+      'results'
+    );
+    const matches = (data.matches || []).slice(-6).reverse();
+    if (!matches.length) throw new Error('No results');
+
+    // ── Results sidebar ──────────────────────────────
+    $('results-list').innerHTML = matches.slice(0, 5).map(m => {
+      const isHome = m.homeTeam.id === CFG.TEAM_ID;
+      const opp = shortName(isHome ? m.awayTeam.name : m.homeTeam.name);
+      const hg = m.score.fullTime.home ?? 0;
+      const ag = m.score.fullTime.away ?? 0;
+      const lufc = isHome ? hg : ag;
+      const them = isHome ? ag : hg;
+      const res = lufc > them ? 'W' : lufc < them ? 'L' : 'D';
+      return `<div class="fx-item">
+        <div class="rr">
+          <span class="rb ${res}">${res}</span>
+          <span style="color:#fff;font-weight:700;font-size:.88rem">vs ${opp}</span>
+        </div>
+        <span class="rs">${hg}–${ag}</span>
+      </div>`;
+    }).join('');
+
+    // ── Match report cards ───────────────────────────
+    buildMatchReports(matches);
+
+  } catch(e) {
+    console.warn('Results API:', e.message);
+    loadStaticResults();
+    // static reports stay as-is
+  }
+}
+
+// Title templates keyed by result + rough scoreline
+const RPT_TITLES = {
+  W: [
+    ['Dominant Win Sends a Statement',        'An emphatic performance from start to finish — Farke\'s men were in total control throughout.'],
+    ['Three Points in Style',                 'A polished display and clinical finishing earned a deserved win in front of a packed Elland Road.'],
+    ['Whites Too Strong in Impressive Victory','Hard work and quality in the final third proved the difference on the day.'],
+    ['Brilliant Performance Earns the Points','The Whites were relentless — pressing high, creating chances and taking them when it mattered.'],
+    ['Job Done in Professional Display',      'A controlled, disciplined performance that showed the maturity Farke has built into this side.'],
+    ['Clinical Whites Seal the Three Points', 'Another confident victory adds to the momentum — the Whites looking stronger with every game.'],
+  ],
+  D: [
+    ['Hard-Fought Point on the Road',         'A competitive match that could have gone either way — Leeds will take the point and move on.'],
+    ['Whites Rescue a Share of the Spoils',   'Resilience on show as Leeds battled back to earn a deserved draw in a tough fixture.'],
+    ['Level Pegging in Entertaining Draw',    'Both sides created chances in an open contest that ended honours even.'],
+    ['Determined Whites Earn a Point',        'Leeds showed their fighting spirit to hold on and take something from a difficult away day.'],
+  ],
+  L: [
+    ['Narrow Defeat Despite Brave Showing',   'The Whites competed well but ultimately fell short — more clinical finishing could have changed things.'],
+    ['Frustrating Loss in Tight Encounter',   'A game Leeds will feel they deserved more from — lessons to learn but much to build on.'],
+    ['Defeat Halts Recent Good Run',          'A tough result to take, but the squad\'s response and character gives plenty of reason for optimism.'],
+    ['Whites Fall Short on the Day',          'Despite a spirited effort, Leeds were unable to find the breakthrough when it mattered most.'],
+  ],
+};
+
+function buildMatchReports(matches) {
+  $('reports-grid').innerHTML = matches.map((m, i) => {
+    const isHome = m.homeTeam.id === CFG.TEAM_ID;
+    const opp  = shortName(isHome ? m.awayTeam.name : m.homeTeam.name);
+    const home = shortName(m.homeTeam.name);
+    const away = shortName(m.awayTeam.name);
+    const hg   = m.score.fullTime.home ?? 0;
+    const ag   = m.score.fullTime.away ?? 0;
+    const lufc = isHome ? hg : ag;
+    const them = isHome ? ag : hg;
+    const res  = lufc > them ? 'W' : lufc < them ? 'L' : 'D';
+
+    const pool  = RPT_TITLES[res];
+    const [title, excerpt] = pool[i % pool.length];
+
+    const venue = isHome ? 'HOME' : 'AWAY';
+    const comp  = compCode(m.competition);
+    const date  = fmtDate(m.utcDate);
+
+    return `<div class="report-card">
+      <div class="report-score">
+        <div class="score-main">${hg}–${ag}</div>
+        <div class="sr ${res}">${res}</div>
+        <div style="color:rgba(255,255,255,.38);font-size:.7rem;margin-top:.4rem">vs ${opp}</div>
+      </div>
+      <div class="report-info">
+        <div class="report-title">${title}</div>
+        <div class="report-opp">${venue} · ${comp} · ${date}</div>
+        <div class="report-excerpt">${excerpt}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  setBadge('reports-badge', true);
+}
+
+// ─── Standings ─────────────────────────────────────
+async function loadStandings() {
+  try {
+    let row = null;
+    // Try Premier League first, then Championship — whichever Leeds are in
+    for (const comp of ['PL', 'ELC']) {
+      try {
+        const d = await apiFetch(`/competitions/${comp}/standings`, `standings_${comp}`);
+        const found = (d.standings[0]?.table || []).find(t => t.team.id === CFG.TEAM_ID);
+        if (found) { row = found; CFG.COMP = comp; break; }
+      } catch {}
+    }
+    if (!row) throw new Error('Team not found in table');
+
+    $('summary-pills').innerHTML = [
+      {n: row.playedGames,   l:'Played',        c:''},
+      {n: row.won,           l:'Won',            c:'color:#22c55e'},
+      {n: row.draw,          l:'Drawn',          c:'color:var(--gold)'},
+      {n: row.lost,          l:'Lost',           c:'color:#ef4444'},
+      {n: row.goalsFor,      l:'Goals For',      c:''},
+      {n: row.goalsAgainst,  l:'Goals Against',  c:''},
+      {n: row.points,        l:'Points',         c:'color:var(--gold)'},
+      {n: row.position+'th',l:'Position',       c:'color:var(--gold)'},
+    ].map(p=>`<div class="pill"><div class="pill-n" style="${p.c}">${p.n}</div><div class="pill-l">${p.l}</div></div>`).join('');
+
+    setBadge('stats-badge', true);
+  } catch(e) {
+    console.warn('Standings API:', e.message);
+    loadStaticPills();
+  }
+}
+
+// ─── Squad ─────────────────────────────────────────
+async function loadSquad() {
+  try {
+    const data = await apiFetch(`/teams/${CFG.TEAM_ID}`, 'squad');
+    const squad = (data.squad || []).slice(0, 16);
+    if (!squad.length) throw new Error('Empty squad');
+
+    $('squad-grid').innerHTML = squad.map(p => {
+      const flag = FLAGS[p.nationality] || '🌍';
+      const pos = POS_MAP[p.position] || p.position?.slice(0,3) || '–';
+      const num = p.shirtNumber || '–';
+      const form = 65 + Math.floor(Math.random() * 30); // simulated form
+      return `<div class="player-card">
+        <div class="p-wm">${num}</div>
+        <div class="p-top">
+          <div class="p-num">${num}</div>
+          <div>
+            <div class="p-name">${p.name}</div>
+            <div class="p-meta"><span class="p-flag">${flag}</span><span class="p-pos">${pos}</span></div>
+          </div>
+        </div>
+        <div class="form-lbl"><span class="form-t">Form Rating</span><span class="form-v">${form}</span></div>
+        <div class="form-track"><div class="form-fill" style="width:${form}%"></div></div>
+      </div>`;
+    }).join('');
+
+    setBadge('squad-badge', true);
+  } catch(e) {
+    console.warn('Squad API:', e.message);
+    loadStaticSquad();
+  }
+}
+
+// ─── Countdown ─────────────────────────────────────
+let countdownTarget = null, cdTimer = null;
+
+function setCountdown(match) {
+  if (!match) return;
+  const isHome = match.homeTeam.id === CFG.TEAM_ID;
+  const opp = shortName(isHome ? match.awayTeam.name : match.homeTeam.name);
+  const venue = isHome ? 'Elland Road' : match.awayTeam.name;
+  $('cd-match').textContent = `Leeds Utd vs ${opp}  ·  ${isHome?'Elland Road':'Away'}  ·  ${compCode(match.competition)}`;
+  countdownTarget = new Date(match.utcDate);
+  if (cdTimer) clearInterval(cdTimer);
+  cdTimer = setInterval(tickCountdown, 1000);
+  tickCountdown();
+}
+
+function tickCountdown() {
+  const diff = (countdownTarget || 0) - Date.now();
+  if (diff <= 0) {
+    ['cd-d','cd-h','cd-m','cd-s'].forEach(id => $(id).textContent = '00');
+    $('cd-match').textContent += '  ·  ⚡ KICK OFF!';
+    clearInterval(cdTimer);
+    return;
+  }
+  const d=Math.floor(diff/86400000), h=Math.floor(diff%86400000/3600000),
+        m=Math.floor(diff%3600000/60000), s=Math.floor(diff%60000/1000);
+  $('cd-d').textContent = String(d).padStart(2,'0');
+  $('cd-h').textContent = String(h).padStart(2,'0');
+  $('cd-m').textContent = String(m).padStart(2,'0');
+  $('cd-s').textContent = String(s).padStart(2,'0');
+}
+
+// ─── Live News via Google News RSS ─────────────────
+const NEWS_GRADS = [
+  'linear-gradient(135deg,#1D428A,#0d1f3e)',
+  'linear-gradient(135deg,#0d3a1a,#0A1628)',
+  'linear-gradient(135deg,#3a1a0a,#0A1628)',
+  'linear-gradient(135deg,#1a0d3a,#0A1628)',
+  'linear-gradient(135deg,#0A1628,#1D428A)',
+  'linear-gradient(135deg,#2a1a3a,#0A1628)',
+];
+const NEWS_ICONS = ['📰','⚽','🔄','🗞️','💛','🏟️'];
+
+async function loadNews() {
+  try {
+    const RSS = 'https://news.google.com/rss/search?q=%22Leeds+United%22&hl=en-GB&gl=GB&ceid=GB:en';
+    const res = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent(RSS));
+    if (!res.ok) throw new Error('Proxy ' + res.status);
+    const json = await res.json();
+    if (!json.contents) throw new Error('Empty response');
+
+    const xml = new DOMParser().parseFromString(json.contents, 'text/xml');
+    const items = Array.from(xml.querySelectorAll('item')).slice(0, 6);
+    if (!items.length) throw new Error('No items in feed');
+
+    $('news-grid').innerHTML = items.map((item, i) => {
+      // Title: Google News format is "Headline - Source Name"
+      const rawTitle = item.querySelector('title')?.textContent?.trim() || 'Leeds United News';
+      const sep = rawTitle.lastIndexOf(' - ');
+      const title = sep > 0 ? rawTitle.slice(0, sep) : rawTitle;
+      const source = sep > 0 ? rawTitle.slice(sep + 3)
+                             : (item.querySelector('source')?.textContent?.trim() || 'News');
+
+      // Link — in RSS 2.0 this is a plain text node between tags
+      let link = '#';
+      for (const node of item.childNodes) {
+        if (node.nodeName === 'link') { link = node.textContent.trim(); break; }
+      }
+
+      // Date
+      const rawDate = item.querySelector('pubDate')?.textContent || '';
+      const d = rawDate ? new Date(rawDate) : null;
+      const dateStr = d && !isNaN(d)
+        ? d.toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'})
+        : '';
+
+      // Truncate long source names
+      const srcLabel = source.length > 22 ? source.slice(0, 20) + '…' : source;
+
+      return `<a href="${link}" target="_blank" rel="noopener noreferrer" class="n-card"
+        style="background:var(--card);border:1px solid var(--cborder);border-radius:8px;overflow:hidden;transition:transform .25s,box-shadow .25s;text-decoration:none;display:block">
+        <div class="news-img" style="background:${NEWS_GRADS[i % NEWS_GRADS.length]}">${NEWS_ICONS[i % NEWS_ICONS.length]}</div>
+        <div class="n-body">
+          <div class="n-meta">
+            <span class="badge">${srcLabel}</span>
+            <span class="n-date">${dateStr}</span>
+          </div>
+          <h3 class="n-title">${title}</h3>
+          <span class="n-link">Read More →</span>
+        </div>
+      </a>`;
+    }).join('');
+
+    setBadge('news-badge', true);
+  } catch(e) {
+    console.warn('News RSS:', e.message);
+    loadStaticNews();
+  }
+}
+
+function loadStaticNews() {
+  setBadge('news-badge', false);
+  $('news-grid').innerHTML = [
+    {grad:'linear-gradient(135deg,#1D428A,#0d1f3e)', icon:'📰', badge:'Club News',    date:'19 May 2026', title:'Season Review: Building on Our Premier League Return'},
+    {grad:'linear-gradient(135deg,#0d3a1a,#0A1628)', icon:'🔄', badge:'Transfers',    date:'15 May 2026', title:'Summer 2026: Targets Identified as Whites Eye Improvement'},
+    {grad:'linear-gradient(135deg,#3a1a0a,#0A1628)', icon:'🌍', badge:'Premier League',date:'10 May 2026', title:"Farke Plots Push for European Places in 2026/27"},
+  ].map(n=>`<a href="#" class="n-card" style="background:var(--card);border:1px solid var(--cborder);border-radius:8px;overflow:hidden;transition:transform .25s,box-shadow .25s;text-decoration:none;display:block">
+    <div class="news-img" style="background:${n.grad}">${n.icon}</div>
+    <div class="n-body"><div class="n-meta"><span class="badge">${n.badge}</span><span class="n-date">${n.date}</span></div>
+    <h3 class="n-title">${n.title}</h3><span class="n-link">Read More →</span></div>
+  </a>`).join('');
+}
+
+// ─── Static fallbacks (shown when no API key) ──────
+function loadStaticFixtures() {
+  $('fixtures-list').innerHTML = [
+    {home:'Leeds Utd',away:'Burnley',date:'9 Aug 2026 · 15:00',h:true,c:'PL'},
+    {home:'Sunderland',away:'Leeds Utd',date:'16 Aug 2026 · 15:00',h:false,c:'PL'},
+    {home:'Leeds Utd',away:'Middlesbrough',date:'23 Aug 2026 · 15:00',h:true,c:'PL'},
+    {home:'Sheffield Utd',away:'Leeds Utd',date:'30 Aug 2026 · 15:00',h:false,c:'PL'},
+    {home:'Leeds Utd',away:'Hull City',date:'13 Sep 2026 · 15:00',h:true,c:'PL'},
+  ].map(f=>`<div class="fx-item"><div><div class="fx-name">${f.home} <span class="fx-vs">vs</span> ${f.away}</div><div class="fx-date">${f.date}</div></div><div class="fx-badges"><span class="${f.h?'b-h':'b-a'}">${f.h?'HOME':'AWAY'}</span><span class="b-c">${f.c}</span></div></div>`).join('');
+
+  // static countdown — opening day of 2026/27 season
+  countdownTarget = new Date('2026-08-09T14:00:00Z');
+  $('cd-match').textContent = 'Leeds United vs Burnley  ·  2026/27 Season Opener  ·  Elland Road';
+  if (cdTimer) clearInterval(cdTimer);
+  cdTimer = setInterval(tickCountdown, 1000);
+  tickCountdown();
+}
+
+function loadStaticResults() {
+  $('results-list').innerHTML = [
+    {opp:'Wolves',score:'2–1',r:'W'},{opp:'Southampton',score:'3–0',r:'W'},
+    {opp:'Bournemouth',score:'1–1',r:'D'},{opp:'Ipswich',score:'2–0',r:'W'},
+    {opp:'Crystal Palace',score:'0–1',r:'L'},
+  ].map(r=>`<div class="fx-item"><div class="rr"><span class="rb ${r.r}">${r.r}</span><span style="color:#fff;font-weight:700;font-size:.88rem">vs ${r.opp}</span></div><span class="rs">${r.score}</span></div>`).join('');
+}
+
+function loadStaticPills() {
+  $('summary-pills').innerHTML = [
+    {n:38,l:'Played',c:''},{n:16,l:'Won',c:'color:#22c55e'},
+    {n:10,l:'Drawn',c:'color:var(--gold)'},{n:12,l:'Lost',c:'color:#ef4444'},
+    {n:58,l:'Goals For',c:''},{n:54,l:'Goals Against',c:''},
+    {n:58,l:'Points',c:'color:var(--gold)'},{n:'11th',l:'Position',c:'color:var(--gold)'},
+  ].map(p=>`<div class="pill"><div class="pill-n" style="${p.c}">${p.n}</div><div class="pill-l">${p.l}</div></div>`).join('');
+}
+
+function loadStaticSquad() {
+  const players = [
+    {num:1,  name:'Lucas Perri',           nat:'Brazil',        pos:'GK',  form:85},
+    {num:2,  name:'Jayden Bogle',          nat:'England',       pos:'RB',  form:79},
+    {num:5,  name:'Pascal Struijk',        nat:'Belgium',       pos:'CB',  form:84},
+    {num:6,  name:'Joe Rodon',             nat:'Wales',         pos:'CB',  form:87},
+    {num:3,  name:'Gabriel Gudmundsson',   nat:'Sweden',        pos:'LB',  form:77},
+    {num:4,  name:'Ethan Ampadu',          nat:'Wales',         pos:'DM',  form:88},
+    {num:8,  name:'Sean Longstaff',        nat:'England',       pos:'CM',  form:80},
+    {num:22, name:'Ao Tanaka',             nat:'Japan',         pos:'CM',  form:82},
+    {num:7,  name:'Daniel James',          nat:'Wales',         pos:'RW',  form:78},
+    {num:10, name:'Joël Piroe',            nat:'Netherlands',   pos:'CF',  form:83},
+    {num:29, name:'Wilfried Gnonto',       nat:'Italy',         pos:'LW',  form:85},
+    {num:9,  name:'Dominic Calvert-Lewin', nat:'England',       pos:'ST',  form:86},
+    {num:11, name:'Brenden Aaronson',      nat:'United States', pos:'MF',  form:79},
+    {num:15, name:'Jaka Bijol',            nat:'Slovenia',      pos:'CB',  form:82},
+    {num:16, name:'Illan Meslier',         nat:'France',        pos:'GK',  form:80},
+    {num:19, name:'Noah Okafor',           nat:'Switzerland',   pos:'FW',  form:78},
+  ];
+  $('squad-grid').innerHTML = players.map(p=>`<div class="player-card"><div class="p-wm">${p.num}</div><div class="p-top"><div class="p-num">${p.num}</div><div><div class="p-name">${p.name}</div><div class="p-meta"><span class="p-flag">${FLAGS[p.nat]||'🌍'}</span><span class="p-pos">${p.pos}</span></div></div></div><div class="form-lbl"><span class="form-t">Form Rating</span><span class="form-v">${p.form}</span></div><div class="form-track"><div class="form-fill" style="width:${p.form}%"></div></div></div>`).join('');
+}
+
+// ─── Badges ────────────────────────────────────────
+function setBadge(id, live) {
+  const el = $(id); if(!el) return;
+  if (live) {
+    el.className = 'live-badge';
+    el.innerHTML = '<span class="live-dot"></span> Live Data';
+  } else {
+    el.className = 'static-badge';
+    el.innerHTML = '📋 Preview Data';
+  }
+}
+
+// ─── API Key banner ────────────────────────────────
+function saveApiKey() {
+  const key = $('api-key-input').value.trim();
+  if (!key) return;
+  CFG.API_KEY = key;
+  try { localStorage.setItem('lufc_apikey', key); } catch{}
+  $('api-banner').classList.add('hidden');
+  // Clear cache so fresh data loads
+  ['fixtures','fixtures_timed','results','standings_PL','standings_ELC','squad'].forEach(k=>{try{localStorage.removeItem('lufc_'+k)}catch{}});
+  init();
+}
+function dismissBanner() { $('api-banner').classList.add('hidden'); }
+
+// ─── Init ──────────────────────────────────────────
+async function init() {
+  // News loads always — no football API key needed
+  loadNews();
+
+  if (CFG.API_KEY) {
+    // Load all live sections in parallel
+    await Promise.allSettled([
+      loadFixtures(),
+      loadResults(),
+      loadStandings(),
+      loadSquad(),
+    ]);
+  } else {
+    // No key — load static fallbacks immediately
+    loadStaticFixtures();
+    loadStaticResults();
+    loadStaticPills();
+    loadStaticSquad();
+  }
+}
+
+// On load: check for saved API key
+(function() {
+  try {
+    const saved = localStorage.getItem('lufc_apikey');
+    if (saved) {
+      CFG.API_KEY = saved;
+      $('api-banner').classList.add('hidden');
+    } else {
+      // Pre-fill if CFG has a hardcoded key
+      if (CFG.API_KEY) $('api-banner').classList.add('hidden');
+    }
+  } catch {}
+
+  // If a key is already hardcoded in CFG, hide banner
+  if (CFG.API_KEY) $('api-banner').classList.add('hidden');
+
+  init();
+})();
+
+// ─── Scroll reveal ─────────────────────────────────
+const revealObs = new IntersectionObserver(
+  e => e.forEach(x => { if(x.isIntersecting){x.target.classList.add('visible');revealObs.unobserve(x.target)} }),
+  {threshold:.08}
+);
+document.querySelectorAll('.reveal').forEach(r => revealObs.observe(r));
+
+// ─── Stat counters ─────────────────────────────────
+let erCounted = false;
+function animCount(el,t,sfx,dur){
+  let v=0,step=t/(dur/16);
+  const tm=setInterval(()=>{v+=step;if(v>=t){el.textContent=t.toLocaleString()+sfx;clearInterval(tm)}else el.textContent=Math.floor(v).toLocaleString()+sfx},16);
+}
+const erObs = new IntersectionObserver(e=>{
+  if(e[0].isIntersecting && !erCounted){
+    erCounted=true;
+    document.querySelectorAll('.er-num').forEach(el=>animCount(el,+el.dataset.target,el.dataset.suffix||'',1800));
+    erObs.disconnect();
+  }
+},{threshold:.18});
+erObs.observe(document.getElementById('elland-road'));
+
+// ─── Gallery lightbox ──────────────────────────────
+const LB_DATA = [
+  {img:'🏟️',title:'Elland Road at Night',desc:'The Cathedral of Yorkshire lit up for a Premier League evening fixture. Nothing quite like it under the floodlights.'},
+  {img:'🎉',title:'Promotion Celebrations 2024',desc:"Thousands of fans flooded the streets of Leeds after Daniel Farke's side secured promotion back to the Premier League."},
+  {img:'⚽',title:"Calvert-Lewin's Overhead Kick vs Wolves",desc:"Dominic Calvert-Lewin's stunning overhead kick sealed a 2–1 win at Elland Road on the final day of the 2025/26 season, May 2026."},
+  {img:'👑',title:"Don Revie's Champions — 1969",desc:"The greatest Leeds United side ever assembled. Revie's men claimed the First Division title in dominant fashion."},
+  {img:'🏆',title:'1992 Title Celebrations',desc:'Howard Wilkinson\'s Leeds United lifted the last ever First Division title before the Premier League era began.'},
+  {img:'🏴󠁧󠁢󠁥󠁮󠁧󠁿',title:'Billy Bremner — The Legend',desc:'The fiercest little man in football. Captain, icon, and the heart of everything great about Leeds United.'},
+  {img:'🧣',title:'South Stand In Full Voice',desc:"37,000 fans packed into Elland Road, creating a wall of noise that has seen off some of Europe's finest."},
+  {img:'🌙',title:"Champions League Night 2001",desc:"O'Leary's young guns stunned Europe. Semi-finalists against Valencia — a night no Leeds fan will ever forget."},
+  {img:'🚀',title:'Bielsa Era — Pure Football',desc:'Marcelo Bielsa transformed Leeds United, promoting them after 16 years away with breathtaking, high-intensity football.'},
+];
+function openLb(i){
+  const d=LB_DATA[i];
+  $('lb-img').textContent=d.img; $('lb-title').textContent=d.title; $('lb-desc').textContent=d.desc;
+  $('lightbox').classList.add('open'); document.body.style.overflow='hidden';
+}
+function closeLb(){ $('lightbox').classList.remove('open'); document.body.style.overflow=''; }
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeLb(); });
+
+// ─── Poll ──────────────────────────────────────────
+const PVOTES=[44,26,18,12], PLBLS=['Dominic Calvert-Lewin','Joe Rodon','Wilfried Gnonto','Lucas Perri'];
+let pvoted=null;
+function vote(i){
+  if(pvoted!==null)return; pvoted=i; PVOTES[i]++;
+  const tot=PVOTES.reduce((a,b)=>a+b,0);
+  $('poll-opts').innerHTML=PLBLS.map((l,j)=>{
+    const pct=Math.round(PVOTES[j]/tot*100);
+    return `<div class="poll-opt"><div class="p-row"><button class="p-btn${j===i?' voted':''}" disabled>${j===i?'✓ ':''}${l}</button><span class="p-pct">${pct}%</span></div><div class="p-track"><div class="p-fill ${j===i?'pf-s':'pf-o'}" style="width:0%" id="pf${j}"></div></div></div>`;
+  }).join('');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    PLBLS.forEach((_,j)=>{ document.getElementById('pf'+j).style.width=Math.round(PVOTES[j]/tot*100)+'%'; });
+  }));
+  $('poll-hint').textContent=`Total votes: ${tot.toLocaleString()}`;
+}
+
+// ─── Mobile menu ───────────────────────────────────
+function toggleMenu(){ $('mob-menu').classList.toggle('open'); }
+
+// ─── Merch cart ────────────────────────────────────
+let cartCount=0;
+function addToCart(btn){
+  cartCount++;
+  const name=btn.closest('.merch-card').querySelector('.m-name').textContent;
+  btn.textContent='✓ Added'; btn.style.background='#22c55e'; btn.style.color='#fff';
+  setTimeout(()=>{btn.textContent='Add to Cart';btn.style.background='';btn.style.color='';},2200);
+  const t=$('cart-toast');
+  t.textContent=`🛒 "${name}" added (${cartCount} item${cartCount>1?'s':''})`;
+  t.style.display='block'; clearTimeout(window._ct);
+  window._ct=setTimeout(()=>t.style.display='none',3000);
+}
+</script>
+</body>
+</html>
