@@ -474,9 +474,8 @@ footer{background:var(--dark);border-top:3px solid var(--blue)}
     <div class="nav-links">
       <a href="#home">Home</a><a href="#news">News</a>
       <a href="#fixtures">Fixtures</a><a href="#squad">Squad</a>
-      <a href="#stats">Stats</a><a href="#history">History</a>
-      <a href="#shop">Shop</a><a href="#gallery">Gallery</a>
-      <a href="#forum">Forum</a><a href="#fan-zone">Fan Zone</a>
+      <a href="#gallery">Gallery</a><a href="#forum">Forum</a>
+      <a href="#fan-zone">Fan Zone</a>
     </div>
     <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
       <span></span><span></span><span></span>
@@ -485,9 +484,8 @@ footer{background:var(--dark);border-top:3px solid var(--blue)}
   <div id="mob-menu">
     <a href="#home" onclick="toggleMenu()">Home</a><a href="#news" onclick="toggleMenu()">News</a>
     <a href="#fixtures" onclick="toggleMenu()">Fixtures</a><a href="#squad" onclick="toggleMenu()">Squad</a>
-    <a href="#stats" onclick="toggleMenu()">Stats</a><a href="#history" onclick="toggleMenu()">History</a>
-    <a href="#shop" onclick="toggleMenu()">Shop</a><a href="#gallery" onclick="toggleMenu()">Gallery</a>
-    <a href="#forum" onclick="toggleMenu()">Forum</a><a href="#fan-zone" onclick="toggleMenu()">Fan Zone</a>
+    <a href="#gallery" onclick="toggleMenu()">Gallery</a><a href="#forum" onclick="toggleMenu()">Forum</a>
+    <a href="#fan-zone" onclick="toggleMenu()">Fan Zone</a>
   </div>
 </nav>
 
@@ -591,6 +589,16 @@ footer{background:var(--dark);border-top:3px solid var(--blue)}
       <span id="fx-badge" class="static-badge">📋 Preview Data</span>
     </div>
     <div class="s-bar"></div>
+    <div class="summary-pills" id="summary-pills">
+      <div class="pill"><div class="pill-n skeleton" style="height:1.5rem;width:3rem;margin:0 auto .3rem"></div><div class="pill-l">Played</div></div>
+      <div class="pill"><div class="pill-n skeleton" style="height:1.5rem;width:3rem;margin:0 auto .3rem"></div><div class="pill-l">Won</div></div>
+      <div class="pill"><div class="pill-n skeleton" style="height:1.5rem;width:3rem;margin:0 auto .3rem"></div><div class="pill-l">Drawn</div></div>
+      <div class="pill"><div class="pill-n skeleton" style="height:1.5rem;width:3rem;margin:0 auto .3rem"></div><div class="pill-l">Lost</div></div>
+      <div class="pill"><div class="pill-n skeleton" style="height:1.5rem;width:3rem;margin:0 auto .3rem"></div><div class="pill-l">Goals For</div></div>
+      <div class="pill"><div class="pill-n skeleton" style="height:1.5rem;width:3rem;margin:0 auto .3rem"></div><div class="pill-l">Goals Against</div></div>
+      <div class="pill"><div class="pill-n skeleton" style="height:1.5rem;width:3rem;margin:0 auto .3rem"></div><div class="pill-l">Points</div></div>
+      <div class="pill"><div class="pill-n skeleton" style="height:1.5rem;width:3rem;margin:0 auto .3rem"></div><div class="pill-l">Position</div></div>
+    </div>
     <div class="fx-grid">
       <div>
         <div class="col-h">Upcoming Fixtures</div>
@@ -613,51 +621,6 @@ footer{background:var(--dark);border-top:3px solid var(--blue)}
   </div>
 </section>
 
-<!-- ══ PLAYER STATS ══ -->
-<section class="section sa reveal" id="stats">
-  <div class="si">
-    <div class="s-head-row">
-      <div><p class="s-label">2025/26 Season</p><h2 class="s-title">Player Statistics</h2></div>
-      <span id="stats-badge" class="static-badge">📋 Preview Data</span>
-    </div>
-    <!-- ─────────────────────────────────────────────────────────────
-         LIVE PLAYER STATS: per-player stats (goals, assists, pass %)
-         are not available on football-data.org free tier.
-         Best free upgrade: API-Football via RapidAPI
-         → https://rapidapi.com/api-sports/api/api-football (100 req/day free)
-         → Endpoint: GET /players?team=341&season=2025&league=39
-         → Set APIFOOTBALL_KEY in CFG below once you have a key
-         ───────────────────────────────────────────────────────────── -->
-    <div class="s-bar"></div>
-    <div class="summary-pills" id="summary-pills">
-      <!-- populated by JS -->
-      <div class="pill"><div class="pill-n skeleton" style="height:1.5rem;width:3rem;margin:0 auto .3rem"></div><div class="pill-l">Played</div></div>
-      <div class="pill"><div class="pill-n skeleton" style="height:1.5rem;width:3rem;margin:0 auto .3rem"></div><div class="pill-l">Won</div></div>
-      <div class="pill"><div class="pill-n skeleton" style="height:1.5rem;width:3rem;margin:0 auto .3rem"></div><div class="pill-l">Drawn</div></div>
-      <div class="pill"><div class="pill-n skeleton" style="height:1.5rem;width:3rem;margin:0 auto .3rem"></div><div class="pill-l">Lost</div></div>
-      <div class="pill"><div class="pill-n skeleton" style="height:1.5rem;width:3rem;margin:0 auto .3rem"></div><div class="pill-l">Goals For</div></div>
-      <div class="pill"><div class="pill-n skeleton" style="height:1.5rem;width:3rem;margin:0 auto .3rem"></div><div class="pill-l">Goals Against</div></div>
-      <div class="pill"><div class="pill-n skeleton" style="height:1.5rem;width:3rem;margin:0 auto .3rem"></div><div class="pill-l">Points</div></div>
-      <div class="pill"><div class="pill-n skeleton" style="height:1.5rem;width:3rem;margin:0 auto .3rem"></div><div class="pill-l">Position</div></div>
-    </div>
-    <div class="stats-table-wrap">
-      <table>
-        <thead><tr><th>Player</th><th>Apps</th><th>Goals</th><th>Assists</th><th>Shots</th><th>Pass %</th><th>Yellow</th><th>Red</th></tr></thead>
-        <tbody>
-          <tr><td><div class="t-player"><div class="t-num">9</div><div><div class="t-name">D. Calvert-Lewin</div><div class="t-pos">ST</div></div></div></td><td>32</td><td class="t-g">14</td><td class="t-a">5</td><td>71</td><td>73%</td><td class="t-y">2</td><td class="t-r">0</td></tr>
-          <tr><td><div class="t-player"><div class="t-num">10</div><div><div class="t-name">J. Piroe</div><div class="t-pos">CF</div></div></div></td><td>30</td><td class="t-g">11</td><td class="t-a">7</td><td>62</td><td>76%</td><td class="t-y">1</td><td class="t-r">0</td></tr>
-          <tr><td><div class="t-player"><div class="t-num">29</div><div><div class="t-name">W. Gnonto</div><div class="t-pos">LW</div></div></div></td><td>35</td><td class="t-g">9</td><td class="t-a">8</td><td>79</td><td>78%</td><td class="t-y">3</td><td class="t-r">0</td></tr>
-          <tr><td><div class="t-player"><div class="t-num">7</div><div><div class="t-name">D. James</div><div class="t-pos">RW</div></div></div></td><td>33</td><td class="t-g">7</td><td class="t-a">9</td><td>64</td><td>81%</td><td class="t-y">4</td><td class="t-r">0</td></tr>
-          <tr><td><div class="t-player"><div class="t-num">4</div><div><div class="t-name">E. Ampadu ©</div><div class="t-pos">DM</div></div></div></td><td>37</td><td class="t-g">2</td><td class="t-a">6</td><td>43</td><td>92%</td><td class="t-y">5</td><td class="t-r">0</td></tr>
-          <tr><td><div class="t-player"><div class="t-num">22</div><div><div class="t-name">A. Tanaka</div><div class="t-pos">CM</div></div></div></td><td>31</td><td class="t-g">3</td><td class="t-a">5</td><td>47</td><td>89%</td><td class="t-y">3</td><td class="t-r">0</td></tr>
-          <tr><td><div class="t-player"><div class="t-num">6</div><div><div class="t-name">J. Rodon</div><div class="t-pos">CB</div></div></div></td><td>35</td><td class="t-g">3</td><td class="t-a">1</td><td>21</td><td>89%</td><td class="t-y">4</td><td class="t-r">0</td></tr>
-          <tr><td><div class="t-player"><div class="t-num">1</div><div><div class="t-name">L. Perri</div><div class="t-pos">GK</div></div></div></td><td>38</td><td class="t-g">0</td><td class="t-a">0</td><td>—</td><td>73%</td><td class="t-y">1</td><td class="t-r">0</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
 <!-- ══ SQUAD ══ -->
 <section class="section reveal" id="squad">
   <div class="si">
@@ -673,38 +636,6 @@ footer{background:var(--dark);border-top:3px solid var(--blue)}
       <div class="sk-card"><div class="skeleton sk-line lg"></div><div class="skeleton sk-line"></div><div class="skeleton sk-line sm"></div></div>
       <div class="sk-card"><div class="skeleton sk-line lg"></div><div class="skeleton sk-line"></div><div class="skeleton sk-line sm"></div></div>
     </div>
-  </div>
-</section>
-
-<!-- ══ SHOP ══ -->
-<section class="section sa reveal" id="shop">
-  <div class="si">
-    <p class="s-label">Official Store</p><h2 class="s-title">Merchandise Shop</h2><div class="s-bar"></div>
-    <div class="shop-grid">
-      <div class="merch-card"><div class="merch-img mi-kh"><span>👕</span><span class="m-tag">New</span></div><div class="m-body"><div class="m-name">Home Kit 2025/26</div><div class="m-cat">Kits &amp; Shirts</div><div class="m-footer"><span class="m-price">£75.00</span><button class="m-btn" onclick="addToCart(this)">Add to Cart</button></div></div></div>
-      <div class="merch-card"><div class="merch-img mi-ka"><span>👕</span><span class="m-tag">New</span></div><div class="m-body"><div class="m-name">Away Kit 2025/26</div><div class="m-cat">Kits &amp; Shirts</div><div class="m-footer"><span class="m-price">£75.00</span><button class="m-btn" onclick="addToCart(this)">Add to Cart</button></div></div></div>
-      <div class="merch-card"><div class="merch-img mi-sc"><span>🧣</span></div><div class="m-body"><div class="m-name">LUFC Woven Scarf</div><div class="m-cat">Accessories</div><div class="m-footer"><span class="m-price">£18.00</span><button class="m-btn" onclick="addToCart(this)">Add to Cart</button></div></div></div>
-      <div class="merch-card"><div class="merch-img mi-jk"><span>🧥</span><span class="m-tag">Sale</span></div><div class="m-body"><div class="m-name">Training Jacket</div><div class="m-cat">Training Wear</div><div class="m-footer"><span class="m-price">£55.00</span><button class="m-btn" onclick="addToCart(this)">Add to Cart</button></div></div></div>
-      <div class="merch-card"><div class="merch-img mi-rt"><span>⭐</span><span class="m-tag">Retro</span></div><div class="m-body"><div class="m-name">1992 Champions Shirt</div><div class="m-cat">Retro Collection</div><div class="m-footer"><span class="m-price">£65.00</span><button class="m-btn" onclick="addToCart(this)">Add to Cart</button></div></div></div>
-      <div class="merch-card"><div class="merch-img mi-ht"><span>🧢</span></div><div class="m-body"><div class="m-name">LUFC Bobble Hat</div><div class="m-cat">Accessories</div><div class="m-footer"><span class="m-price">£20.00</span><button class="m-btn" onclick="addToCart(this)">Add to Cart</button></div></div></div>
-    </div>
-    <div id="cart-toast" style="display:none;position:fixed;bottom:2rem;right:2rem;background:var(--gold);color:var(--navy);font-weight:800;padding:.85rem 1.5rem;border-radius:6px;z-index:200;font-size:.87rem;box-shadow:0 8px 24px rgba(0,0,0,.4)"></div>
-  </div>
-</section>
-
-<!-- ══ HISTORY ══ -->
-<section class="section reveal" id="history">
-  <div class="si" style="text-align:center"><p class="s-label">Est. 1919</p><h2 class="s-title">Our Story</h2><div class="s-bar c"></div></div>
-  <div class="tl-container">
-    <div class="tl-item"><div class="tl-year">1919</div><div class="tl-card"><div class="tl-icon">⚽</div><div class="tl-title">Leeds United Founded</div><div class="tl-desc">The club rises from the ashes of Leeds City, beginning a new era for football in Yorkshire.</div></div></div>
-    <div class="tl-item right"><div class="tl-year">1969</div><div class="tl-card"><div class="tl-icon">🏆</div><div class="tl-title">First Division Champions</div><div class="tl-desc">Don Revie's legendary side — Bremner, Hunter, Charlton, Lorimer — claim the First Division title in style.</div></div></div>
-    <div class="tl-item"><div class="tl-year">1972</div><div class="tl-card"><div class="tl-icon">🥇</div><div class="tl-title">FA Cup Winners</div><div class="tl-desc">The Centenary FA Cup Final at Wembley. Allan Clarke's diving header secures the trophy.</div></div></div>
-    <div class="tl-item right"><div class="tl-year">1974</div><div class="tl-card"><div class="tl-icon">🏅</div><div class="tl-title">Division One Champions Again</div><div class="tl-desc">Revie's last great triumph as the Whites reclaim the title in his final season at the helm.</div></div></div>
-    <div class="tl-item"><div class="tl-year">1992</div><div class="tl-card"><div class="tl-icon">🏆</div><div class="tl-title">Division One Champions</div><div class="tl-desc">Howard Wilkinson leads Leeds to the final First Division title before the Premier League era begins.</div></div></div>
-    <div class="tl-item right"><div class="tl-year">2001</div><div class="tl-card"><div class="tl-icon">⭐</div><div class="tl-title">Champions League Semi-Finalists</div><div class="tl-desc">David O'Leary's young guns stun Europe, reaching the semis with wins over Lazio, Deportivo &amp; AC Milan.</div></div></div>
-    <div class="tl-item"><div class="tl-year">2020</div><div class="tl-card"><div class="tl-icon">🎉</div><div class="tl-title">Back in the Premier League!</div><div class="tl-desc">Marcelo Bielsa's remarkable Leeds promoted after 16 years away. The whole city erupts.</div></div></div>
-    <div class="tl-item right"><div class="tl-year">2022</div><div class="tl-card"><div class="tl-icon">💪</div><div class="tl-title">Premier League Survival</div><div class="tl-desc">Jesse Marsch leads Leeds to final-day safety in one of the most dramatic conclusions in club history.</div></div></div>
-    <div class="tl-item"><div class="tl-year">2024</div><div class="tl-card"><div class="tl-icon">🚀</div><div class="tl-title">Return to the Top Flight</div><div class="tl-desc">Promotion back to the Premier League under Daniel Farke. Forever Leeds, forever bouncing back.</div></div></div>
   </div>
 </section>
 
@@ -921,7 +852,7 @@ footer{background:var(--dark);border-top:3px solid var(--blue)}
       <p class="f-tag">Forever Leeds.</p>
       <p class="f-desc">The online home for Leeds United fans worldwide. We bleed blue and gold. MOT.</p>
     </div>
-    <div class="fc"><h4>Quick Links</h4><div class="fl"><a href="#home">Home</a><a href="#news">News</a><a href="#fixtures">Fixtures</a><a href="#squad">Squad</a><a href="#stats">Stats</a><a href="#history">History</a><a href="#shop">Shop</a><a href="#gallery">Gallery</a><a href="#forum">Forum</a><a href="#fan-zone">Fan Zone</a></div></div>
+    <div class="fc"><h4>Quick Links</h4><div class="fl"><a href="#home">Home</a><a href="#news">News</a><a href="#fixtures">Fixtures</a><a href="#squad">Squad</a><a href="#gallery">Gallery</a><a href="#forum">Forum</a><a href="#fan-zone">Fan Zone</a></div></div>
     <div class="fc"><h4>Follow Us</h4><div class="soc-row"><button class="soc-btn" title="Twitter/X">𝕏</button><button class="soc-btn" title="Instagram">📸</button><button class="soc-btn" title="Facebook">📘</button><button class="soc-btn" title="YouTube">▶</button></div></div>
   </div>
   <div class="footer-bottom"><p>This is an unofficial fan site. Not affiliated with Leeds United AFC.</p><p>© 2026 LUFC Fan Hub · All rights reserved · MOT 🔵💛</p></div>
@@ -1181,7 +1112,6 @@ async function loadStandings() {
       {n: row.position+'th',l:'Position',       c:'color:var(--gold)'},
     ].map(p=>`<div class="pill"><div class="pill-n" style="${p.c}">${p.n}</div><div class="pill-l">${p.l}</div></div>`).join('');
 
-    setBadge('stats-badge', true);
   } catch(e) {
     console.warn('Standings API:', e.message);
     loadStaticPills();
@@ -1682,19 +1612,6 @@ function vote(i){
 
 // ─── Mobile menu ───────────────────────────────────
 function toggleMenu(){ $('mob-menu').classList.toggle('open'); }
-
-// ─── Merch cart ────────────────────────────────────
-let cartCount=0;
-function addToCart(btn){
-  cartCount++;
-  const name=btn.closest('.merch-card').querySelector('.m-name').textContent;
-  btn.textContent='✓ Added'; btn.style.background='#22c55e'; btn.style.color='#fff';
-  setTimeout(()=>{btn.textContent='Add to Cart';btn.style.background='';btn.style.color='';},2200);
-  const t=$('cart-toast');
-  t.textContent=`🛒 "${name}" added (${cartCount} item${cartCount>1?'s':''})`;
-  t.style.display='block'; clearTimeout(window._ct);
-  window._ct=setTimeout(()=>t.style.display='none',3000);
-}
 </script>
 </body>
 </html>
