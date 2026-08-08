@@ -880,13 +880,22 @@ footer{background:var(--dark);border-top:3px solid var(--blue)}
 
 <script>
 // ═══════════════════════════════════════════════════
-//  ⚙️  CONFIGURATION — paste your API key below
+//  ⚙️  CONFIGURATION
 // ═══════════════════════════════════════════════════
+//  Football data is fetched through /api/football (see api/football.js).
+//  That proxy exists because football-data.org's free tier returns
+//  `Access-Control-Allow-Origin: http://localhost`, so the browser cannot call
+//  it directly from a deployed origin — and it keeps the API key server-side.
+//  Set FOOTBALL_DATA_KEY in the hosting environment.
+//
+//  API_KEY below is only used for the direct-call fallback when the proxy is
+//  unavailable (e.g. opening this file straight off http://localhost).
 const CFG = {
-  API_KEY: 'REDACTED_ROTATE_ME',
+  API_KEY: '',
   TEAM_ID: 341,         // Leeds United FC
   TEAM_NAME: 'Leeds United FC',
   COMP: 'PL',           // Premier League
+  PROXY: '/api/football?path=',
   BASE: 'https://api.football-data.org/v4',
   CACHE_MS: 5 * 60 * 1000,  // 5-minute cache
   // ── Optional live upgrades (leave empty to use static fallbacks) ──
@@ -923,12 +932,30 @@ const CACHE = {
 };
 
 // Pass cacheKey = null to bypass the cache entirely (live scores must never be cached)
+// Goes through the serverless proxy first; falls back to a direct call only if a
+// key is configured (that path only works from http://localhost).
+let proxyAvailable = true;
+
 async function apiFetch(path, cacheKey) {
   if (cacheKey) {
     const cached = CACHE.get(cacheKey);
     if (cached) return cached;
   }
-  const res = await fetch(CFG.BASE + path, {headers:{'X-Auth-Token': CFG.API_KEY}});
+
+  let res = null;
+  if (proxyAvailable) {
+    try {
+      res = await fetch(CFG.PROXY + encodeURIComponent(path));
+      // No proxy deployed here — stop trying it for the rest of the session
+      if (res.status === 404) { proxyAvailable = false; res = null; }
+    } catch { proxyAvailable = false; res = null; }
+  }
+
+  if (!res) {
+    if (!CFG.API_KEY) throw new Error('No proxy and no API key');
+    res = await fetch(CFG.BASE + path, {headers:{'X-Auth-Token': CFG.API_KEY}});
+  }
+
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   const data = await res.json();
   if (cacheKey) CACHE.set(cacheKey, data);
@@ -1124,12 +1151,13 @@ async function loadResults() {
       const lufc = isHome ? hg : ag;
       const them = isHome ? ag : hg;
       const res = lufc > them ? 'W' : lufc < them ? 'L' : 'D';
+      // Always Leeds' score first, otherwise an away loss reads like a win
       return `<div class="fx-item">
         <div class="rr">
           <span class="rb ${res}">${res}</span>
           <span style="color:#fff;font-weight:700;font-size:.88rem">vs ${opp}</span>
         </div>
-        <span class="rs">${hg}–${ag}</span>
+        <span class="rs">${lufc}–${them}</span>
       </div>`;
     }).join('');
 
@@ -1445,7 +1473,10 @@ async function loadGallery() {
       .map(p => {
         const ii = p.imageinfo?.[0];
         if (!ii) return null;
-        const ext = (ii.url || '').split('.').pop().toLowerCase();
+        // Strip query/hash first — Wikimedia appends utm_* params to image URLs,
+        // which otherwise swallow the file extension
+        const clean = (ii.url || '').split(/[?#]/)[0];
+        const ext = clean.split('.').pop().toLowerCase();
         if (!['jpg','jpeg','png'].includes(ext)) return null;
         const desc = ii.extmetadata?.ImageDescription?.value?.replace(/<[^>]+>/g,'').slice(0,120) || 'Elland Road, Leeds';
         const title = ii.extmetadata?.ObjectName?.value || p.title?.replace('File:','') || 'Gallery image';
@@ -1649,6 +1680,7 @@ function saveApiKey() {
   $('api-banner').classList.add('hidden');
   // Clear cache so fresh data loads
   CACHE_KEYS.forEach(k=>{try{localStorage.removeItem('lufc_'+k)}catch{}});
+  proxyAvailable = false;  // user supplied a key — call the API directly
   init();
 }
 function dismissBanner() { $('api-banner').classList.add('hidden'); }
@@ -1661,42 +1693,36 @@ async function init() {
   initForum();     // Giscus embed (or static threads if not configured)
   initPoll();      // JSONbin shared votes (or localStorage if not configured)
 
-  if (CFG.API_KEY) {
-    // Load all live sections in parallel
-    await Promise.allSettled([
-      loadFixtures(),
-      loadResults(),
-      loadStandings(),
-      loadSquad(),
-    ]);
-    // Then start watching for an in-play match (takes over the hero countdown)
-    startLivePolling();
-  } else {
-    // No key — load static fallbacks immediately
-    loadStaticFixtures();
-    loadStaticResults();
-    loadStaticPills();
-    loadStaticSquad();
-  }
+  // Always attempt the football sections — each one falls back to static data on
+  // its own if the proxy is missing and no direct API key is configured.
+  await Promise.allSettled([
+    loadFixtures(),
+    loadResults(),
+    loadStandings(),
+    loadSquad(),
+  ]);
+
+  // Watch for an in-play match only if the data layer actually reached the API
+  if (proxyAvailable || CFG.API_KEY) startLivePolling();
 }
 
-// On load: check for saved API key
+// On load: restore any saved key, then start.
+// The banner is only for self-hosting without the proxy, so keep it hidden
+// until we know the proxy isn't there.
 (function() {
   try {
     const saved = localStorage.getItem('lufc_apikey');
-    if (saved) {
-      CFG.API_KEY = saved;
-      $('api-banner').classList.add('hidden');
-    } else {
-      // Pre-fill if CFG has a hardcoded key
-      if (CFG.API_KEY) $('api-banner').classList.add('hidden');
-    }
+    if (saved) CFG.API_KEY = saved;
   } catch {}
 
-  // If a key is already hardcoded in CFG, hide banner
-  if (CFG.API_KEY) $('api-banner').classList.add('hidden');
+  $('api-banner').classList.add('hidden');
 
-  init();
+  init().then(() => {
+    // Proxy missing and no key configured — offer the manual key entry
+    if (!proxyAvailable && !CFG.API_KEY) {
+      $('api-banner').classList.remove('hidden');
+    }
+  });
 })();
 
 // ─── Scroll reveal ─────────────────────────────────
