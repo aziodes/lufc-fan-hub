@@ -84,6 +84,16 @@ nav{position:sticky;top:0;z-index:100;background:var(--dark);border-bottom:3px s
 .hero-mgr{color:rgba(255,255,255,.5);font-size:.82rem;letter-spacing:.15em;text-transform:uppercase;margin-bottom:.5rem}
 .hero-sub{color:rgba(255,255,255,.75);font-size:clamp(1rem,2.5vw,1.2rem);margin-bottom:1.75rem;letter-spacing:.04em}
 .countdown-bar{background:rgba(10,22,40,.7);border:1px solid rgba(255,205,0,.25);border-radius:8px;padding:1.1rem 1.5rem;margin-bottom:2rem;display:inline-block;min-width:340px}
+.countdown-bar.hidden{display:none}
+
+/* ── LIVE MATCH BAR ── */
+.live-bar{display:none;background:rgba(10,22,40,.85);border:2px solid #22c55e;border-radius:8px;padding:1.1rem 1.75rem;margin-bottom:2rem;min-width:340px;box-shadow:0 0 28px rgba(34,197,94,.22)}
+.live-bar.open{display:inline-block}
+.lm-head{display:flex;align-items:center;justify-content:center;gap:.45rem;color:#22c55e;font-size:.7rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;margin-bottom:.7rem}
+.lm-row{display:flex;align-items:center;justify-content:center;gap:1.1rem;flex-wrap:wrap}
+.lm-team{color:#fff;font-weight:800;font-size:.95rem;min-width:100px}
+.lm-score{color:var(--gold);font-weight:900;font-size:2.1rem;line-height:1;font-variant-numeric:tabular-nums;white-space:nowrap}
+.lm-meta{color:rgba(255,255,255,.45);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;margin-top:.65rem}
 .cd-label{color:var(--gold);font-size:.7rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;margin-bottom:.5rem}
 .cd-match{color:#fff;font-weight:800;font-size:.9rem;margin-bottom:.7rem}
 .cd-units{display:flex;gap:1.2rem;justify-content:center}
@@ -516,7 +526,17 @@ footer{background:var(--dark);border-top:3px solid var(--blue)}
     <h1 class="hero-title">Marching On<br>Together</h1>
     <p class="hero-mgr">Manager: Daniel Farke &nbsp;·&nbsp; Elland Road, Leeds &nbsp;·&nbsp; Est. 1919</p>
     <p class="hero-sub">The Pride of Yorkshire — The Whites — Forever Leeds</p>
-    <div class="countdown-bar">
+    <!-- Live match bar — shown only while a Leeds game is IN_PLAY / PAUSED -->
+    <div class="live-bar" id="live-bar">
+      <div class="lm-head"><span class="live-dot"></span><span id="lm-status">Live Now</span></div>
+      <div class="lm-row">
+        <span class="lm-team" id="lm-home">—</span>
+        <span class="lm-score" id="lm-score">0 – 0</span>
+        <span class="lm-team" id="lm-away">—</span>
+      </div>
+      <div class="lm-meta" id="lm-meta"></div>
+    </div>
+    <div class="countdown-bar" id="countdown-bar">
       <div class="cd-label" id="cd-label">⚡ Next Match</div>
       <div class="cd-match" id="cd-match">Loading next fixture…</div>
       <div class="cd-units">
@@ -566,7 +586,7 @@ footer{background:var(--dark);border-top:3px solid var(--blue)}
 <section class="section sa reveal" id="reports">
   <div class="si">
     <div class="s-head-row">
-      <div><p class="s-label">Post-Match</p><h2 class="s-title">Match Reports</h2></div>
+      <div><p class="s-label" id="reports-label">Post-Match</p><h2 class="s-title">Match Reports</h2></div>
       <span id="reports-badge" class="static-badge">📋 Preview Data</span>
     </div>
     <div class="s-bar"></div>
@@ -585,7 +605,7 @@ footer{background:var(--dark);border-top:3px solid var(--blue)}
 <section class="section reveal" id="fixtures">
   <div class="si">
     <div class="s-head-row">
-      <div><p class="s-label">This Season</p><h2 class="s-title">Fixtures &amp; Results</h2></div>
+      <div><p class="s-label" id="fx-season-label">This Season</p><h2 class="s-title">Fixtures &amp; Results</h2></div>
       <span id="fx-badge" class="static-badge">📋 Preview Data</span>
     </div>
     <div class="s-bar"></div>
@@ -610,7 +630,7 @@ footer{background:var(--dark);border-top:3px solid var(--blue)}
         </div>
       </div>
       <div>
-        <div class="col-h">Recent Results</div>
+        <div class="col-h" id="results-head">Recent Results</div>
         <div class="fx-list" id="results-list">
           <div class="sk-card"><div class="skeleton sk-line lg"></div><div class="skeleton sk-line sm"></div></div>
           <div class="sk-card"><div class="skeleton sk-line lg"></div><div class="skeleton sk-line sm"></div></div>
@@ -625,7 +645,7 @@ footer{background:var(--dark);border-top:3px solid var(--blue)}
 <section class="section reveal" id="squad">
   <div class="si">
     <div class="s-head-row">
-      <div><p class="s-label">2025/26 Season</p><h2 class="s-title">The Squad</h2></div>
+      <div><p class="s-label" id="squad-season-label">Current Season</p><h2 class="s-title">The Squad</h2></div>
       <span id="squad-badge" class="static-badge">📋 Preview Data</span>
     </div>
     <div class="s-bar"></div>
@@ -875,28 +895,43 @@ const CFG = {
   GISCUS_CATEGORY_ID: '',   // from giscus.app
   JSONBIN_BIN_ID: '',       // from jsonbin.io (free)
   APIFOOTBALL_KEY: '',      // RapidAPI → api-football (100 req/day free)
+  LIVE_POLL_MS: 60 * 1000,  // re-check for an in-play match every 60s
 };
 
 // ─── Helpers ───────────────────────────────────────
 const $ = id => document.getElementById(id);
 
+// Football seasons are labelled by their starting year: 2026 => 2026/27.
+// Aug–Dec belong to the season starting this year; Jan–Jul to the one that started last year.
+const SEASON_START = (() => {
+  const n = new Date();
+  return n.getMonth() >= 7 ? n.getFullYear() : n.getFullYear() - 1;
+})();
+const SEASON_LABEL = `${SEASON_START}/${String(SEASON_START + 1).slice(2)}`;
+const PREV_SEASON_LABEL = `${SEASON_START - 1}/${String(SEASON_START).slice(2)}`;
+
+const CACHE_KEYS = ['fixtures','fixtures_timed','results','results_prev','standings_PL','standings_ELC','squad'];
+
 // Cache version — bump this string any time the squad/data needs a forced refresh
-const CACHE_VER = 'v2026a';
-// Wipe all stored entries if the version has changed (catches stale squad data)
-(function(){try{if(localStorage.getItem('lufc_cache_ver')!==CACHE_VER){['fixtures','fixtures_timed','results','standings_PL','standings_ELC','squad'].forEach(k=>localStorage.removeItem('lufc_'+k));localStorage.setItem('lufc_cache_ver',CACHE_VER);}}catch{}})();
+const CACHE_VER = 'v2026b-' + SEASON_START;
+// Wipe all stored entries if the version has changed (catches stale squad + season rollover)
+(function(){try{if(localStorage.getItem('lufc_cache_ver')!==CACHE_VER){CACHE_KEYS.forEach(k=>localStorage.removeItem('lufc_'+k));localStorage.setItem('lufc_cache_ver',CACHE_VER);}}catch{}})();
 
 const CACHE = {
   get(k){try{const v=JSON.parse(localStorage.getItem('lufc_'+k));return v&&Date.now()<v.exp?v.d:null}catch{return null}},
   set(k,d){try{localStorage.setItem('lufc_'+k,JSON.stringify({d,exp:Date.now()+CFG.CACHE_MS}))}catch{}}
 };
 
+// Pass cacheKey = null to bypass the cache entirely (live scores must never be cached)
 async function apiFetch(path, cacheKey) {
-  const cached = CACHE.get(cacheKey);
-  if (cached) return cached;
+  if (cacheKey) {
+    const cached = CACHE.get(cacheKey);
+    if (cached) return cached;
+  }
   const res = await fetch(CFG.BASE + path, {headers:{'X-Auth-Token': CFG.API_KEY}});
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   const data = await res.json();
-  CACHE.set(cacheKey, data);
+  if (cacheKey) CACHE.set(cacheKey, data);
   return data;
 }
 
@@ -990,14 +1025,95 @@ async function loadFixtures() {
   }
 }
 
+// ─── Live match (IN_PLAY / PAUSED) ─────────────────
+let livePollTimer = null;
+
+async function loadLive() {
+  const bar = $('live-bar'), cd = $('countdown-bar');
+  if (!bar) return;
+  try {
+    // Never cached — a live score must be fresh on every poll
+    const data = await apiFetch(`/teams/${CFG.TEAM_ID}/matches?status=IN_PLAY,PAUSED`, null);
+    const m = (data.matches || [])[0];
+
+    if (!m) {
+      // No live game — restore the countdown
+      bar.classList.remove('open');
+      cd?.classList.remove('hidden');
+      return;
+    }
+
+    const hg = m.score.fullTime.home ?? m.score.halfTime.home ?? 0;
+    const ag = m.score.fullTime.away ?? m.score.halfTime.away ?? 0;
+
+    $('lm-home').textContent  = shortName(m.homeTeam.name);
+    $('lm-away').textContent  = shortName(m.awayTeam.name);
+    $('lm-score').textContent = `${hg} – ${ag}`;
+    $('lm-status').textContent = m.status === 'PAUSED' ? 'Half Time' : 'Live Now';
+    $('lm-meta').textContent  =
+      `${compCode(m.competition)}${m.matchday ? ' · Matchday ' + m.matchday : ''}`;
+
+    // Live bar takes over the hero from the countdown
+    bar.classList.add('open');
+    cd?.classList.add('hidden');
+  } catch(e) {
+    console.warn('Live match:', e.message);
+  }
+}
+
+// Only poll during an actual match window. Polling year-round would burn
+// ~1400 calls/day against the free tier for nothing.
+const MATCH_WINDOW_BEFORE = 10 * 60 * 1000;   // start watching 10 min before kick-off
+const MATCH_WINDOW_AFTER  = 165 * 60 * 1000;  // keep watching ~2h45m after
+
+function inMatchWindow() {
+  if (!countdownTarget) return false;
+  const delta = Date.now() - countdownTarget.getTime();
+  return delta >= -MATCH_WINDOW_BEFORE && delta <= MATCH_WINDOW_AFTER;
+}
+
+function startLivePolling() {
+  // One check on load — covers a reload mid-match
+  loadLive();
+
+  const schedule = () => {
+    if (livePollTimer) clearTimeout(livePollTimer);
+    // Fast cadence inside the window, slow idle re-check outside it
+    const wait = inMatchWindow() ? CFG.LIVE_POLL_MS : 10 * 60 * 1000;
+    livePollTimer = setTimeout(async () => {
+      if (inMatchWindow()) await loadLive();
+      schedule();
+    }, wait);
+  };
+  schedule();
+}
+
 async function loadResults() {
   try {
-    const data = await apiFetch(
+    // Current season first. At a season rollover this returns nothing (no games
+    // played yet), so fall back to the previous season's results.
+    let data = await apiFetch(
       `/teams/${CFG.TEAM_ID}/matches?status=FINISHED&limit=6`,
       'results'
     );
-    const matches = (data.matches || []).slice(-6).reverse();
+    let matches = (data.matches || []).slice(-6).reverse();
+    let isPrevSeason = false;
+
+    if (!matches.length) {
+      data = await apiFetch(
+        `/teams/${CFG.TEAM_ID}/matches?status=FINISHED&season=${SEASON_START - 1}`,
+        'results_prev'
+      );
+      matches = (data.matches || []).slice(-6).reverse();
+      isPrevSeason = true;
+    }
     if (!matches.length) throw new Error('No results');
+
+    // Label the column so old results are never mistaken for this season's
+    const rh = $('results-head');
+    if (rh) rh.textContent = isPrevSeason
+      ? `Final Results — ${PREV_SEASON_LABEL}`
+      : 'Recent Results';
 
     // ── Results sidebar ──────────────────────────────
     $('results-list').innerHTML = matches.slice(0, 5).map(m => {
@@ -1018,7 +1134,7 @@ async function loadResults() {
     }).join('');
 
     // ── Match report cards ───────────────────────────
-    buildMatchReports(matches);
+    buildMatchReports(matches, isPrevSeason);
 
   } catch(e) {
     console.warn('Results API:', e.message);
@@ -1051,7 +1167,13 @@ const RPT_TITLES = {
   ],
 };
 
-function buildMatchReports(matches) {
+function buildMatchReports(matches, isPrevSeason) {
+  // Retitle the section when we're showing last season's games
+  const rl = $('reports-label');
+  if (rl) rl.textContent = isPrevSeason
+    ? `${PREV_SEASON_LABEL} Review`
+    : 'Post-Match';
+
   $('reports-grid').innerHTML = matches.map((m, i) => {
     const isHome = m.homeTeam.id === CFG.TEAM_ID;
     const opp  = shortName(isHome ? m.awayTeam.name : m.homeTeam.name);
@@ -1090,16 +1212,28 @@ function buildMatchReports(matches) {
 // ─── Standings ─────────────────────────────────────
 async function loadStandings() {
   try {
-    let row = null;
+    let row = null, seasonMeta = null;
     // Try Premier League first, then Championship — whichever Leeds are in
     for (const comp of ['PL', 'ELC']) {
       try {
         const d = await apiFetch(`/competitions/${comp}/standings`, `standings_${comp}`);
         const found = (d.standings[0]?.table || []).find(t => t.team.id === CFG.TEAM_ID);
-        if (found) { row = found; CFG.COMP = comp; break; }
+        if (found) { row = found; seasonMeta = d.season; CFG.COMP = comp; break; }
       } catch {}
     }
     if (!row) throw new Error('Team not found in table');
+
+    // At a season rollover the API still serves the previous season's completed
+    // table. A full 38-game record before this season's opener means exactly that.
+    const seasonStarted = new Date() >= new Date(seasonMeta?.startDate || 0);
+    const isFinalTable = !seasonStarted && row.playedGames >= 38;
+
+    const sh = $('fx-season-label');
+    if (sh) sh.textContent = isFinalTable
+      ? `${PREV_SEASON_LABEL} Final Table`
+      : `${SEASON_LABEL} Season`;
+
+    const ord = n => n + (['th','st','nd','rd'][(n%100-20)%10] || ['th','st','nd','rd'][n%100] || 'th');
 
     $('summary-pills').innerHTML = [
       {n: row.playedGames,   l:'Played',        c:''},
@@ -1109,7 +1243,7 @@ async function loadStandings() {
       {n: row.goalsFor,      l:'Goals For',      c:''},
       {n: row.goalsAgainst,  l:'Goals Against',  c:''},
       {n: row.points,        l:'Points',         c:'color:var(--gold)'},
-      {n: row.position+'th',l:'Position',       c:'color:var(--gold)'},
+      {n: ord(row.position), l:'Position',       c:'color:var(--gold)'},
     ].map(p=>`<div class="pill"><div class="pill-n" style="${p.c}">${p.n}</div><div class="pill-l">${p.l}</div></div>`).join('');
 
   } catch(e) {
@@ -1122,8 +1256,11 @@ async function loadStandings() {
 async function loadSquad() {
   try {
     const data = await apiFetch(`/teams/${CFG.TEAM_ID}`, 'squad');
-    const squad = (data.squad || []).slice(0, 16);
+    const squad = (data.squad || []).slice(0, 24);
     if (!squad.length) throw new Error('Empty squad');
+
+    const sl = $('squad-season-label');
+    if (sl) sl.textContent = `${SEASON_LABEL} Season`;
 
     $('squad-grid').innerHTML = squad.map(p => {
       const flag = FLAGS[p.nationality] || '🌍';
@@ -1420,57 +1557,73 @@ async function initPoll() {
 
 // ─── Static fallbacks (shown when no API key) ──────
 function loadStaticFixtures() {
+  // Real 2026/27 Premier League opening fixtures, per football-data.org
   $('fixtures-list').innerHTML = [
-    {home:'Leeds Utd',away:'Burnley',date:'9 Aug 2026 · 15:00',h:true,c:'PL'},
-    {home:'Sunderland',away:'Leeds Utd',date:'16 Aug 2026 · 15:00',h:false,c:'PL'},
-    {home:'Leeds Utd',away:'Middlesbrough',date:'23 Aug 2026 · 15:00',h:true,c:'PL'},
-    {home:'Sheffield Utd',away:'Leeds Utd',date:'30 Aug 2026 · 15:00',h:false,c:'PL'},
-    {home:'Leeds Utd',away:'Hull City',date:'13 Sep 2026 · 15:00',h:true,c:'PL'},
+    {home:"Nott'm Forest",away:'Leeds Utd',    date:'22 Aug 2026 · 15:00',h:false,c:'PL'},
+    {home:'Leeds Utd',    away:'Brentford',    date:'30 Aug 2026 · 14:00',h:true, c:'PL'},
+    {home:'Brighton',     away:'Leeds Utd',    date:'5 Sep 2026 · 15:00', h:false,c:'PL'},
+    {home:'Leeds Utd',    away:'Newcastle Utd',date:'14 Sep 2026 · 20:00',h:true, c:'PL'},
   ].map(f=>`<div class="fx-item"><div><div class="fx-name">${f.home} <span class="fx-vs">vs</span> ${f.away}</div><div class="fx-date">${f.date}</div></div><div class="fx-badges"><span class="${f.h?'b-h':'b-a'}">${f.h?'HOME':'AWAY'}</span><span class="b-c">${f.c}</span></div></div>`).join('');
 
-  // static countdown — opening day of 2026/27 season
-  countdownTarget = new Date('2026-08-09T14:00:00Z');
-  $('cd-match').textContent = 'Leeds United vs Burnley  ·  2026/27 Season Opener  ·  Elland Road';
+  // static countdown — 2026/27 season opener
+  countdownTarget = new Date('2026-08-22T14:00:00Z');
+  $('cd-match').textContent = "Nott'm Forest vs Leeds Utd  ·  2026/27 Season Opener  ·  Away";
   if (cdTimer) clearInterval(cdTimer);
   cdTimer = setInterval(tickCountdown, 1000);
   tickCountdown();
 }
 
 function loadStaticResults() {
+  // Leeds' closing 2025/26 results, per football-data.org
+  const rh = $('results-head');
+  if (rh) rh.textContent = `Final Results — ${PREV_SEASON_LABEL}`;
   $('results-list').innerHTML = [
-    {opp:'Wolves',score:'2–1',r:'W'},{opp:'Southampton',score:'3–0',r:'W'},
-    {opp:'Bournemouth',score:'1–1',r:'D'},{opp:'Ipswich',score:'2–0',r:'W'},
-    {opp:'Crystal Palace',score:'0–1',r:'L'},
+    {opp:'West Ham',   score:'0–3',r:'L'},
+    {opp:'Brighton',   score:'1–0',r:'W'},
+    {opp:'Tottenham',  score:'1–1',r:'D'},
+    {opp:'Burnley',    score:'3–1',r:'W'},
+    {opp:'Bournemouth',score:'2–2',r:'D'},
   ].map(r=>`<div class="fx-item"><div class="rr"><span class="rb ${r.r}">${r.r}</span><span style="color:#fff;font-weight:700;font-size:.88rem">vs ${r.opp}</span></div><span class="rs">${r.score}</span></div>`).join('');
 }
 
 function loadStaticPills() {
+  // Leeds' final 2025/26 Premier League record, per football-data.org
+  const sl = $('fx-season-label');
+  if (sl) sl.textContent = `${PREV_SEASON_LABEL} Final Table`;
   $('summary-pills').innerHTML = [
-    {n:38,l:'Played',c:''},{n:16,l:'Won',c:'color:#22c55e'},
-    {n:10,l:'Drawn',c:'color:var(--gold)'},{n:12,l:'Lost',c:'color:#ef4444'},
-    {n:58,l:'Goals For',c:''},{n:54,l:'Goals Against',c:''},
-    {n:58,l:'Points',c:'color:var(--gold)'},{n:'11th',l:'Position',c:'color:var(--gold)'},
+    {n:38,l:'Played',c:''},{n:11,l:'Won',c:'color:#22c55e'},
+    {n:14,l:'Drawn',c:'color:var(--gold)'},{n:13,l:'Lost',c:'color:#ef4444'},
+    {n:49,l:'Goals For',c:''},{n:56,l:'Goals Against',c:''},
+    {n:47,l:'Points',c:'color:var(--gold)'},{n:'14th',l:'Position',c:'color:var(--gold)'},
   ].map(p=>`<div class="pill"><div class="pill-n" style="${p.c}">${p.n}</div><div class="pill-l">${p.l}</div></div>`).join('');
 }
 
 function loadStaticSquad() {
+  // Mirrors the football-data.org squad for the current season.
+  // Shirt numbers are not exposed on the free tier — shown as '–' where unknown.
   const players = [
-    {num:1,  name:'Lucas Perri',           nat:'Brazil',        pos:'GK',  form:85},
-    {num:2,  name:'Jayden Bogle',          nat:'England',       pos:'RB',  form:79},
-    {num:5,  name:'Pascal Struijk',        nat:'Belgium',       pos:'CB',  form:84},
-    {num:6,  name:'Joe Rodon',             nat:'Wales',         pos:'CB',  form:87},
-    {num:3,  name:'Gabriel Gudmundsson',   nat:'Sweden',        pos:'LB',  form:77},
-    {num:4,  name:'Ethan Ampadu',          nat:'Wales',         pos:'DM',  form:88},
-    {num:8,  name:'Sean Longstaff',        nat:'England',       pos:'CM',  form:80},
-    {num:22, name:'Ao Tanaka',             nat:'Japan',         pos:'CM',  form:82},
-    {num:7,  name:'Daniel James',          nat:'Wales',         pos:'RW',  form:78},
-    {num:10, name:'Joël Piroe',            nat:'Netherlands',   pos:'CF',  form:83},
-    {num:29, name:'Wilfried Gnonto',       nat:'Italy',         pos:'LW',  form:85},
-    {num:9,  name:'Dominic Calvert-Lewin', nat:'England',       pos:'ST',  form:86},
-    {num:11, name:'Brenden Aaronson',      nat:'United States', pos:'MF',  form:79},
-    {num:15, name:'Jaka Bijol',            nat:'Slovenia',      pos:'CB',  form:82},
-    {num:16, name:'Illan Meslier',         nat:'France',        pos:'GK',  form:80},
-    {num:19, name:'Noah Okafor',           nat:'Switzerland',   pos:'FW',  form:78},
+    {num:1,  name:'Lucas Perri',           nat:'Brazil',            pos:'GK',  form:85},
+    {num:2,  name:'Jayden Bogle',          nat:'England',           pos:'RB',  form:79},
+    {num:6,  name:'Joe Rodon',             nat:'Wales',             pos:'CB',  form:87},
+    {num:3,  name:'Gabriel Gudmundsson',   nat:'Sweden',            pos:'LB',  form:77},
+    {num:4,  name:'Ethan Ampadu',          nat:'Wales',             pos:'DM',  form:88},
+    {num:15, name:'Jaka Bijol',            nat:'Slovenia',          pos:'CB',  form:82},
+    {num:'–',name:'Sebastiaan Bornauw',    nat:'Belgium',           pos:'CB',  form:78},
+    {num:'–',name:'James Justin',          nat:'England',           pos:'DEF', form:80},
+    {num:'–',name:'Maximilian Wöber',      nat:'Austria',           pos:'CB',  form:79},
+    {num:8,  name:'Sean Longstaff',        nat:'England',           pos:'CM',  form:80},
+    {num:22, name:'Ao Tanaka',             nat:'Japan',             pos:'CM',  form:82},
+    {num:'–',name:'Anton Stach',           nat:'Germany',           pos:'MF',  form:81},
+    {num:'–',name:'Ilia Gruev',            nat:'Bulgaria',          pos:'MF',  form:78},
+    {num:11, name:'Brenden Aaronson',      nat:'United States',     pos:'MF',  form:79},
+    {num:7,  name:'Daniel James',          nat:'Wales',             pos:'RW',  form:78},
+    {num:29, name:'Wilfried Gnonto',       nat:'Italy',             pos:'LW',  form:85},
+    {num:9,  name:'Dominic Calvert-Lewin', nat:'England',           pos:'ST',  form:86},
+    {num:10, name:'Joël Piroe',            nat:'Netherlands',       pos:'CF',  form:83},
+    {num:'–',name:'Harry Wilson',          nat:'Wales',             pos:'FW',  form:80},
+    {num:'–',name:'Lukas Nmecha',          nat:'Germany',           pos:'FW',  form:77},
+    {num:'–',name:'Jack Harrison',         nat:'England',           pos:'FW',  form:79},
+    {num:19, name:'Noah Okafor',           nat:'Switzerland',       pos:'FW',  form:78},
   ];
   $('squad-grid').innerHTML = players.map(p=>`<div class="player-card"><div class="p-wm">${p.num}</div><div class="p-top"><div class="p-num">${p.num}</div><div><div class="p-name">${p.name}</div><div class="p-meta"><span class="p-flag">${FLAGS[p.nat]||'🌍'}</span><span class="p-pos">${p.pos}</span></div></div></div><div class="form-lbl"><span class="form-t">Form Rating</span><span class="form-v">${p.form}</span></div><div class="form-track"><div class="form-fill" style="width:${p.form}%"></div></div></div>`).join('');
 }
@@ -1495,7 +1648,7 @@ function saveApiKey() {
   try { localStorage.setItem('lufc_apikey', key); } catch{}
   $('api-banner').classList.add('hidden');
   // Clear cache so fresh data loads
-  ['fixtures','fixtures_timed','results','standings_PL','standings_ELC','squad'].forEach(k=>{try{localStorage.removeItem('lufc_'+k)}catch{}});
+  CACHE_KEYS.forEach(k=>{try{localStorage.removeItem('lufc_'+k)}catch{}});
   init();
 }
 function dismissBanner() { $('api-banner').classList.add('hidden'); }
@@ -1516,6 +1669,8 @@ async function init() {
       loadStandings(),
       loadSquad(),
     ]);
+    // Then start watching for an in-play match (takes over the hero countdown)
+    startLivePolling();
   } else {
     // No key — load static fallbacks immediately
     loadStaticFixtures();
