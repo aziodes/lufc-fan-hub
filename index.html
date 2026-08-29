@@ -1360,13 +1360,25 @@ const NEWS_ICONS = ['📰','⚽','🔄','🗞️','💛','🏟️'];
 
 async function loadNews() {
   try {
-    const RSS = 'https://news.google.com/rss/search?q=%22Leeds+United%22&hl=en-GB&gl=GB&ceid=GB:en';
-    const res = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent(RSS));
-    if (!res.ok) throw new Error('Proxy ' + res.status);
-    const json = await res.json();
-    if (!json.contents) throw new Error('Empty response');
+    // Own proxy first (see api/news.js). allorigins.win is the fallback only —
+    // it is a third-party CORS proxy outside our control and has gone down,
+    // silently dropping this section to static data.
+    let raw = null;
+    try {
+      const r = await fetch('/api/news');
+      if (r.ok) raw = await r.text();
+    } catch {}
 
-    const xml = new DOMParser().parseFromString(json.contents, 'text/xml');
+    if (!raw) {
+      const RSS = 'https://news.google.com/rss/search?q=%22Leeds+United%22&hl=en-GB&gl=GB&ceid=GB:en';
+      const res = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent(RSS));
+      if (!res.ok) throw new Error('Proxy ' + res.status);
+      const json = await res.json();
+      if (!json.contents) throw new Error('Empty response');
+      raw = json.contents;
+    }
+
+    const xml = new DOMParser().parseFromString(raw, 'text/xml');
     const items = Array.from(xml.querySelectorAll('item')).slice(0, 6);
     if (!items.length) throw new Error('No items in feed');
 
