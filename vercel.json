@@ -1,5 +1,5 @@
 {
   "buildCommand": null,
   "outputDirectory": ".",
-  "rewrites": [{ "source": "/", "destination": "/lufc-standalone.html" }]
+  "framework": null
 }

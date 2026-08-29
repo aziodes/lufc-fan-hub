@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "lufc",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "7723",
+        "--directory",
+        "/Users/incxinc/Claude/Projects/lufc-fan-hub"
+      ],
+      "port": 7723
+    }
+  ]
+}

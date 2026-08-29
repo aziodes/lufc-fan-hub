@@ -1,0 +1,135 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 222 60% 10%;
+    --foreground: 0 0% 98%;
+    --card: 222 50% 13%;
+    --card-foreground: 0 0% 98%;
+    --popover: 222 50% 13%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 48 100% 50%;
+    --primary-foreground: 222 60% 10%;
+    --secondary: 222 50% 20%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 222 40% 18%;
+    --muted-foreground: 0 0% 65%;
+    --accent: 222 60% 30%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 222 40% 22%;
+    --input: 222 40% 18%;
+    --ring: 48 100% 50%;
+    --radius: 0.4rem;
+    --leeds-blue: #1D428A;
+    --leeds-gold: #FFCD00;
+    --leeds-navy: #0A1628;
+    --leeds-white: #FFFFFF;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+    box-sizing: border-box;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    overflow-x: hidden;
+  }
+}
+
+/* ---- Ticker ---- */
+@keyframes ticker-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.ticker-track {
+  overflow: hidden;
+  white-space: nowrap;
+}
+.ticker-inner {
+  display: inline-flex;
+  gap: 3rem;
+  animation: ticker-scroll 30s linear infinite;
+  white-space: nowrap;
+}
+
+/* ---- Float animation ---- */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50%       { transform: translateY(-22px) rotate(18deg); }
+}
+.float-ball { animation: float 3.8s ease-in-out infinite; display: inline-block; }
+
+/* ---- Entrance animations ---- */
+.section-hidden {
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+.section-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---- Timeline centre line ---- */
+.timeline-container {
+  position: relative;
+}
+.timeline-container::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(to bottom, #FFCD00 0%, #1D428A 100%);
+  transform: translateX(-50%);
+}
+
+/* ---- Poll bar ---- */
+.poll-bar {
+  height: 10px;
+  border-radius: 5px;
+  background: #FFCD00;
+  transition: width 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  min-width: 4px;
+}
+
+/* ---- Card hover ---- */
+.card-hover {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  cursor: default;
+}
+.card-hover:hover {
+  transform: translateY(-7px);
+  box-shadow: 0 24px 48px rgba(0,0,0,0.45);
+}
+
+/* ---- Nav link ---- */
+.nav-link {
+  color: rgba(255,255,255,0.72);
+  font-weight: 600;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.3rem 0;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+.nav-link:hover { color: #FFCD00; border-color: #FFCD00; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 7px; }
+::-webkit-scrollbar-track { background: #0A1628; }
+::-webkit-scrollbar-thumb { background: #1D428A; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #FFCD00; }

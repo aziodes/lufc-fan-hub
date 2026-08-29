@@ -9,14 +9,22 @@ Unofficial Leeds United fan site. Single-file vanilla HTML/CSS/JS — no build s
 | `main` | v1 — mixed live/static baseline |
 | `live-fork` | Working branch — all sections free-API backed or removed |
 
+## Layout
+
+| Path | What |
+|------|------|
+| `index.html` | The site. Single self-contained file, no build step. |
+| `api/football.js` | Serverless proxy for football-data.org (see below). |
+| `legacy-react/` | The original React/Vite version, superseded. Kept for reference; not built or deployed. |
+
 ## Preview
 
 ```bash
 python3 -m http.server 7723 --directory .
-# open http://localhost:7723/lufc-standalone.html
+# open http://localhost:7723/index.html
 ```
 
-Or open `lufc-standalone.html` directly in a browser (some API calls may CORS-fail without a server).
+Or open `index.html` directly in a browser (some API calls may CORS-fail without a server).
 
 ## Live data sources
 
@@ -32,28 +40,43 @@ Or open `lufc-standalone.html` directly in a browser (some API calls may CORS-fa
 
 ## Configuration
 
-Edit the `CFG` block near the top of `lufc-standalone.html`:
+Football data goes through `api/football.js`, a serverless proxy. It exists because
+football-data.org's free tier returns `Access-Control-Allow-Origin: http://localhost`,
+so the browser cannot call it from a deployed origin — and it keeps the key server-side.
+
+Set the key in the hosting environment (not in the page):
+
+```bash
+vercel env add FOOTBALL_DATA_KEY production
+```
+
+Get a free key at https://www.football-data.org/client/register
+
+Optional upgrades, in the `CFG` block near the top of `index.html` — leave empty to
+use the static fallbacks:
 
 ```js
-const CFG = {
-  API_KEY: '',          // football-data.org free key → https://www.football-data.org/client/register
-  // Optional upgrades — leave empty to use static fallbacks
-  GISCUS_REPO: '',          // e.g. 'yourname/lufc-fan-hub' — https://giscus.app
-  GISCUS_REPO_ID: '',
-  GISCUS_CATEGORY_ID: '',
-  JSONBIN_BIN_ID: '',       // https://jsonbin.io (free) — shared poll votes
-};
+GISCUS_REPO / GISCUS_REPO_ID / GISCUS_CATEGORY_ID  // live forum, https://giscus.app
+JSONBIN_BIN_ID                                     // shared poll votes, https://jsonbin.io
 ```
+
+Giscus needs a **public** repo with Discussions enabled.
 
 ## Deploying
 
-Single file — drop on any static host (Vercel, Netlify, GitHub Pages):
+Pushing to the connected branch deploys automatically. To deploy by hand:
 
 ```bash
-# Vercel example
 vercel --prod
 ```
 
-No build config needed. Point root to `lufc-standalone.html` or rename to `index.html`.
+## Local development
+
+`python3 -m http.server` serves the page but **not** `api/football.js`, so the football
+sections fall back to static data locally. To exercise the proxy, run:
+
+```bash
+vercel dev
+```
 
 ## Not affiliated with Leeds United AFC.

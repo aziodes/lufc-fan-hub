@@ -1,0 +1,14 @@
+# Dependencies & build output (all regenerable)
+node_modules/
+dist/
+dist-parcel/
+dist-parcel2/
+.parcel-cache/
+
+# Local tooling
+.vercel/
+.DS_Store
+*.local
+.env
+.env.*
+!.env.example
