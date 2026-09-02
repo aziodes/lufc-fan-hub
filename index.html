@@ -206,11 +206,6 @@ tbody td:not(:first-child){text-align:center}
 .p-meta{display:flex;align-items:center;gap:.35rem;margin-top:.22rem}
 .p-flag{font-size:.76rem}
 .p-pos{background:rgba(29,66,138,.5);color:var(--gold);font-size:.65rem;font-weight:700;padding:.14rem .4rem;border-radius:3px;letter-spacing:.06em}
-.form-lbl{display:flex;justify-content:space-between;margin-bottom:.3rem}
-.form-t{color:rgba(255,255,255,.42);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase}
-.form-v{color:var(--gold);font-weight:800;font-size:.76rem}
-.form-track{background:rgba(255,255,255,.08);border-radius:3px;height:6px;overflow:hidden}
-.form-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--gold),#e6b800)}
 
 /* ── SHOP ── */
 .shop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1.4rem}
@@ -1285,20 +1280,10 @@ async function loadStandings() {
 // One renderer for every squad source. The live and fallback paths used to have
 // their own copies of this markup and silently drifted apart — that's how the
 // static list ended up 11 players out of date.
-// `form` is a placeholder metric, not real data: the free tiers expose no
-// per-player stats. It's derived from the name so a player's number at least
-// stays stable across reloads instead of changing on every refresh.
-function fauxForm(name) {
-  let h = 0;
-  for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0;
-  return 68 + (h % 24);
-}
-
 function renderSquadCards(players) {
   $('squad-grid').innerHTML = players.map(p => {
     const num = (p.num ?? '–') === '' ? '–' : (p.num ?? '–');
     const flag = FLAGS[p.nat] || '🌍';
-    const form = p.form ?? fauxForm(p.name);
     return `<div class="player-card">
       <div class="p-wm">${num}</div>
       <div class="p-top">
@@ -1308,8 +1293,6 @@ function renderSquadCards(players) {
           <div class="p-meta"><span class="p-flag">${flag}</span><span class="p-pos">${p.pos}</span></div>
         </div>
       </div>
-      <div class="form-lbl"><span class="form-t">Form Rating</span><span class="form-v">${form}</span></div>
-      <div class="form-track"><div class="form-fill" style="width:${form}%"></div></div>
     </div>`;
   }).join('');
 }
