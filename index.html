@@ -707,12 +707,14 @@ footer{background:var(--dark);border-top:3px solid var(--blue)}
     <p class="s-label">Community</p><h2 class="s-title">Fan Forum</h2><div class="s-bar"></div>
     <!-- ─────────────────────────────────────────────────────────────
          LIVE FORUM: powered by Giscus (free, GitHub Discussions)
-         To activate: replace the data-* values below with your repo.
-         1. Go to https://giscus.app and follow the setup guide
-         2. Create a public GitHub repo (e.g. lufc-fan-hub-comments)
-         3. Enable Discussions on the repo (Settings → Features)
-         4. Install the Giscus app: https://github.com/apps/giscus
-         5. Fill in GISCUS_REPO, GISCUS_REPO_ID, GISCUS_CATEGORY_ID below
+         Config below points at aziodes/lufc-fan-hub, category "Announcements"
+         (repo, repoId, category and categoryId must all agree — giscus
+         rejects the widget if the category name and its id don't match).
+         Discussions is enabled on that repo (has_discussions: true).
+         REMAINING STEP (not done by code — needs a human on github.com):
+         install the Giscus GitHub App on the repo: https://github.com/apps/giscus
+         Until that's installed, giscus loads but shows "install to comment"
+         instead of a comment box.
          ───────────────────────────────────────────────────────────── -->
     <div id="forum-container"></div>
   </div>
@@ -894,9 +896,10 @@ const CFG = {
   BASE: 'https://api.football-data.org/v4',
   CACHE_MS: 5 * 60 * 1000,  // 5-minute cache
   // ── Optional live upgrades (leave empty to use static fallbacks) ──
-  GISCUS_REPO: '',          // e.g. 'yourname/lufc-fan-hub'
-  GISCUS_REPO_ID: '',       // from giscus.app
-  GISCUS_CATEGORY_ID: '',   // from giscus.app
+  GISCUS_REPO: 'aziodes/lufc-fan-hub',
+  GISCUS_REPO_ID: 'R_kgDOUIFEhA',
+  GISCUS_CATEGORY: 'Announcements', // locked category — visitors can comment, only maintainers start new threads
+  GISCUS_CATEGORY_ID: 'DIC_kwDOUIFEhM4DEub9',
   JSONBIN_BIN_ID: '',       // from jsonbin.io (free)
   APIFOOTBALL_KEY: '',      // RapidAPI → api-football (100 req/day free)
   LIVE_POLL_MS: 60 * 1000,  // re-check for an in-play match every 60s
@@ -1562,7 +1565,7 @@ function initForum() {
     script.src = 'https://giscus.app/client.js';
     script.dataset.repo           = CFG.GISCUS_REPO;
     script.dataset.repoId         = CFG.GISCUS_REPO_ID;
-    script.dataset.category       = 'Fan Hub';
+    script.dataset.category       = CFG.GISCUS_CATEGORY;
     script.dataset.categoryId     = CFG.GISCUS_CATEGORY_ID;
     script.dataset.mapping        = 'pathname';
     script.dataset.reactionsEnabled = '1';
