@@ -1282,34 +1282,71 @@ async function loadStandings() {
 }
 
 // ─── Squad ─────────────────────────────────────────
+// One renderer for every squad source. The live and fallback paths used to have
+// their own copies of this markup and silently drifted apart — that's how the
+// static list ended up 11 players out of date.
+// `form` is a placeholder metric, not real data: the free tiers expose no
+// per-player stats. It's derived from the name so a player's number at least
+// stays stable across reloads instead of changing on every refresh.
+function fauxForm(name) {
+  let h = 0;
+  for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0;
+  return 68 + (h % 24);
+}
+
+function renderSquadCards(players) {
+  $('squad-grid').innerHTML = players.map(p => {
+    const num = (p.num ?? '–') === '' ? '–' : (p.num ?? '–');
+    const flag = FLAGS[p.nat] || '🌍';
+    const form = p.form ?? fauxForm(p.name);
+    return `<div class="player-card">
+      <div class="p-wm">${num}</div>
+      <div class="p-top">
+        <div class="p-num">${num}</div>
+        <div>
+          <div class="p-name">${p.name}</div>
+          <div class="p-meta"><span class="p-flag">${flag}</span><span class="p-pos">${p.pos}</span></div>
+        </div>
+      </div>
+      <div class="form-lbl"><span class="form-t">Form Rating</span><span class="form-v">${form}</span></div>
+      <div class="form-track"><div class="form-fill" style="width:${form}%"></div></div>
+    </div>`;
+  }).join('');
+}
+
 async function loadSquad() {
+  const sl = $('squad-season-label');
+
+  // 1. Wikipedia — the only free source that keeps up with transfers and
+  //    carries shirt numbers, and that excludes players out on loan.
+  try {
+    const r = await fetch('/api/squad');
+    if (r.ok) {
+      const d = await r.json();
+      if (Array.isArray(d.squad) && d.squad.length >= 15) {
+        renderSquadCards(d.squad.map(p => ({
+          num: p.number ?? '–', name: p.name, nat: p.nationality, pos: p.position,
+        })));
+        if (sl) sl.textContent = `${SEASON_LABEL} Season`;
+        setBadge('squad-badge', true);
+        return;
+      }
+    }
+  } catch(e) { console.warn('Squad (Wikipedia):', e.message); }
+
+  // 2. football-data.org — complete but lags on transfers and has no numbers
   try {
     const data = await apiFetch(`/teams/${CFG.TEAM_ID}`, 'squad');
-    const squad = (data.squad || []).slice(0, 33); // full current squad size (was capped at 24)
+    const squad = (data.squad || []).slice(0, 33);
     if (!squad.length) throw new Error('Empty squad');
 
-    const sl = $('squad-season-label');
     if (sl) sl.textContent = `${SEASON_LABEL} Season`;
-
-    $('squad-grid').innerHTML = squad.map(p => {
-      const flag = FLAGS[p.nationality] || '🌍';
-      const pos = POS_MAP[p.position] || p.position?.slice(0,3) || '–';
-      const num = p.shirtNumber || '–';
-      const form = 65 + Math.floor(Math.random() * 30); // simulated form
-      return `<div class="player-card">
-        <div class="p-wm">${num}</div>
-        <div class="p-top">
-          <div class="p-num">${num}</div>
-          <div>
-            <div class="p-name">${p.name}</div>
-            <div class="p-meta"><span class="p-flag">${flag}</span><span class="p-pos">${pos}</span></div>
-          </div>
-        </div>
-        <div class="form-lbl"><span class="form-t">Form Rating</span><span class="form-v">${form}</span></div>
-        <div class="form-track"><div class="form-fill" style="width:${form}%"></div></div>
-      </div>`;
-    }).join('');
-
+    renderSquadCards(squad.map(p => ({
+      num: p.shirtNumber || '–',
+      name: p.name,
+      nat: p.nationality,
+      pos: POS_MAP[p.position] || p.position?.slice(0,3) || '–',
+    })));
     setBadge('squad-badge', true);
   } catch(e) {
     console.warn('Squad API:', e.message);
@@ -1643,46 +1680,36 @@ function loadStaticPills() {
 }
 
 function loadStaticSquad() {
-  // Mirrors the football-data.org squad for the current season.
-  // Shirt numbers are not exposed on the free tier — shown as '–' where unknown.
-  // Position codes come from POS_MAP applied to the free tier's coarse
-  // Goalkeeper/Defence/Midfield/Offence buckets, same as the live path.
+  // Mirrors the Wikipedia first-team squad (see api/squad.js) — the source the
+  // live path uses. Excludes players out on loan. Shirt numbers are official;
+  // '–' means the player has not been assigned one yet.
   const players = [
-    {num:1,  name:'Lucas Perri',           nat:'Brazil',             pos:POS_MAP['Goalkeeper'], form:85},
-    {num:'–',name:'Alex Cairns',           nat:'England',            pos:POS_MAP['Goalkeeper'], form:74},
-    {num:'–',name:'Michael Zetterer',      nat:'Germany',            pos:POS_MAP['Goalkeeper'], form:76},
-    {num:'–',name:'James Trafford',        nat:'England',            pos:POS_MAP['Goalkeeper'], form:81},
-    {num:'–',name:'Nico Elvedi',           nat:'Switzerland',        pos:POS_MAP['Defence'],    form:83},
-    {num:2,  name:'Jayden Bogle',          nat:'England',            pos:POS_MAP['Defence'],    form:79},
-    {num:'–',name:'James Justin',          nat:'England',            pos:POS_MAP['Defence'],    form:80},
-    {num:6,  name:'Joe Rodon',             nat:'Wales',              pos:POS_MAP['Defence'],    form:87},
-    {num:'–',name:'Maximilian Wöber',      nat:'Austria',            pos:POS_MAP['Defence'],    form:79},
-    {num:'–',name:'Sam Byram',             nat:'England',            pos:POS_MAP['Defence'],    form:75},
-    {num:'–',name:'Sebastiaan Bornauw',    nat:'Belgium',            pos:POS_MAP['Defence'],    form:78},
-    {num:3,  name:'Gabriel Gudmundsson',   nat:'Sweden',             pos:POS_MAP['Defence'],    form:77},
-    {num:15, name:'Jaka Bijol',            nat:'Slovenia',           pos:POS_MAP['Defence'],    form:82},
-    {num:'–',name:'Isaac Schmidt',         nat:'Switzerland',        pos:POS_MAP['Defence'],    form:78},
-    {num:'–',name:'Tarik Muharemović',     nat:'Bosnia-Herzegovina', pos:POS_MAP['Defence'],    form:76},
-    {num:8,  name:'Sean Longstaff',        nat:'England',            pos:POS_MAP['Midfield'],   form:80},
-    {num:4,  name:'Ethan Ampadu',          nat:'Wales',              pos:POS_MAP['Midfield'],   form:88},
-    {num:22, name:'Ao Tanaka',             nat:'Japan',              pos:POS_MAP['Midfield'],   form:82},
-    {num:'–',name:'Anton Stach',           nat:'Germany',            pos:POS_MAP['Midfield'],   form:81},
-    {num:'–',name:'Ilia Gruev',            nat:'Bulgaria',           pos:POS_MAP['Midfield'],   form:78},
-    {num:11, name:'Brenden Aaronson',      nat:'United States',      pos:POS_MAP['Midfield'],   form:79},
-    {num:'–',name:'Charlie Crewe',         nat:'Wales',              pos:POS_MAP['Midfield'],   form:74},
-    {num:'–',name:'Jack Harrison',         nat:'England',            pos:POS_MAP['Offence'],    form:79},
-    {num:9,  name:'Dominic Calvert-Lewin', nat:'England',            pos:POS_MAP['Offence'],    form:86},
-    {num:'–',name:'Lukas Nmecha',          nat:'Germany',            pos:POS_MAP['Offence'],    form:77},
-    {num:7,  name:'Daniel James',          nat:'Wales',              pos:POS_MAP['Offence'],    form:78},
-    {num:'–',name:'Harry Wilson',          nat:'Wales',              pos:POS_MAP['Offence'],    form:80},
-    {num:19, name:'Noah Okafor',           nat:'Switzerland',        pos:POS_MAP['Offence'],    form:78},
-    {num:10, name:'Joël Piroe',            nat:'Netherlands',        pos:POS_MAP['Offence'],    form:83},
-    {num:'–',name:'Joe Gelhardt',          nat:'England',            pos:POS_MAP['Offence'],    form:76},
-    {num:'–',name:'Largie Ramazani',       nat:'Belgium',            pos:POS_MAP['Offence'],    form:79},
-    {num:29, name:'Wilfried Gnonto',       nat:'Italy',              pos:POS_MAP['Offence'],    form:85},
-    {num:'–',name:'Mateo Fernandez',       nat:'Spain',              pos:POS_MAP['Offence'],    form:77},
+    {num:1,    name:'James Trafford', nat:'England', pos:'GK'},
+    {num:2,    name:'Jayden Bogle', nat:'England', pos:'DEF'},
+    {num:3,    name:'Gabriel Gudmundsson', nat:'Sweden', pos:'DEF'},
+    {num:4,    name:'Ethan Ampadu', nat:'Wales', pos:'MF'},
+    {num:5,    name:'Tarik Muharemović', nat:'Bosnia-Herzegovina', pos:'DEF'},
+    {num:6,    name:'Joe Rodon', nat:'Wales', pos:'DEF'},
+    {num:7,    name:'Daniel James', nat:'Wales', pos:'MF'},
+    {num:8,    name:'Sean Longstaff', nat:'England', pos:'MF'},
+    {num:9,    name:'Dominic Calvert-Lewin', nat:'England', pos:'FW'},
+    {num:10,   name:'Harry Wilson', nat:'Wales', pos:'MF'},
+    {num:11,   name:'Brenden Aaronson', nat:'United States', pos:'MF'},
+    {num:14,   name:'Lukas Nmecha', nat:'Germany', pos:'FW'},
+    {num:15,   name:'Jaka Bijol', nat:'Slovenia', pos:'DEF'},
+    {num:18,   name:'Anton Stach', nat:'Germany', pos:'MF'},
+    {num:19,   name:'Noah Okafor', nat:'Switzerland', pos:'FW'},
+    {num:21,   name:'Alex Cairns', nat:'England', pos:'GK'},
+    {num:22,   name:'Ao Tanaka', nat:'Japan', pos:'MF'},
+    {num:24,   name:'James Justin', nat:'England', pos:'DEF'},
+    {num:30,   name:'Nico Elvedi', nat:'Switzerland', pos:'DEF'},
+    {num:44,   name:'Ilia Gruev', nat:'Bulgaria', pos:'MF'},
+    {num:'–',  name:'Michael Zetterer', nat:'Germany', pos:'GK'},
+    {num:'–',  name:'Melvin Bard', nat:'France', pos:'DEF'},
+    {num:'–',  name:'Jean-Mattéo Bahoya', nat:'France', pos:'FW'},
+    {num:'–',  name:'Mateo Joseph', nat:'Spain', pos:'FW'},
   ];
-  $('squad-grid').innerHTML = players.map(p=>`<div class="player-card"><div class="p-wm">${p.num}</div><div class="p-top"><div class="p-num">${p.num}</div><div><div class="p-name">${p.name}</div><div class="p-meta"><span class="p-flag">${FLAGS[p.nat]||'🌍'}</span><span class="p-pos">${p.pos}</span></div></div></div><div class="form-lbl"><span class="form-t">Form Rating</span><span class="form-v">${p.form}</span></div><div class="form-track"><div class="form-fill" style="width:${p.form}%"></div></div></div>`).join('');
+  renderSquadCards(players);
 }
 
 // ─── Badges ────────────────────────────────────────
