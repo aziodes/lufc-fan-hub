@@ -211,21 +211,15 @@ tbody td:not(:first-child){text-align:center}
 .shop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1.4rem}
 .merch-card{background:var(--card);border:1px solid var(--cborder);border-radius:8px;overflow:hidden;transition:transform .25s,box-shadow .25s}
 .merch-card:hover{transform:translateY(-7px);box-shadow:0 24px 48px rgba(0,0,0,.45)}
-.merch-img{height:170px;display:flex;align-items:center;justify-content:center;font-size:3.8rem;position:relative}
-.mi-kh{background:linear-gradient(135deg,#fff,#e8e8e8)}
-.mi-ka{background:linear-gradient(135deg,#FFCD00,#e6b800)}
-.mi-sc{background:linear-gradient(135deg,var(--blue),var(--dark))}
-.mi-jk{background:linear-gradient(135deg,#1a3a6a,var(--dark))}
-.mi-rt{background:linear-gradient(135deg,#2a1a5a,var(--dark))}
-.mi-ht{background:linear-gradient(135deg,var(--blue),var(--dark))}
-.m-tag{position:absolute;top:.55rem;right:.55rem;background:var(--gold);color:var(--navy);font-size:.63rem;font-weight:800;padding:.18rem .48rem;border-radius:3px;text-transform:uppercase;letter-spacing:.06em}
+.merch-img{height:170px;display:flex;align-items:center;justify-content:center;background:var(--dark);position:relative;overflow:hidden}
+.merch-img img{width:100%;height:100%;object-fit:cover}
 .m-body{padding:1rem}
 .m-name{color:#fff;font-weight:800;font-size:.9rem;margin-bottom:.28rem}
-.m-cat{color:rgba(255,255,255,.38);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.7rem}
-.m-footer{display:flex;align-items:center;justify-content:space-between}
+.m-footer{display:flex;align-items:center;justify-content:space-between;margin-top:.7rem}
 .m-price{color:var(--gold);font-weight:900;font-size:1.05rem}
 .m-btn{background:var(--blue);color:#fff;border:none;font-weight:700;font-size:.73rem;padding:.38rem .85rem;border-radius:3px;cursor:pointer;letter-spacing:.05em;text-transform:uppercase;transition:background .2s}
 .m-btn:hover{background:var(--gold);color:var(--navy)}
+.m-btn:disabled{opacity:.5;cursor:default}
 
 /* ── HISTORY ── */
 .tl-container{position:relative;max-width:900px;margin:0 auto}
@@ -479,8 +473,8 @@ footer{background:var(--dark);border-top:3px solid var(--blue)}
     <div class="nav-links">
       <a href="#home">Home</a><a href="#news">News</a>
       <a href="#fixtures">Fixtures</a><a href="#squad">Squad</a>
-      <a href="#gallery">Gallery</a><a href="#forum">Forum</a>
-      <a href="#fan-zone">Fan Zone</a>
+      <a href="#shop">Shop</a><a href="#gallery">Gallery</a>
+      <a href="#forum">Forum</a><a href="#fan-zone">Fan Zone</a>
     </div>
     <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
       <span></span><span></span><span></span>
@@ -489,8 +483,8 @@ footer{background:var(--dark);border-top:3px solid var(--blue)}
   <div id="mob-menu">
     <a href="#home" onclick="toggleMenu()">Home</a><a href="#news" onclick="toggleMenu()">News</a>
     <a href="#fixtures" onclick="toggleMenu()">Fixtures</a><a href="#squad" onclick="toggleMenu()">Squad</a>
-    <a href="#gallery" onclick="toggleMenu()">Gallery</a><a href="#forum" onclick="toggleMenu()">Forum</a>
-    <a href="#fan-zone" onclick="toggleMenu()">Fan Zone</a>
+    <a href="#shop" onclick="toggleMenu()">Shop</a><a href="#gallery" onclick="toggleMenu()">Gallery</a>
+    <a href="#forum" onclick="toggleMenu()">Forum</a><a href="#fan-zone" onclick="toggleMenu()">Fan Zone</a>
   </div>
 </nav>
 
@@ -651,6 +645,29 @@ footer{background:var(--dark);border-top:3px solid var(--blue)}
       <div class="sk-card"><div class="skeleton sk-line lg"></div><div class="skeleton sk-line"></div><div class="skeleton sk-line sm"></div></div>
       <div class="sk-card"><div class="skeleton sk-line lg"></div><div class="skeleton sk-line"></div><div class="skeleton sk-line sm"></div></div>
     </div>
+  </div>
+</section>
+
+<!-- ══ SHOP ══ -->
+<section class="section sa reveal" id="shop">
+  <div class="si">
+    <div class="s-head-row">
+      <div><p class="s-label">Official Merch</p><h2 class="s-title">Fan Shop</h2></div>
+      <span id="shop-badge" class="static-badge">🛠️ Opening Soon</span>
+    </div>
+    <div class="s-bar"></div>
+    <!-- ─────────────────────────────────────────────────────────────
+         REAL E-COMMERCE: Stripe Checkout -> Printful fulfillment.
+         Nothing here is fabricated — an empty CATALOG in
+         api/_shop-catalog.js means there is genuinely nothing to sell yet.
+         To go live: see MERCH_SETUP.md.
+         ───────────────────────────────────────────────────────────── -->
+    <div class="shop-grid" id="shop-grid">
+      <div style="grid-column:1/-1;text-align:center;padding:2.5rem 1rem;color:var(--dim)">
+        🧵 The shop's still being stitched together — check back soon.
+      </div>
+    </div>
+    <div id="shop-toast" style="display:none;position:fixed;bottom:2rem;right:2rem;background:var(--gold);color:var(--navy);font-weight:800;padding:.85rem 1.5rem;border-radius:6px;z-index:200;font-size:.87rem;box-shadow:0 8px 24px rgba(0,0,0,.4)"></div>
   </div>
 </section>
 
@@ -869,7 +886,7 @@ footer{background:var(--dark);border-top:3px solid var(--blue)}
       <p class="f-tag">Forever Leeds.</p>
       <p class="f-desc">The online home for Leeds United fans worldwide. We bleed blue and gold. MOT.</p>
     </div>
-    <div class="fc"><h4>Quick Links</h4><div class="fl"><a href="#home">Home</a><a href="#news">News</a><a href="#fixtures">Fixtures</a><a href="#squad">Squad</a><a href="#gallery">Gallery</a><a href="#forum">Forum</a><a href="#fan-zone">Fan Zone</a></div></div>
+    <div class="fc"><h4>Quick Links</h4><div class="fl"><a href="#home">Home</a><a href="#news">News</a><a href="#fixtures">Fixtures</a><a href="#squad">Squad</a><a href="#shop">Shop</a><a href="#gallery">Gallery</a><a href="#forum">Forum</a><a href="#fan-zone">Fan Zone</a></div></div>
     <div class="fc"><h4>Follow Us</h4><div class="soc-row"><button class="soc-btn" title="Twitter/X">𝕏</button><button class="soc-btn" title="Instagram">📸</button><button class="soc-btn" title="Facebook">📘</button><button class="soc-btn" title="YouTube">▶</button></div></div>
   </div>
   <div class="footer-bottom"><p>This is an unofficial fan site. Not affiliated with Leeds United AFC.</p><p>© 2026 LUFC Fan Hub · All rights reserved · MOT 🔵💛</p></div>
@@ -1600,6 +1617,70 @@ function initForum() {
   }
 }
 
+// ─── Shop: Printful catalog + Stripe checkout ──────
+function fmtPrice(cents, currency) {
+  return new Intl.NumberFormat('en-GB', { style: 'currency', currency: (currency || 'gbp').toUpperCase() })
+    .format(cents / 100);
+}
+
+async function loadShop() {
+  const grid = $('shop-grid');
+  if (!grid) return;
+  try {
+    const res = await fetch('/api/shop');
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+
+    if (!data.configured || !data.products.length) {
+      // Nothing wired up yet — leave the "opening soon" placeholder already in the HTML.
+      return;
+    }
+
+    grid.innerHTML = data.products.map(p => `
+      <div class="merch-card">
+        <div class="merch-img">${p.image ? `<img src="${p.image}" alt="${p.name}" loading="lazy"/>` : '👕'}</div>
+        <div class="m-body">
+          <div class="m-name">${p.name}</div>
+          <div class="m-footer">
+            <span class="m-price">${fmtPrice(p.priceCents, p.currency)}</span>
+            <button class="m-btn" onclick="buyNow('${p.id}', this)">Buy Now</button>
+          </div>
+        </div>
+      </div>`).join('');
+
+    setBadge('shop-badge', true);
+    $('shop-badge').innerHTML = '<span class="live-dot"></span> Shop Open';
+  } catch (e) {
+    console.warn('Shop:', e.message);
+    // Leave the "opening soon" placeholder in place
+  }
+}
+
+async function buyNow(productId, btn) {
+  btn.disabled = true;
+  const original = btn.textContent;
+  btn.textContent = 'Redirecting…';
+  try {
+    const res = await fetch('/api/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ productId, quantity: 1 }),
+    });
+    const data = await res.json();
+    if (!res.ok || !data.url) throw new Error(data.error || 'Checkout failed');
+    location.href = data.url; // Stripe's hosted Checkout — card details never touch this site
+  } catch (e) {
+    console.warn('Checkout:', e.message);
+    btn.disabled = false;
+    btn.textContent = original;
+    const t = $('shop-toast');
+    t.textContent = '⚠️ Checkout is temporarily unavailable — try again shortly.';
+    t.style.display = 'block';
+    clearTimeout(window._st);
+    window._st = setTimeout(() => t.style.display = 'none', 3500);
+  }
+}
+
 // ─── Poll: JSONbin shared vote store ───────────────
 async function initPoll() {
   if (!CFG.JSONBIN_BIN_ID) return; // localStorage fallback already active via vote()
@@ -1731,6 +1812,7 @@ async function init() {
   loadGallery();   // Wikimedia Commons → gallery grid + lightbox
   initForum();     // Giscus embed (or static threads if not configured)
   initPoll();      // JSONbin shared votes (or localStorage if not configured)
+  loadShop();      // Printful catalog via /api/shop (or "opening soon" if not configured)
 
   // Always attempt the football sections — each one falls back to static data on
   // its own if the proxy is missing and no direct API key is configured.

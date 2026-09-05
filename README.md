@@ -15,6 +15,9 @@ Unofficial Leeds United fan site. Single-file vanilla HTML/CSS/JS — no build s
 |------|------|
 | `index.html` | The site. Single self-contained file, no build step. |
 | `api/football.js` | Serverless proxy for football-data.org (see below). |
+| `api/news.js` | Serverless proxy for the Google News RSS feed. |
+| `api/squad.js` | Squad source, parsed from Wikipedia (kept current post-transfer-window better than football-data.org's free tier does). |
+| `api/shop.js` / `api/checkout.js` / `api/stripe-webhook.js` / `api/_shop-catalog.js` | Real e-commerce: Stripe Checkout -> Printful fulfillment. See `MERCH_SETUP.md`. |
 | `legacy-react/` | The original React/Vite version, superseded. Kept for reference; not built or deployed. |
 
 ## Preview
@@ -37,6 +40,7 @@ Or open `index.html` directly in a browser (some API calls may CORS-fail without
 | Gallery | Wikimedia Commons API (no key, CORS-enabled) |
 | Forum | Giscus (GitHub Discussions) — see setup below |
 | Poll votes | localStorage / JSONbin.io (optional) |
+| Shop | Printful (products/fulfillment) + Stripe (payment) — see `MERCH_SETUP.md` |
 
 ## Configuration
 
@@ -61,6 +65,14 @@ JSONBIN_BIN_ID                                     // shared poll votes, https:/
 ```
 
 Giscus needs a **public** repo with Discussions enabled.
+
+## Merchandise
+
+The Shop section is real e-commerce, not a demo — Stripe Checkout for payment,
+Printful for print-on-demand fulfillment. It ships with an empty product
+catalog and shows an honest "opening soon" state until you configure it.
+Setup (two accounts, some keys, a licensing decision that's on you):
+see `MERCH_SETUP.md`.
 
 ## Deploying
 
