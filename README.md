@@ -1,94 +1,80 @@
 # LUFC Fan Hub
 
-Unofficial Leeds United fan site. Single-file vanilla HTML/CSS/JS — no build step.
+Unofficial Leeds United fan site. One self-contained `index.html` (vanilla
+HTML/CSS/JS, no build step) plus a handful of serverless functions under
+`api/`. Deployed on Vercel; **pushing to `main` deploys automatically.**
 
-## Branches
-
-| Branch | What it is |
-|--------|-----------|
-| `main` | v1 — mixed live/static baseline |
-| `live-fork` | Working branch — all sections free-API backed or removed |
+Live: https://lufc-fan-hub.vercel.app
 
 ## Layout
 
 | Path | What |
 |------|------|
-| `index.html` | The site. Single self-contained file, no build step. |
-| `api/football.js` | Serverless proxy for football-data.org (see below). |
-| `api/news.js` | Serverless proxy for the Google News RSS feed. |
-| `api/squad.js` | Squad source, parsed from Wikipedia (kept current post-transfer-window better than football-data.org's free tier does). |
-| `api/shop.js` / `api/checkout.js` / `api/stripe-webhook.js` / `api/_shop-catalog.js` | Real e-commerce: Stripe Checkout -> Printful fulfillment. See `MERCH_SETUP.md`. |
+| `index.html` | The whole site. No build step — open it or serve the folder. |
+| `api/football.js` | Proxy for football-data.org (fixtures, results, standings). |
+| `api/news.js` | Proxy for the Google News RSS feed (news cards + ticker). |
+| `api/squad.js` | Squad, parsed from Wikipedia — keeps up with transfers better than football-data.org's free tier. |
+| `api/shop.js`, `api/checkout.js`, `api/stripe-webhook.js`, `api/_shop-catalog.js` | Real store: Stripe Checkout → Printful fulfillment. See `MERCH_SETUP.md`. |
 | `legacy-react/` | The original React/Vite version, superseded. Kept for reference; not built or deployed. |
 
-## Preview
+## Data sources
 
-```bash
-python3 -m http.server 7723 --directory .
-# open http://localhost:7723/index.html
-```
+Every section is either live from a free source or shows an honest "preview /
+opening soon" fallback — nothing is fabricated.
 
-Or open `index.html` directly in a browser (some API calls may CORS-fail without a server).
-
-## Live data sources
-
-| Section | Source |
-|---------|--------|
-| Ticker + News | Google News RSS via allorigins.win proxy |
-| Fixtures / Results / Standings | football-data.org v4 (free tier, Team ID 341) |
-| Squad | football-data.org v4 |
-| Match Reports | Generated from results API |
-| Gallery | Wikimedia Commons API (no key, CORS-enabled) |
-| Forum | Giscus (GitHub Discussions) — see setup below |
-| Poll votes | localStorage / JSONbin.io (optional) |
-| Shop | Printful (products/fulfillment) + Stripe (payment) — see `MERCH_SETUP.md` |
+| Section | Source | Fallback when it fails |
+|---------|--------|------------------------|
+| News + Ticker | `api/news.js` (Google News RSS); allorigins.win as second try | static preview cards |
+| Fixtures / Results / Standings / Match Reports | `api/football.js` (football-data.org v4, Team ID 341) | static snapshot |
+| Squad | `api/squad.js` (Wikipedia); football-data.org as fallback | static snapshot |
+| Gallery | Wikimedia Commons API (no key, CORS-enabled) | emoji-tile placeholders |
+| Forum | Giscus (GitHub Discussions) — **live** | static preview threads |
+| Poll | localStorage (per-browser); JSONbin.io if configured | — |
+| Shop | Stripe + Printful — **not configured**, shows "opening soon" | — |
 
 ## Configuration
 
-Football data goes through `api/football.js`, a serverless proxy. It exists because
-football-data.org's free tier returns `Access-Control-Allow-Origin: http://localhost`,
-so the browser cannot call it from a deployed origin — and it keeps the key server-side.
-
-Set the key in the hosting environment (not in the page):
+Server-side keys live in the Vercel project environment, never in the page:
 
 ```bash
-vercel env add FOOTBALL_DATA_KEY production
+vercel env add FOOTBALL_DATA_KEY production     # free: https://www.football-data.org/client/register
 ```
 
-Get a free key at https://www.football-data.org/client/register
+The football proxy exists because football-data.org's free tier pins
+`Access-Control-Allow-Origin` to `http://localhost` — the browser can't call
+it from a deployed origin at all, so it has to go server-side.
 
-Optional upgrades, in the `CFG` block near the top of `index.html` — leave empty to
-use the static fallbacks:
+Client-side config is the `CFG` block near the top of `index.html`:
 
-```js
-GISCUS_REPO / GISCUS_REPO_ID / GISCUS_CATEGORY_ID  // live forum, https://giscus.app
-JSONBIN_BIN_ID                                     // shared poll votes, https://jsonbin.io
-```
-
-Giscus needs a **public** repo with Discussions enabled.
+- **Forum (live).** `GISCUS_REPO`, `GISCUS_REPO_ID`, `GISCUS_CATEGORY`,
+  `GISCUS_CATEGORY_ID` are set to `aziodes/lufc-fan-hub` / `Announcements`.
+  Discussions is enabled on the repo and the Giscus GitHub App
+  (https://github.com/apps/giscus) is installed on it — both are required and
+  both are done.
+- **Poll (optional).** Set `JSONBIN_BIN_ID` to share votes across visitors;
+  empty means per-browser localStorage only.
 
 ## Merchandise
 
-The Shop section is real e-commerce, not a demo — Stripe Checkout for payment,
-Printful for print-on-demand fulfillment. It ships with an empty product
-catalog and shows an honest "opening soon" state until you configure it.
-Setup (two accounts, some keys, a licensing decision that's on you):
-see `MERCH_SETUP.md`.
-
-## Deploying
-
-Pushing to the connected branch deploys automatically. To deploy by hand:
-
-```bash
-vercel --prod
-```
+The Shop is real e-commerce — Stripe Checkout for payment, Printful for
+print-on-demand fulfillment — shipped with an empty catalog so it shows
+"opening soon" rather than fake products. Going live needs a Printful
+account, a Stripe account, a trademark/licensing decision, and three env
+vars. All of it is in `MERCH_SETUP.md`.
 
 ## Local development
 
-`python3 -m http.server` serves the page but **not** `api/football.js`, so the football
-sections fall back to static data locally. To exercise the proxy, run:
-
 ```bash
-vercel dev
+python3 -m http.server 7723 --directory .
+# http://localhost:7723/index.html
 ```
+
+A plain static server doesn't run anything under `api/`, so the News,
+Fixtures, Squad and Shop sections fall back to their static/preview states
+locally. To exercise the functions, use `vercel dev` instead.
+
+## Deploying
+
+Push to `main`. To deploy by hand: `vercel --prod`.
 
 ## Not affiliated with Leeds United AFC.
