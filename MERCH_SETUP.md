@@ -50,6 +50,55 @@ criminal-offence framing above.
 Nothing below cares which you pick — it's the same pipeline either way. This
 step is on you regardless of the code.
 
+## 0a. Design ideas within the LEEDS / LS11 boundary
+
+All text-only, no kit-style colour blocking, no badge-shaped composition —
+consistent with the decision above. Starting points, not finished art.
+
+**Typography-led (just "LEEDS" or "LS11", the type does the work)**
+- Varsity/collegiate block lettering — "LEEDS" arched like a US college tee,
+  a style with no football-specific association at all.
+- Industrial stencil — Yorkshire's mill-town/steelworks heritage, rough
+  stencilled "LEEDS" like a shipping crate or factory marking.
+- Art Deco — Leeds has real Art Deco civic architecture (Leeds Town Hall,
+  the Corn Exchange); geometric period lettering nods to the city, not the
+  club.
+- Distance/road-sign style — "LEEDS" or "LS11" set like a UK road sign or
+  mile marker, optionally with a real distance ("2 MILES" to Elland Road,
+  city centre, wherever) as the joke.
+
+**Geography-led (the postcode/location is the whole design)**
+- "LS11" as a minimal wordmark — the postcode alone, no other text, single
+  colour.
+- Coordinates — Elland Road's actual lat/long typeset small under "LS11" or
+  "LEEDS", runner's-shirt style.
+- Line-art skyline — an original silhouette illustration of the Leeds city
+  skyline (your own drawing, not a traced photo — photos have their own
+  copyright even when the buildings themselves don't).
+- Postcode boundary map — a simplified outline of the LS11 area as the
+  graphic, "LS11" as the only text.
+
+**Fact-led (things nobody can own)**
+- Founding year — "EST. 1919" is a historical fact, not IP. Pairs well with
+  either typography style above.
+- A simple number/stat as the whole design (e.g. a home attendance figure,
+  a distance) if you want something more oblique than a full wordmark.
+
+**Judgment calls — not covered by the LEEDS/LS11 decision, listed for later**
+These read as more exclusively "Leeds United" to a buyer than "LEEDS" or
+"LS11" do, even though none of them are the literal registered word marks —
+they're closer to the "Dirty Leeds" situation than the "LEEDS" one. Worth
+their own explicit decision (and ideally the same solicitor check) before
+using, not something to fold into "the boundary" by default:
+- **"MOT"** (Marching On Together, the terrace shorthand) — instantly and
+  almost exclusively reads as Leeds United to anyone who'd buy this.
+- **"The Whites"** — LUFC's kit-colour nickname, though a handful of other
+  clubs (Fulham, Swansea) use the same nickname, which cuts against any one
+  club exclusively owning it.
+- **"Marching On Together"** in full — this is a song title with its own
+  music copyright (separate from club trademark law entirely), not
+  something the LEEDS/LS11 trademark analysis above even covers.
+
 ## 1. Printful account
 
 1. Sign up at printful.com (free).
