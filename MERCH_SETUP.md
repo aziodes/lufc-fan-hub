@@ -9,15 +9,43 @@ two accounts, a licensing call, and pasting a few keys.
 This is an unofficial fan site (the footer already says so). Printing and
 selling items that use Leeds United's crest, name, or colours in a way that
 implies official merchandise is a trademark issue — the club's own disclaimer
-elsewhere on this site doesn't cover commercial sale of branded goods.
+elsewhere on this site doesn't cover commercial sale of branded goods. The
+club actively enforces this: unauthorised use of a registered mark on goods
+can be a **criminal offence** under s.92 Trade Marks Act 1994, not just a
+civil letter (leedsunited.com/en/news/leeds-united-brand-protection).
 
-Realistic options, safest first:
-- **Fan-original designs only** — art that doesn't reproduce the crest or
-  wordmarks (e.g. "MOT" text art, Yorkshire-themed designs, your own
-  illustration referencing the club without copying its registered marks).
+**Decision (2026-09-18): "LEEDS" and "LS11" only.** Not "LUFC" / "Leeds
+United" / "Leeds Utd" — those sit inside the club's actual registered word
+marks (Leeds United Football Club Limited holds 7 registered marks, mostly
+in the clothing class); dropping the crest and keeping the name as text is
+not a workaround, word marks are if anything easier to enforce than a logo.
+Not "Dirty Leeds" either — that's already a registered trademark, but held
+by an unrelated third party (Dirty Leeds Company), not the club, so it swaps
+one infringement risk for a different, currently-active one. "LEEDS" alone
+and the "LS11" postcode are genuinely lower risk: place names and postcodes
+aren't ownable as general trademarks.
+
+**That covers the words. It does not cover the look.** Passing off doesn't
+require any word or logo at all — it asks whether a reasonable buyer would
+take the item for official merch. Royal blue + gold laid out in a kit-style
+block, or a badge-shaped composition, reads as "official" regardless of what
+text is or isn't on it, and is the same exposure as using the name — just
+without a register entry to check first. So alongside the text rule: no
+kit-style two-tone layout, no badge-shaped composition, no colour pairing in
+club proportions. An accent colour used generically is fine; recreating the
+kit's look is not, independent of whether "LEEDS" is printed on it.
+
+Options, safest first:
+- **Fan-original designs, text-only, no kit-style layout** — "LEEDS" / "LS11"
+  text art, Yorkshire-themed imagery, your own illustration. Current plan.
 - **Ask the club.** Some clubs run official licensee/creator programs.
-- **Full crest/branding reproduction** — the highest-risk option. That's a
-  legal call for you to make, not something to route around technically.
+- **Full crest/branding/kit-look reproduction** — the highest-risk option.
+  That's a legal call for you to make, not something to route around
+  technically, and no combination of wording changes it.
+
+None of this is legal advice — it's my read of public sources, not a
+solicitor's. Worth a real one before spending money on inventory, given the
+criminal-offence framing above.
 
 Nothing below cares which you pick — it's the same pipeline either way. This
 step is on you regardless of the code.
