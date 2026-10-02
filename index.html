@@ -726,24 +726,11 @@ footer{background:var(--dark);border-top:3px solid var(--blue)}
       <div class="fan-card"><div class="fa-icon">🎵</div><h3 class="fa-title">Fan Chants &amp; Songs</h3><div class="chant-box">Here we go with Leeds United,<br>We're gonna give the boys a hand,<br>Stand up and sing for Leeds United,<br>They are the greatest in the land.<br><br>Everyday we're all gonna say,<br>We love you Leeds! Leeds! Leeds!<br><strong>Marching on together,<br>We're gonna see you win!</strong></div><span class="chant-credit">— Marching On Together (1972)</span></div>
     </div>
     <div class="poll-box">
-      <div class="poll-h">🗳️ Fan Poll <span id="poll-badge" style="font-size:.65rem;font-weight:600;opacity:.7;margin-left:6px">· local only</span></div>
-      <div class="poll-q">Who was LUFC's Player of the Season?</div>
-      <!-- ─────────────────────────────────────────────────────────
-           SHARED VOTING: powered by JSONbin.io (free, no auth needed)
-           To activate:
-           1. Go to https://jsonbin.io and create a free account
-           2. Create a new Bin with this initial JSON:
-              {"votes":[0,0,0,0],"total":0}
-           3. Copy the Bin ID (looks like: 6641a2f5acd3cb34a838f2e3)
-           4. Set JSONBIN_BIN_ID below — votes will be shared across all visitors
-           ───────────────────────────────────────────────────────── -->
-      <div id="poll-opts">
-        <div class="poll-opt"><button class="p-btn" onclick="vote(0)">Dominic Calvert-Lewin</button></div>
-        <div class="poll-opt"><button class="p-btn" onclick="vote(1)">Joe Rodon</button></div>
-        <div class="poll-opt"><button class="p-btn" onclick="vote(2)">Willy Gnonto</button></div>
-        <div class="poll-opt"><button class="p-btn" onclick="vote(3)">Lucas Perri</button></div>
-      </div>
-      <p class="poll-hint" id="poll-hint">Click a name to cast your vote</p>
+      <!-- Man of the Match for the latest result — picked by /api/poll, never hardcoded -->
+      <div class="poll-h">🗳️ Fan Poll <span id="poll-badge" style="font-size:.65rem;font-weight:600;opacity:.7;margin-left:6px"></span></div>
+      <div class="poll-q" id="poll-q">Loading this week's poll…</div>
+      <div id="poll-opts"></div>
+      <p class="poll-hint" id="poll-hint"></p>
     </div>
   </div>
 </section>
@@ -896,7 +883,6 @@ const CFG = {
   GISCUS_REPO_ID: 'R_kgDOUIFEhA',
   GISCUS_CATEGORY: 'Announcements', // locked category — visitors can comment, only maintainers start new threads
   GISCUS_CATEGORY_ID: 'DIC_kwDOUIFEhM4DEub9',
-  JSONBIN_BIN_ID: '',       // from jsonbin.io (free)
   APIFOOTBALL_KEY: '',      // RapidAPI → api-football (100 req/day free)
   LIVE_POLL_MS: 60 * 1000,  // re-check for an in-play match every 60s
 };
@@ -1720,26 +1706,98 @@ async function buyNow(productId, btn) {
   }
 }
 
-// ─── Poll: JSONbin shared vote store ───────────────
+// ─── Poll: Man of the Match (api/poll.js) ──────────
+// The question is always the latest finished match and the options are the
+// current squad, both decided server-side — so it rolls over after every game.
+// One vote per browser per match (remembered in localStorage).
+let pollState = null;
+
+const pollVotedKey = id => 'lufc_poll_' + id;
+function pollMyVote(id) { try { return localStorage.getItem(pollVotedKey(id)); } catch { return null; } }
+
 async function initPoll() {
-  if (!CFG.JSONBIN_BIN_ID) return; // localStorage fallback already active via vote()
-  const BIN_URL = `https://api.jsonbin.io/v3/b/${CFG.JSONBIN_BIN_ID}/latest`;
   try {
-    const res = await fetch(BIN_URL, { headers: { 'X-Access-Key': CFG.JSONBIN_BIN_ID } });
-    if (!res.ok) throw new Error('JSONbin ' + res.status);
-    const json = await res.json();
-    const remote = json?.record?.votes;
-    if (Array.isArray(remote) && remote.length === PVOTES.length) {
-      remote.forEach((v, i) => { PVOTES[i] = v; });
-      // Re-render totals
-      const tot = PVOTES.reduce((a,b) => a+b, 0);
-      $('poll-hint').textContent = `Total votes: ${tot.toLocaleString()} (live)`;
-    }
-    setBadge('poll-badge', true);
+    const r = await fetch('/api/poll');
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    pollState = await r.json();
   } catch(e) {
-    console.warn('Poll (JSONbin):', e.message);
-    // Falls back to localStorage-only via existing vote() function
+    console.warn('Poll:', e.message);
+    $('poll-q').textContent = 'The fan poll is unavailable right now.';
+    return;
   }
+  const { match, configured } = pollState;
+  if (!match) {
+    $('poll-q').textContent = "Man of the Match voting opens after Leeds' next game.";
+    return;
+  }
+  const hg = match.score.fullTime.home ?? 0, ag = match.score.fullTime.away ?? 0;
+  const day = new Date(match.utcDate).toLocaleDateString('en-GB', {day:'numeric', month:'short'});
+  $('poll-q').textContent =
+    `Man of the Match: ${shortName(match.homeTeam.name)} ${hg}–${ag} ${shortName(match.awayTeam.name)} (${day})`;
+  $('poll-badge').textContent = configured ? '· live' : '· not switched on yet';
+
+  const mine = pollMyVote(match.id);
+  if (configured && mine) return renderPollResults(mine);
+  renderPollForm();
+}
+
+function renderPollForm() {
+  const { options, configured } = pollState;
+  $('poll-opts').innerHTML = `
+    <div style="display:flex;gap:.6rem;flex-wrap:wrap">
+      <select id="poll-choice" ${configured ? '' : 'disabled'} aria-label="Choose your Man of the Match"
+        style="flex:1;min-width:0;background:var(--card);color:#fff;border:1px solid var(--cborder);border-radius:6px;padding:.55rem .6rem;font-size:16px">
+        <option value="">Pick a player…</option>
+        ${options.map(o => `<option>${o}</option>`).join('')}
+      </select>
+      <button class="btn-gold" id="poll-submit" onclick="submitPollVote()" ${configured ? '' : 'disabled'}
+        style="font-size:.82rem;padding:.55rem 1.3rem">Vote</button>
+    </div>`;
+  $('poll-hint').textContent = configured
+    ? (pollState.total ? `${pollState.total.toLocaleString()} votes so far · one vote per browser` : 'Be the first to vote · one vote per browser')
+    : 'Voting switches on once the vote store is connected.';
+}
+
+async function submitPollVote() {
+  const choice = $('poll-choice').value;
+  if (!choice) { $('poll-hint').textContent = 'Pick a player first.'; return; }
+  const btn = $('poll-submit'); btn.disabled = true;
+  try {
+    const r = await fetch('/api/poll', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ match: pollState.match.id, choice }),
+    });
+    const d = await r.json().catch(() => ({}));
+    if (r.status === 409 && d.match) {  // poll rolled over to a newer match
+      await initPoll();
+      $('poll-hint').textContent = 'Voting has moved on to the latest match — pick again.';
+      return;
+    }
+    if (!r.ok) throw new Error(d.error || 'HTTP ' + r.status);
+    try { localStorage.setItem(pollVotedKey(pollState.match.id), choice); } catch {}
+    pollState = d;
+    renderPollResults(choice);
+  } catch(e) {
+    btn.disabled = false;
+    $('poll-hint').textContent = `Vote not counted: ${e.message}`;
+  }
+}
+
+function renderPollResults(mine) {
+  const { counts, total } = pollState;
+  // Top six by votes, plus your pick if it isn't among them
+  let rows = Object.entries(counts || {}).filter(([, n]) => n > 0).sort((a, b) => b[1] - a[1]);
+  const top = rows.slice(0, 6);
+  if (mine && !top.some(([n]) => n === mine)) top.push([mine, counts?.[mine] || 0]);
+  const pct = n => total ? Math.round(n / total * 100) : 0;
+  $('poll-opts').innerHTML = top.map(([name, n], j) => `<div class="poll-opt">
+      <div class="p-row"><span class="p-btn${name === mine ? ' voted' : ''}">${name === mine ? '✓ ' : ''}${name}</span><span class="p-pct">${pct(n)}%</span></div>
+      <div class="p-track"><div class="p-fill ${name === mine ? 'pf-s' : 'pf-o'}" style="width:0%" id="pf${j}"></div></div>
+    </div>`).join('');
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    top.forEach(([, n], j) => { $('pf' + j).style.width = pct(n) + '%'; });
+  }));
+  $('poll-hint').textContent = `${total.toLocaleString()} vote${total === 1 ? '' : 's'} · you voted ${mine}`;
 }
 
 // ─── Snapshot fallback ─────────────────────────────
@@ -1801,7 +1859,7 @@ async function init() {
   loadNews();      // Google News RSS → news cards + ticker
   loadGallery();   // Wikimedia Commons → gallery grid + lightbox
   initForum();     // Giscus embed (or static threads if not configured)
-  initPoll();      // JSONbin shared votes (or localStorage if not configured)
+  initPoll();      // Man of the Match via /api/poll (Upstash Redis)
   loadShop();      // Printful catalog via /api/shop (or "opening soon" if not configured)
 
   // Always attempt the football sections — each one falls back to the snapshot
@@ -1886,22 +1944,6 @@ function openLb(i){
 }
 function closeLb(){ $('lightbox').classList.remove('open'); document.body.style.overflow=''; }
 document.addEventListener('keydown', e => { if(e.key==='Escape') closeLb(); });
-
-// ─── Poll ──────────────────────────────────────────
-const PVOTES=[44,26,18,12], PLBLS=['Dominic Calvert-Lewin','Joe Rodon','Wilfried Gnonto','Lucas Perri'];
-let pvoted=null;
-function vote(i){
-  if(pvoted!==null)return; pvoted=i; PVOTES[i]++;
-  const tot=PVOTES.reduce((a,b)=>a+b,0);
-  $('poll-opts').innerHTML=PLBLS.map((l,j)=>{
-    const pct=Math.round(PVOTES[j]/tot*100);
-    return `<div class="poll-opt"><div class="p-row"><button class="p-btn${j===i?' voted':''}" disabled>${j===i?'✓ ':''}${l}</button><span class="p-pct">${pct}%</span></div><div class="p-track"><div class="p-fill ${j===i?'pf-s':'pf-o'}" style="width:0%" id="pf${j}"></div></div></div>`;
-  }).join('');
-  requestAnimationFrame(()=>requestAnimationFrame(()=>{
-    PLBLS.forEach((_,j)=>{ document.getElementById('pf'+j).style.width=Math.round(PVOTES[j]/tot*100)+'%'; });
-  }));
-  $('poll-hint').textContent=`Total votes: ${tot.toLocaleString()}`;
-}
 
 // ─── Mobile menu ───────────────────────────────────
 function toggleMenu(){ $('mob-menu').classList.toggle('open'); }
