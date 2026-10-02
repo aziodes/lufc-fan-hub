@@ -18,14 +18,13 @@
 //   2. Copy its signing secret into STRIPE_WEBHOOK_SECRET.
 //   3. PRINTFUL_API_KEY must also be set (same key api/shop.js uses).
 //
-// Known limitation: if Stripe redelivers this webhook (it retries on any
-// non-2xx response or timeout), the same order could be submitted to
-// Printful twice. Printful's `external_id` field is set to the Stripe
-// session id below so a duplicate is at least traceable, but nothing here
-// currently checks for and skips an already-fulfilled session — that would
-// need a persistent store (e.g. Vercel KV) to do properly, which is outside
-// what this pass adds. Low-volume fan-site risk; revisit if this ever sells
-// more than a handful of orders a day.
+// De-duplication: Stripe redelivers a webhook on any non-2xx or timeout, and
+// may deliver the same event twice even on success. Every Printful order
+// carries an `external_id` that must be unique within the store, so Printful
+// itself is the idempotency record — no separate datastore. The id is derived
+// deterministically from the Stripe session (see printfulExternalId), the
+// webhook looks it up before creating, and a create that loses a race to a
+// concurrent delivery is recognised by looking it up again.
 
 import crypto from 'node:crypto'
 
@@ -60,6 +59,25 @@ function verifyStripeSignature(rawBody, sigHeader, secret) {
   const a = Buffer.from(expected, 'hex')
   const b = Buffer.from(signature, 'hex')
   return a.length === b.length && crypto.timingSafeEqual(a, b)
+}
+
+// Printful caps external_id at 32 chars of [0-9A-Za-z_-]; a Stripe session id
+// (`cs_live_…`) is ~66, so it can't be used directly — Printful rejects it.
+// 32 hex chars of its SHA-256 are deterministic (every redelivery of a session
+// maps to the same order) and collision-free at any realistic volume.
+function printfulExternalId(sessionId) {
+  return crypto.createHash('sha256').update(sessionId).digest('hex').slice(0, 32)
+}
+
+// true = order exists, false = definitely doesn't (404). Throws on anything
+// else, so an unknown state never falls through to creating a second order.
+async function printfulOrderExists(externalId, printfulKey) {
+  const r = await fetch(`https://api.printful.com/orders/@${externalId}`, {
+    headers: { Authorization: `Bearer ${printfulKey}` },
+  })
+  if (r.ok) return true
+  if (r.status === 404) return false
+  throw new Error(`Printful lookup HTTP ${r.status}`)
 }
 
 export default async function handler(req, res) {
@@ -98,12 +116,26 @@ export default async function handler(req, res) {
   const shipping = session?.shipping_details || session?.shipping
   const address = shipping?.address
 
+  if (session?.payment_status !== 'paid') {
+    // Checkout is card-only so this shouldn't happen, but never ship unpaid
+    console.error('stripe-webhook: session completed but not paid', { sessionId: session?.id })
+    return res.status(200).send('Ignored (unpaid)')
+  }
+
   if (!meta.printfulSyncVariantId || !address) {
     console.error('stripe-webhook: missing metadata or shipping address', { sessionId: session?.id })
     return res.status(400).send('Missing order data')
   }
 
+  const externalId = printfulExternalId(session.id)
+
   try {
+    // Redelivery of an already-fulfilled session: acknowledge, don't reorder
+    if (await printfulOrderExists(externalId, printfulKey)) {
+      console.log('stripe-webhook: duplicate delivery, order exists', { sessionId: session.id, externalId })
+      return res.status(200).send('Already fulfilled')
+    }
+
     const orderRes = await fetch('https://api.printful.com/orders', {
       method: 'POST',
       headers: {
@@ -111,7 +143,7 @@ export default async function handler(req, res) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        external_id: session.id,
+        external_id: externalId,
         recipient: {
           name: shipping?.name || session?.customer_details?.name || 'Customer',
           address1: address.line1,
@@ -132,12 +164,19 @@ export default async function handler(req, res) {
       }),
     })
 
-    const orderJson = await orderRes.json()
+    const orderJson = await orderRes.json().catch(() => ({}))
     if (!orderRes.ok) {
+      // A concurrent delivery may have created it between our lookup and this
+      // create (Printful then rejects the duplicate external_id) — that's success
+      if (await printfulOrderExists(externalId, printfulKey).catch(() => false)) {
+        console.log('stripe-webhook: lost create race, order exists', { sessionId: session.id, externalId })
+        return res.status(200).send('Already fulfilled')
+      }
       console.error('stripe-webhook: Printful order failed', orderJson)
       return res.status(502).send('Printful order failed')
     }
 
+    console.log('stripe-webhook: order created', { sessionId: session.id, externalId, printfulId: orderJson.result?.id })
     return res.status(200).send('OK')
   } catch (err) {
     console.error('stripe-webhook: fulfillment error', err)

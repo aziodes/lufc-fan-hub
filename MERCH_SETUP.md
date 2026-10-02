@@ -163,9 +163,18 @@ Commit and push. `/api/shop` will start returning real products, and the
 - If `CATALOG` is empty or a key is missing, the site shows the honest
   "opening soon" state — it never fabricates products or prices.
 
-## Known limitation
+- Duplicate webhooks can't double-ship. Stripe redelivers on any failure (and
+  occasionally even on success); each paid session maps to one fixed Printful
+  `external_id`, the webhook checks Printful for it before creating, and a
+  concurrent duplicate is recognised and acknowledged. No extra database —
+  Printful's own uniqueness rule is the record. Unpaid sessions are never shipped.
 
-If Stripe redelivers the webhook (it retries on any failure), the same paid
-order could be submitted to Printful twice — there's no de-duplication store
-wired up yet. Low risk at fan-site volume; worth adding a persistent
-idempotency check (e.g. Vercel KV) before this does meaningful volume.
+## One check to do in Stripe test mode
+
+The concurrent-duplicate case relies on Printful rejecting a second order with
+the same `external_id` (their docs say it "must be unique within the store" but
+don't document the error). Once test mode works, confirm it: after a test
+purchase lands in Printful, resend that event from Stripe (Dashboard →
+Developers → Events → the `checkout.session.completed` event → Resend, or
+`stripe events resend <evt_id>`). Expected: the resend gets `200 Already
+fulfilled` and Printful still shows one order.
