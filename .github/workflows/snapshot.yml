@@ -1,0 +1,45 @@
+# Keeps data/snapshot.json — the page's fallback when the live APIs fail —
+# current, so it can't rot the way the old hand-written fallbacks did.
+#
+# Commits only when the data actually changed (roughly after each match and
+# during transfer windows), and each commit redeploys via Vercel's git
+# integration like any other push to main. A failed source turns the run red
+# (GitHub emails the repo owner) while the other sections still refresh.
+
+name: Refresh fallback snapshot
+
+on:
+  schedule:
+    - cron: '17 5 * * *'   # daily, 05:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency: snapshot
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Rebuild snapshot from the live site
+        run: node scripts/snapshot.mjs
+
+      # Runs even if a section failed, so the sections that did refresh still land
+      - name: Commit if changed
+        if: ${{ !cancelled() }}
+        run: |
+          if git diff --quiet -- data/snapshot.json && git ls-files --error-unmatch data/snapshot.json >/dev/null 2>&1; then
+            echo "Snapshot unchanged"; exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/snapshot.json
+          git commit -m 'chore: refresh fallback snapshot'
+          git push
