@@ -1,0 +1,1051 @@
+{
+ "matches": {
+  "asOf": "2026-10-02T11:31:41.728Z",
+  "season": 2026,
+  "matches": [
+   {
+    "utcDate": "2026-08-22T14:00:00Z",
+    "status": "FINISHED",
+    "matchday": 1,
+    "competition": {
+     "code": "PL",
+     "name": "Premier League"
+    },
+    "homeTeam": {
+     "id": 351,
+     "name": "Nottingham Forest FC"
+    },
+    "awayTeam": {
+     "id": 341,
+     "name": "Leeds United FC"
+    },
+    "score": {
+     "fullTime": {
+      "home": 0,
+      "away": 1
+     }
+    }
+   },
+   {
+    "utcDate": "2026-08-30T13:00:00Z",
+    "status": "FINISHED",
+    "matchday": 2,
+    "competition": {
+     "code": "PL",
+     "name": "Premier League"
+    },
+    "homeTeam": {
+     "id": 341,
+     "name": "Leeds United FC"
+    },
+    "awayTeam": {
+     "id": 402,
+     "name": "Brentford FC"
+    },
+    "score": {
+     "fullTime": {
+      "home": 1,
+      "away": 1
+     }
+    }
+   },
+   {
+    "utcDate": "2026-09-05T14:00:00Z",
+    "status": "FINISHED",
+    "matchday": 3,
+    "competition": {
+     "code": "PL",
+     "name": "Premier League"
+    },
+    "homeTeam": {
+     "id": 397,
+     "name": "Brighton & Hove Albion FC"
+    },
+    "awayTeam": {
+     "id": 341,
+     "name": "Leeds United FC"
+    },
+    "score": {
+     "fullTime": {
+      "home": 1,
+      "away": 1
+     }
+    }
+   },
+   {
+    "utcDate": "2026-09-14T19:00:00Z",
+    "status": "FINISHED",
+    "matchday": 4,
+    "competition": {
+     "code": "PL",
+     "name": "Premier League"
+    },
+    "homeTeam": {
+     "id": 341,
+     "name": "Leeds United FC"
+    },
+    "awayTeam": {
+     "id": 67,
+     "name": "Newcastle United FC"
+    },
+    "score": {
+     "fullTime": {
+      "home": 4,
+      "away": 1
+     }
+    }
+   },
+   {
+    "utcDate": "2026-09-20T13:00:00Z",
+    "status": "FINISHED",
+    "matchday": 5,
+    "competition": {
+     "code": "PL",
+     "name": "Premier League"
+    },
+    "homeTeam": {
+     "id": 341,
+     "name": "Leeds United FC"
+    },
+    "awayTeam": {
+     "id": 354,
+     "name": "Crystal Palace FC"
+    },
+    "score": {
+     "fullTime": {
+      "home": 0,
+      "away": 0
+     }
+    }
+   },
+   {
+    "utcDate": "2026-10-10T11:30:00Z",
+    "status": "TIMED",
+    "matchday": 6,
+    "competition": {
+     "code": "PL",
+     "name": "Premier League"
+    },
+    "homeTeam": {
+     "id": 57,
+     "name": "Arsenal FC"
+    },
+    "awayTeam": {
+     "id": 341,
+     "name": "Leeds United FC"
+    },
+    "score": {
+     "fullTime": {
+      "home": null,
+      "away": null
+     }
+    }
+   },
+   {
+    "utcDate": "2026-10-18T13:00:00Z",
+    "status": "TIMED",
+    "matchday": 7,
+    "competition": {
+     "code": "PL",
+     "name": "Premier League"
+    },
+    "homeTeam": {
+     "id": 341,
+     "name": "Leeds United FC"
+    },
+    "awayTeam": {
+     "id": 66,
+     "name": "Manchester United FC"
+    },
+    "score": {
+     "fullTime": {
+      "home": null,
+      "away": null
+     }
+    }
+   },
+   {
+    "utcDate": "2026-10-25T16:30:00Z",
+    "status": "TIMED",
+    "matchday": 8,
+    "competition": {
+     "code": "PL",
+     "name": "Premier League"
+    },
+    "homeTeam": {
+     "id": 71,
+     "name": "Sunderland AFC"
+    },
+    "awayTeam": {
+     "id": 341,
+     "name": "Leeds United FC"
+    },
+    "score": {
+     "fullTime": {
+      "home": null,
+      "away": null
+     }
+    }
+   },
+   {
+    "utcDate": "2026-10-31T15:00:00Z",
+    "status": "TIMED",
+    "matchday": 9,
+    "competition": {
+     "code": "PL",
+     "name": "Premier League"
+    },
+    "homeTeam": {
+     "id": 1044,
+     "name": "AFC Bournemouth"
+    },
+    "awayTeam": {
+     "id": 341,
+     "name": "Leeds United FC"
+    },
+    "score": {
+     "fullTime": {
+      "home": null,
+      "away": null
+     }
+    }
+   },
+   {
+    "utcDate": "2026-11-07T12:30:00Z",
+    "status": "TIMED",
+    "matchday": 10,
+    "competition": {
+     "code": "PL",
+     "name": "Premier League"
+    },
+    "homeTeam": {
+     "id": 341,
+     "name": "Leeds United FC"
+    },
+    "awayTeam": {
+     "id": 73,
+     "name": "Tottenham Hotspur FC"
+    },
+    "score": {
+     "fullTime": {
+      "home": null,
+      "away": null
+     }
+    }
+   },
+   {
+    "utcDate": "2026-11-21T15:00:00Z",
+    "status": "TIMED",
+    "matchday": 11,
+    "competition": {
+     "code": "PL",
+     "name": "Premier League"
+    },
+    "homeTeam": {
+     "id": 61,
+     "name": "Chelsea FC"
+    },
+    "awayTeam": {
+     "id": 341,
+     "name": "Leeds United FC"
+    },
+    "score": {
+     "fullTime": {
+      "home": null,
+      "away": null
+     }
+    }
+   },
+   {
+    "utcDate": "2026-11-28T15:00:00Z",
+    "status": "TIMED",
+    "matchday": 12,
+    "competition": {
+     "code": "PL",
+     "name": "Premier League"
+    },
+    "homeTeam": {
+     "id": 341,
+     "name": "Leeds United FC"
+    },
+    "awayTeam": {
+     "id": 1076,
+     "name": "Coventry City FC"
+    },
+    "score": {
+     "fullTime": {
+      "home": null,
+      "away": null
+     }
+    }
+   },
+   {
+    "utcDate": "2026-12-02T20:00:00Z",
+    "status": "TIMED",
+    "matchday": 13,
+    "competition": {
+     "code": "PL",
+     "name": "Premier League"
+    },
+    "homeTeam": {
+     "id": 65,
+     "name": "Manchester City FC"
+    },
+    "awayTeam": {
+     "id": 341,
+     "name": "Leeds United FC"
+    },
+    "score": {
+     "fullTime": {
+      "home": null,
+      "away": null
+     }
+    }
+   },
+   {
+    "utcDate": "2026-12-05T15:00:00Z",
+    "status": "TIMED",
+    "matchday": 14,
+    "competition": {
+     "code": "PL",
+     "name": "Premier League"
+    },
+    "homeTeam": {
+     "id": 341,
+     "name": "Leeds United FC"
+    },
+    "awayTeam": {
+     "id": 349,
+     "name": "Ipswich Town FC"
+    },
+    "score": {
+     "fullTime": {
+      "home": null,
+      "away": null
+     }
+    }
+   },
+   {
+    "utcDate": "2026-12-12T15:00:00Z",
+    "status": "TIMED",
+    "matchday": 15,
+    "competition": {
+     "code": "PL",
+     "name": "Premier League"
+    },
+    "homeTeam": {
+     "id": 64,
+     "name": "Liverpool FC"
+    },
+    "awayTeam": {
+     "id": 341,
+     "name": "Leeds United FC"
+    },
+    "score": {
+     "fullTime": {
+      "home": null,
+      "away": null
+     }
+    }
+   },
+   {
+    "utcDate": "2026-12-19T15:00:00Z",
+    "status": "TIMED",
+    "matchday": 16,
+    "competition": {
+     "code": "PL",
+     "name": "Premier League"
+    },
+    "homeTeam": {
+     "id": 341,
+     "name": "Leeds United FC"
+    },
+    "awayTeam": {
+     "id": 63,
+     "name": "Fulham FC"
+    },
+    "score": {
+     "fullTime": {
+      "home": null,
+      "away": null
+     }
+    }
+   },
+   {
+    "utcDate": "2026-12-26T12:30:00Z",
+    "status": "TIMED",
+    "matchday": 17,
+    "competition": {
+     "code": "PL",
+     "name": "Premier League"
+    },
+    "homeTeam": {
+     "id": 58,
+     "name": "Aston Villa FC"
+    },
+    "awayTeam": {
+     "id": 341,
+     "name": "Leeds United FC"
+    },
+    "score": {
+     "fullTime": {
+      "home": null,
+      "away": null
+     }
+    }
+   },
+   {
+    "utcDate": "2026-12-29T19:30:00Z",
+    "status": "TIMED",
+    "matchday": 18,
+    "competition": {
+     "code": "PL",
+     "name": "Premier League"
+    },
+    "homeTeam": {
+     "id": 322,
+     "name": "Hull City AFC"
+    },
+    "awayTeam": {
+     "id": 341,
+     "name": "Leeds United FC"
+    },
+    "score": {
+     "fullTime": {
+      "home": null,
+      "away": null
+     }
+    }
+   },
+   {
+    "utcDate": "2027-01-01T20:00:00Z",
+    "status": "TIMED",
+    "matchday": 19,
+    "competition": {
+     "code": "PL",
+     "name": "Premier League"
+    },
+    "homeTeam": {
+     "id": 341,
+     "name": "Leeds United FC"
+    },
+    "awayTeam": {
+     "id": 62,
+     "name": "Everton FC"
+    },
+    "score": {
+     "fullTime": {
+      "home": null,
+      "away": null
+     }
+    }
+   },
+   {
+    "utcDate": "2027-01-06T20:15:00Z",
+    "status": "TIMED",
+    "matchday": 20,
+    "competition": {
+     "code": "PL",
+     "name": "Premier League"
+    },
+    "homeTeam": {
+     "id": 341,
+     "name": "Leeds United FC"
+    },
+    "awayTeam": {
+     "id": 65,
+     "name": "Manchester City FC"
+    },
+    "score": {
+     "fullTime": {
+      "home": null,
+      "away": null
+     }
+    }
+   },
+   {
+    "utcDate": "2027-01-16T15:00:00Z",
+    "status": "TIMED",
+    "matchday": 21,
+    "competition": {
+     "code": "PL",
+     "name": "Premier League"
+    },
+    "homeTeam": {
+     "id": 73,
+     "name": "Tottenham Hotspur FC"
+    },
+    "awayTeam": {
+     "id": 341,
+     "name": "Leeds United FC"
+    },
+    "score": {
+     "fullTime": {
+      "home": null,
+      "away": null
+     }
+    }
+   },
+   {
+    "utcDate": "2027-01-23T15:00:00Z",
+    "status": "TIMED",
+    "matchday": 22,
+    "competition": {
+     "code": "PL",
+     "name": "Premier League"
+    },
+    "homeTeam": {
+     "id": 341,
+     "name": "Leeds United FC"
+    },
+    "awayTeam": {
+     "id": 61,
+     "name": "Chelsea FC"
+    },
+    "score": {
+     "fullTime": {
+      "home": null,
+      "away": null
+     }
+    }
+   },
+   {
+    "utcDate": "2027-01-30T15:00:00Z",
+    "status": "TIMED",
+    "matchday": 23,
+    "competition": {
+     "code": "PL",
+     "name": "Premier League"
+    },
+    "homeTeam": {
+     "id": 1076,
+     "name": "Coventry City FC"
+    },
+    "awayTeam": {
+     "id": 341,
+     "name": "Leeds United FC"
+    },
+    "score": {
+     "fullTime": {
+      "home": null,
+      "away": null
+     }
+    }
+   },
+   {
+    "utcDate": "2027-02-06T15:00:00Z",
+    "status": "TIMED",
+    "matchday": 24,
+    "competition": {
+     "code": "PL",
+     "name": "Premier League"
+    },
+    "homeTeam": {
+     "id": 341,
+     "name": "Leeds United FC"
+    },
+    "awayTeam": {
+     "id": 1044,
+     "name": "AFC Bournemouth"
+    },
+    "score": {
+     "fullTime": {
+      "home": null,
+      "away": null
+     }
+    }
+   },
+   {
+    "utcDate": "2027-02-10T20:00:00Z",
+    "status": "TIMED",
+    "matchday": 25,
+    "competition": {
+     "code": "PL",
+     "name": "Premier League"
+    },
+    "homeTeam": {
+     "id": 62,
+     "name": "Everton FC"
+    },
+    "awayTeam": {
+     "id": 341,
+     "name": "Leeds United FC"
+    },
+    "score": {
+     "fullTime": {
+      "home": null,
+      "away": null
+     }
+    }
+   },
+   {
+    "utcDate": "2027-02-20T15:00:00Z",
+    "status": "TIMED",
+    "matchday": 26,
+    "competition": {
+     "code": "PL",
+     "name": "Premier League"
+    },
+    "homeTeam": {
+     "id": 341,
+     "name": "Leeds United FC"
+    },
+    "awayTeam": {
+     "id": 58,
+     "name": "Aston Villa FC"
+    },
+    "score": {
+     "fullTime": {
+      "home": null,
+      "away": null
+     }
+    }
+   },
+   {
+    "utcDate": "2027-02-27T15:00:00Z",
+    "status": "TIMED",
+    "matchday": 27,
+    "competition": {
+     "code": "PL",
+     "name": "Premier League"
+    },
+    "homeTeam": {
+     "id": 63,
+     "name": "Fulham FC"
+    },
+    "awayTeam": {
+     "id": 341,
+     "name": "Leeds United FC"
+    },
+    "score": {
+     "fullTime": {
+      "home": null,
+      "away": null
+     }
+    }
+   },
+   {
+    "utcDate": "2027-03-03T20:00:00Z",
+    "status": "TIMED",
+    "matchday": 28,
+    "competition": {
+     "code": "PL",
+     "name": "Premier League"
+    },
+    "homeTeam": {
+     "id": 341,
+     "name": "Leeds United FC"
+    },
+    "awayTeam": {
+     "id": 322,
+     "name": "Hull City AFC"
+    },
+    "score": {
+     "fullTime": {
+      "home": null,
+      "away": null
+     }
+    }
+   },
+   {
+    "utcDate": "2027-03-13T15:00:00Z",
+    "status": "TIMED",
+    "matchday": 29,
+    "competition": {
+     "code": "PL",
+     "name": "Premier League"
+    },
+    "homeTeam": {
+     "id": 341,
+     "name": "Leeds United FC"
+    },
+    "awayTeam": {
+     "id": 397,
+     "name": "Brighton & Hove Albion FC"
+    },
+    "score": {
+     "fullTime": {
+      "home": null,
+      "away": null
+     }
+    }
+   },
+   {
+    "utcDate": "2027-03-20T15:00:00Z",
+    "status": "TIMED",
+    "matchday": 30,
+    "competition": {
+     "code": "PL",
+     "name": "Premier League"
+    },
+    "homeTeam": {
+     "id": 67,
+     "name": "Newcastle United FC"
+    },
+    "awayTeam": {
+     "id": 341,
+     "name": "Leeds United FC"
+    },
+    "score": {
+     "fullTime": {
+      "home": null,
+      "away": null
+     }
+    }
+   },
+   {
+    "utcDate": "2027-04-10T14:00:00Z",
+    "status": "TIMED",
+    "matchday": 31,
+    "competition": {
+     "code": "PL",
+     "name": "Premier League"
+    },
+    "homeTeam": {
+     "id": 341,
+     "name": "Leeds United FC"
+    },
+    "awayTeam": {
+     "id": 351,
+     "name": "Nottingham Forest FC"
+    },
+    "score": {
+     "fullTime": {
+      "home": null,
+      "away": null
+     }
+    }
+   },
+   {
+    "utcDate": "2027-04-17T14:00:00Z",
+    "status": "TIMED",
+    "matchday": 32,
+    "competition": {
+     "code": "PL",
+     "name": "Premier League"
+    },
+    "homeTeam": {
+     "id": 402,
+     "name": "Brentford FC"
+    },
+    "awayTeam": {
+     "id": 341,
+     "name": "Leeds United FC"
+    },
+    "score": {
+     "fullTime": {
+      "home": null,
+      "away": null
+     }
+    }
+   },
+   {
+    "utcDate": "2027-04-24T14:00:00Z",
+    "status": "TIMED",
+    "matchday": 33,
+    "competition": {
+     "code": "PL",
+     "name": "Premier League"
+    },
+    "homeTeam": {
+     "id": 341,
+     "name": "Leeds United FC"
+    },
+    "awayTeam": {
+     "id": 64,
+     "name": "Liverpool FC"
+    },
+    "score": {
+     "fullTime": {
+      "home": null,
+      "away": null
+     }
+    }
+   },
+   {
+    "utcDate": "2027-05-01T14:00:00Z",
+    "status": "TIMED",
+    "matchday": 34,
+    "competition": {
+     "code": "PL",
+     "name": "Premier League"
+    },
+    "homeTeam": {
+     "id": 349,
+     "name": "Ipswich Town FC"
+    },
+    "awayTeam": {
+     "id": 341,
+     "name": "Leeds United FC"
+    },
+    "score": {
+     "fullTime": {
+      "home": null,
+      "away": null
+     }
+    }
+   },
+   {
+    "utcDate": "2027-05-08T14:00:00Z",
+    "status": "TIMED",
+    "matchday": 35,
+    "competition": {
+     "code": "PL",
+     "name": "Premier League"
+    },
+    "homeTeam": {
+     "id": 341,
+     "name": "Leeds United FC"
+    },
+    "awayTeam": {
+     "id": 57,
+     "name": "Arsenal FC"
+    },
+    "score": {
+     "fullTime": {
+      "home": null,
+      "away": null
+     }
+    }
+   },
+   {
+    "utcDate": "2027-05-15T14:00:00Z",
+    "status": "TIMED",
+    "matchday": 36,
+    "competition": {
+     "code": "PL",
+     "name": "Premier League"
+    },
+    "homeTeam": {
+     "id": 66,
+     "name": "Manchester United FC"
+    },
+    "awayTeam": {
+     "id": 341,
+     "name": "Leeds United FC"
+    },
+    "score": {
+     "fullTime": {
+      "home": null,
+      "away": null
+     }
+    }
+   },
+   {
+    "utcDate": "2027-05-23T14:00:00Z",
+    "status": "TIMED",
+    "matchday": 37,
+    "competition": {
+     "code": "PL",
+     "name": "Premier League"
+    },
+    "homeTeam": {
+     "id": 341,
+     "name": "Leeds United FC"
+    },
+    "awayTeam": {
+     "id": 71,
+     "name": "Sunderland AFC"
+    },
+    "score": {
+     "fullTime": {
+      "home": null,
+      "away": null
+     }
+    }
+   },
+   {
+    "utcDate": "2027-05-30T15:00:00Z",
+    "status": "TIMED",
+    "matchday": 38,
+    "competition": {
+     "code": "PL",
+     "name": "Premier League"
+    },
+    "homeTeam": {
+     "id": 354,
+     "name": "Crystal Palace FC"
+    },
+    "awayTeam": {
+     "id": 341,
+     "name": "Leeds United FC"
+    },
+    "score": {
+     "fullTime": {
+      "home": null,
+      "away": null
+     }
+    }
+   }
+  ],
+  "prevResults": []
+ },
+ "standings": {
+  "asOf": "2026-10-02T11:31:41.728Z",
+  "comp": "PL",
+  "season": {
+   "startDate": "2026-08-21"
+  },
+  "row": {
+   "position": 5,
+   "playedGames": 5,
+   "form": null,
+   "won": 2,
+   "draw": 3,
+   "lost": 0,
+   "points": 9,
+   "goalsFor": 7,
+   "goalsAgainst": 3,
+   "goalDifference": 4
+  }
+ },
+ "squad": {
+  "asOf": "2026-10-02T11:31:41.728Z",
+  "players": [
+   {
+    "number": 1,
+    "name": "James Trafford",
+    "nationality": "England",
+    "position": "GK"
+   },
+   {
+    "number": 2,
+    "name": "Jayden Bogle",
+    "nationality": "England",
+    "position": "DEF"
+   },
+   {
+    "number": 3,
+    "name": "Gabriel Gudmundsson",
+    "nationality": "Sweden",
+    "position": "DEF"
+   },
+   {
+    "number": 4,
+    "name": "Ethan Ampadu",
+    "nationality": "Wales",
+    "position": "MF"
+   },
+   {
+    "number": 5,
+    "name": "Tarik Muharemović",
+    "nationality": "Bosnia-Herzegovina",
+    "position": "DEF"
+   },
+   {
+    "number": 6,
+    "name": "Joe Rodon",
+    "nationality": "Wales",
+    "position": "DEF"
+   },
+   {
+    "number": 7,
+    "name": "Daniel James",
+    "nationality": "Wales",
+    "position": "MF"
+   },
+   {
+    "number": 8,
+    "name": "Sean Longstaff",
+    "nationality": "England",
+    "position": "MF"
+   },
+   {
+    "number": 9,
+    "name": "Dominic Calvert-Lewin",
+    "nationality": "England",
+    "position": "FW"
+   },
+   {
+    "number": 10,
+    "name": "Harry Wilson",
+    "nationality": "Wales",
+    "position": "MF"
+   },
+   {
+    "number": 11,
+    "name": "Brenden Aaronson",
+    "nationality": "United States",
+    "position": "MF"
+   },
+   {
+    "number": 14,
+    "name": "Lukas Nmecha",
+    "nationality": "Germany",
+    "position": "FW"
+   },
+   {
+    "number": 15,
+    "name": "Jaka Bijol",
+    "nationality": "Slovenia",
+    "position": "DEF"
+   },
+   {
+    "number": 16,
+    "name": "Michael Zetterer",
+    "nationality": "Germany",
+    "position": "GK"
+   },
+   {
+    "number": 18,
+    "name": "Anton Stach",
+    "nationality": "Germany",
+    "position": "MF"
+   },
+   {
+    "number": 19,
+    "name": "Noah Okafor",
+    "nationality": "Switzerland",
+    "position": "FW"
+   },
+   {
+    "number": 21,
+    "name": "Alex Cairns",
+    "nationality": "England",
+    "position": "GK"
+   },
+   {
+    "number": 22,
+    "name": "Ao Tanaka",
+    "nationality": "Japan",
+    "position": "MF"
+   },
+   {
+    "number": 23,
+    "name": "Jean-Mattéo Bahoya",
+    "nationality": "France",
+    "position": "FW"
+   },
+   {
+    "number": 24,
+    "name": "James Justin",
+    "nationality": "England",
+    "position": "DEF"
+   },
+   {
+    "number": 26,
+    "name": "Melvin Bard",
+    "nationality": "France",
+    "position": "DEF"
+   },
+   {
+    "number": 30,
+    "name": "Nico Elvedi",
+    "nationality": "Switzerland",
+    "position": "DEF"
+   },
+   {
+    "number": 44,
+    "name": "Ilia Gruev",
+    "nationality": "Bulgaria",
+    "position": "MF"
+   },
+   {
+    "number": null,
+    "name": "Mateo Joseph",
+    "nationality": "Spain",
+    "position": "FW"
+   }
+  ]
+ }
+}
