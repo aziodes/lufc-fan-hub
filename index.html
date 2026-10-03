@@ -5,6 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>LUFC Fan Hub | Leeds United Supporters</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+<meta name="description" content="Unofficial Leeds United fan site: live fixtures, results, squad, news, a Man of the Match poll and the fan forum."/>
+<!-- Link-share preview. Image: aerial render of a fan-made 3D model of Elland Road -->
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="LUFC Fan Hub"/>
+<meta property="og:title" content="LUFC Fan Hub | Leeds United Supporters"/>
+<meta property="og:description" content="Unofficial Leeds United fan site: live fixtures, results, squad, news, fan poll and forum."/>
+<meta property="og:url" content="https://lufc-fan-hub.vercel.app/"/>
+<meta property="og:image" content="https://lufc-fan-hub.vercel.app/assets/og-image.jpg"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta property="og:image:alt" content="Aerial view of a 3D model of Elland Road at dusk"/>
+<meta name="twitter:card" content="summary_large_image"/>
 <style>
 :root{
   --blue:#1D428A;--gold:#FFCD00;--navy:#0A1628;--dark:#060f1e;
@@ -234,7 +246,15 @@ tbody td:not(:first-child){text-align:center}
 .tl-desc{color:var(--dim);font-size:.82rem;line-height:1.55}
 
 /* ── ELLAND ROAD ── */
-#elland-road{background:linear-gradient(135deg,var(--dark) 0%,var(--blue) 50%,var(--dark) 100%);padding:5rem 1.5rem;position:relative;overflow:hidden}
+/* Backdrop: render of a fan-made 3D model of Elland Road, darkened so text stays readable */
+#elland-road{background:linear-gradient(180deg,rgba(6,15,30,.88) 0%,rgba(10,22,40,.78) 45%,rgba(6,15,30,.94) 100%),url(assets/elland-road/backdrop-1600.webp) center 35%/cover no-repeat,var(--dark);padding:5rem 1.5rem;position:relative;overflow:hidden}
+@media (max-width:800px){#elland-road{background-image:linear-gradient(180deg,rgba(6,15,30,.88) 0%,rgba(10,22,40,.8) 45%,rgba(6,15,30,.94) 100%),url(assets/elland-road/backdrop-800.webp)}}
+.er-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(120px,40vw),1fr));gap:.75rem;margin:0 auto 1rem;max-width:1040px}
+.er-tile{position:relative;border:1px solid rgba(255,205,0,.2);border-radius:6px;overflow:hidden;aspect-ratio:16/9;padding:0;cursor:pointer;background:var(--dark)}
+.er-tile img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s}
+.er-tile:hover img,.er-tile:focus-visible img{transform:scale(1.06)}
+.er-tile span{position:absolute;left:0;right:0;bottom:0;padding:.4rem .5rem;background:linear-gradient(transparent,rgba(0,0,0,.75));color:#fff;font-size:.72rem;font-weight:700;text-align:left}
+.er-credit{color:rgba(255,255,255,.38);font-size:.7rem;margin-bottom:2rem}
 .er-texture{position:absolute;inset:0;background-image:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,205,0,.015) 40px,rgba(255,205,0,.015) 80px);pointer-events:none}
 .er-inner{max-width:1040px;margin:0 auto;position:relative;z-index:1;text-align:center}
 .er-title{color:#fff;font-weight:900;font-size:clamp(1.8rem,5vw,3.2rem);letter-spacing:-.02em;text-transform:uppercase;line-height:1.1;margin-bottom:2.75rem}
@@ -549,6 +569,15 @@ footer{background:var(--dark);border-top:3px solid var(--blue)}
       <div class="er-cell" style="border-right:none"><div class="er-num" data-target="57892" data-suffix="">0</div><div class="er-label">Record Crowd (1967)</div></div>
     </div>
     <p class="er-quote">Home of Leeds United since the club's founding in 1919. Four stands named for club legends — Don Revie, Jack Charlton, Norman Hunter and John Charles.</p>
+    <!-- Around the ground: renders of the site owner's own 3D model (source files kept outside the repo) -->
+    <div class="er-tiles">
+      <button class="er-tile" onclick="openErTile(0)"><img src="assets/elland-road/bremner-640.webp" alt="Billy Bremner statue (3D model render)" loading="lazy" width="640" height="360"><span>Billy Bremner statue</span></button>
+      <button class="er-tile" onclick="openErTile(1)"><img src="assets/elland-road/revie-640.webp" alt="Don Revie statue (3D model render)" loading="lazy" width="640" height="360"><span>Don Revie statue</span></button>
+      <button class="er-tile" onclick="openErTile(2)"><img src="assets/elland-road/kop-640.webp" alt="The Kop, Don Revie Stand (3D model render)" loading="lazy" width="640" height="360"><span>The Kop</span></button>
+      <button class="er-tile" onclick="openErTile(3)"><img src="assets/elland-road/east-640.webp" alt="Jack Charlton East Stand (3D model render)" loading="lazy" width="640" height="360"><span>East Stand</span></button>
+      <button class="er-tile" onclick="openErTile(4)"><img src="assets/elland-road/floodlights-640.webp" alt="Elland Road floodlights (3D model render)" loading="lazy" width="640" height="360"><span>Floodlights</span></button>
+    </div>
+    <p class="er-credit">Backdrop and tiles: renders from a fan-made 3D model of Elland Road — not photographs.</p>
     <a href="https://www.leedsunited.com/en/news/category/ticketing" target="_blank" rel="noopener noreferrer" class="btn-gold">Ticket News (official site) ↗</a>
   </div>
 </section>
@@ -1698,9 +1727,19 @@ erObs.observe(document.getElementById('elland-road'));
 // ─── Gallery lightbox ──────────────────────────────
 // Filled by loadGallery() from Wikimedia Commons
 let LB_DATA = [];
-function openLb(i){
-  const d=LB_DATA[i];
-  if (!d) return;
+function openLb(i){ if (LB_DATA[i]) openLbItem(LB_DATA[i]); }
+
+// Elland Road "around the ground" tiles — the site owner's own 3D-model renders
+const ER_TILES = [
+  {key:'bremner',     title:'Billy Bremner statue',    desc:'Captain Billy Bremner, arms raised, outside Elland Road.'},
+  {key:'revie',       title:'Don Revie statue',        desc:'Don Revie, manager of the club\'s first league title side.'},
+  {key:'kop',         title:'The Kop — Don Revie Stand', desc:'The north end of the ground, home of the Kop.'},
+  {key:'east',        title:'Jack Charlton East Stand', desc:'The ground\'s largest stand, seen from outside.'},
+  {key:'floodlights', title:'Floodlights',             desc:'Elland Road\'s floodlight pylons.'},
+].map(t => ({...t, imgUrl:`assets/elland-road/${t.key}-1600.webp`, credit:'Render of a fan-made 3D model — not a photograph'}));
+function openErTile(i){ openLbItem(ER_TILES[i]); }
+
+function openLbItem(d){
   $('lb-img').innerHTML = `<img src="${esc(d.imgUrl)}" alt="${esc(d.title)}"
       style="max-width:100%;max-height:65vh;border-radius:8px;object-fit:contain;display:block;margin:0 auto">`;
   $('lb-title').textContent=d.title; $('lb-desc').textContent=d.desc;
