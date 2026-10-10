@@ -900,7 +900,7 @@
   }
  },
  "squad": {
-  "asOf": "2026-10-02T11:31:41.728Z",
+  "asOf": "2026-10-10T11:10:34.753Z",
   "players": [
    {
     "number": 1,
@@ -1041,10 +1041,10 @@
     "position": "MF"
    },
    {
-    "number": null,
-    "name": "Mateo Joseph",
-    "nationality": "Spain",
-    "position": "FW"
+    "number": 65,
+    "name": "Jayden Lienou",
+    "nationality": "Wales",
+    "position": "DEF"
    }
   ]
  }
