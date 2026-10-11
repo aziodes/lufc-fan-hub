@@ -1,6 +1,6 @@
 {
  "matches": {
-  "asOf": "2026-10-02T11:31:41.728Z",
+  "asOf": "2026-10-11T11:23:58.004Z",
   "season": 2026,
   "matches": [
    {
@@ -120,7 +120,7 @@
    },
    {
     "utcDate": "2026-10-10T11:30:00Z",
-    "status": "TIMED",
+    "status": "FINISHED",
     "matchday": 6,
     "competition": {
      "code": "PL",
@@ -136,8 +136,8 @@
     },
     "score": {
      "fullTime": {
-      "home": null,
-      "away": null
+      "home": 2,
+      "away": 1
      }
     }
    },
@@ -881,22 +881,22 @@
   "prevResults": []
  },
  "standings": {
-  "asOf": "2026-10-02T11:31:41.728Z",
+  "asOf": "2026-10-11T11:23:58.004Z",
   "comp": "PL",
   "season": {
    "startDate": "2026-08-21"
   },
   "row": {
-   "position": 5,
-   "playedGames": 5,
+   "position": 6,
+   "playedGames": 6,
    "form": null,
    "won": 2,
    "draw": 3,
-   "lost": 0,
+   "lost": 1,
    "points": 9,
-   "goalsFor": 7,
-   "goalsAgainst": 3,
-   "goalDifference": 4
+   "goalsFor": 8,
+   "goalsAgainst": 5,
+   "goalDifference": 3
   }
  },
  "squad": {
