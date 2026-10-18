@@ -881,13 +881,13 @@
   "prevResults": []
  },
  "standings": {
-  "asOf": "2026-10-12T13:09:16.695Z",
+  "asOf": "2026-10-18T09:36:55.621Z",
   "comp": "PL",
   "season": {
    "startDate": "2026-08-21"
   },
   "row": {
-   "position": 7,
+   "position": 8,
    "playedGames": 6,
    "form": null,
    "won": 2,
