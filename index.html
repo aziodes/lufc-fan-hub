@@ -233,6 +233,21 @@ tbody td:not(:first-child){text-align:center}
 .m-btn{background:var(--blue);color:#fff;border:none;font-weight:700;font-size:.73rem;padding:.38rem .85rem;border-radius:3px;cursor:pointer;letter-spacing:.05em;text-transform:uppercase;transition:background .2s}
 .m-btn:hover{background:var(--gold);color:var(--navy)}
 .m-btn:disabled{opacity:.5;cursor:default}
+/* Featured fan-made kit (preview card above the Printful grid) */
+.kit-feature{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:1.6rem;background:var(--card);border:1px solid var(--cborder);border-radius:8px;padding:1.2rem;margin-bottom:1.8rem}
+.kit-video{width:100%;height:auto;aspect-ratio:16/9;display:block;border-radius:6px;background:var(--dark)}
+.kit-brand{color:var(--gold);font-size:.7rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;margin-bottom:.3rem}
+.kit-name{color:#fff;font-weight:900;font-size:clamp(1.25rem,2.6vw,1.6rem);line-height:1.15;margin-bottom:.6rem}
+.kit-desc{color:var(--dim);font-size:.88rem;line-height:1.55;margin-bottom:.8rem}
+.kit-specs{list-style:none;margin:0 0 1rem;padding:0;display:grid;gap:.35rem}
+.kit-specs li{color:var(--dim);font-size:.84rem;padding-left:1rem;position:relative}
+.kit-specs li::before{content:'';position:absolute;left:0;top:.5em;width:6px;height:6px;border-radius:50%;background:var(--gold)}
+.kit-specs strong{color:#fff}
+.kit-thumbs{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1rem}
+.kit-status{color:var(--dim);font-size:.8rem;margin-bottom:.6rem;display:flex;flex-wrap:wrap;align-items:center;gap:.5rem}
+.kit-pill{background:rgba(255,205,0,.12);color:var(--gold);border:1px solid rgba(255,205,0,.35);border-radius:20px;padding:.22rem .65rem;font-size:.7rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
+.kit-legal{color:rgba(255,255,255,.4);font-size:.7rem;line-height:1.5}
+@media (max-width:800px){.kit-feature{grid-template-columns:1fr;padding:1rem}}
 
 /* ── HISTORY ── */
 .tl-container{position:relative;max-width:900px;margin:0 auto}
@@ -540,6 +555,34 @@ footer{background:var(--dark);border-top:3px solid var(--blue)}
       <span id="shop-badge" class="static-badge">🛠️ Opening Soon</span>
     </div>
     <div class="s-bar"></div>
+    <!-- Featured fan-made product, shown as a preview only. The kit is 3D-printed by the
+         site owner, so it can't go through the Printful checkout below: no price and
+         no Buy button until it has its own fulfilment path. -->
+    <article class="kit-feature" aria-labelledby="kit-title">
+      <div class="kit-media">
+        <video class="kit-video" controls playsinline preload="none" width="1280" height="720"
+               poster="assets/shop/elland-road-kit-poster-1280.webp"
+               aria-label="30-second advert for the Elland Road Stadium Kit">
+          <source src="assets/shop/elland-road-kit-ad-720.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="kit-body">
+        <p class="kit-brand">LS11 FanMerch</p>
+        <h3 id="kit-title" class="kit-name">Elland Road Stadium Kit</h3>
+        <p class="kit-desc">A 3D-printed model of the ground that you build yourself, from the Kop to the East Stand roof. Comes with a step-by-step instruction sheet.</p>
+        <ul class="kit-specs">
+          <li><strong>12</strong> snap-fit parts</li>
+          <li><strong>173 × 151 mm</strong> finished size</li>
+          <li><strong>2 editions:</strong> full colour, or grey to paint yourself</li>
+        </ul>
+        <div class="kit-thumbs">
+          <button class="er-tile" onclick="openKitTile(0)"><img src="assets/shop/elland-road-kit-editions-960.webp" alt="The kit in full colour beside the grey paint edition" loading="lazy" width="960" height="540"><span>Two editions</span></button>
+          <button class="er-tile" onclick="openKitTile(1)"><img src="assets/shop/elland-road-kit-instructions-960.webp" alt="The kit's instruction sheet" loading="lazy" width="960" height="540"><span>Instructions included</span></button>
+        </div>
+        <p class="kit-status"><span class="kit-pill">Preview · not on sale yet</span> Price and release date to come.</p>
+        <p class="kit-legal">Unofficial fan-made product. Not affiliated with or endorsed by Leeds United FC. Images are renders of the 3D model, not photographs.</p>
+      </div>
+    </article>
     <!-- ─────────────────────────────────────────────────────────────
          REAL E-COMMERCE: Stripe Checkout -> Printful fulfillment.
          Nothing here is fabricated — an empty CATALOG in
@@ -1740,6 +1783,13 @@ const ER_TILES = [
   {key:'floodlights', title:'Floodlights',             desc:'Elland Road\'s floodlight pylons.'},
 ].map(t => ({...t, imgUrl:`assets/elland-road/${t.key}-1600.webp`, credit:'Render of a fan-made 3D model — not a photograph'}));
 function openErTile(i){ openLbItem(ER_TILES[i]); }
+
+// Shop: Elland Road kit preview images (renders of the site owner's own 3D model)
+const KIT_TILES = [
+  {key:'editions',     title:'Two editions',          desc:'Full colour, or printed in grey to paint yourself.'},
+  {key:'instructions', title:'Instructions included', desc:'Parts list, print settings and a 5-step assembly guide.'},
+].map(t => ({...t, imgUrl:`assets/shop/elland-road-kit-${t.key}-1600.webp`, credit:'Render of a fan-made 3D model — not a photograph'}));
+function openKitTile(i){ openLbItem(KIT_TILES[i]); }
 
 function openLbItem(d){
   $('lb-img').innerHTML = `<img src="${esc(d.imgUrl)}" alt="${esc(d.title)}"
