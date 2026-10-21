@@ -1,6 +1,6 @@
 {
  "matches": {
-  "asOf": "2026-10-19T10:45:55.953Z",
+  "asOf": "2026-10-21T10:07:21.847Z",
   "season": 2026,
   "matches": [
    {
@@ -280,7 +280,7 @@
     }
    },
    {
-    "utcDate": "2026-12-02T20:00:00Z",
+    "utcDate": "2026-12-02T19:30:00Z",
     "status": "TIMED",
     "matchday": 13,
     "competition": {
