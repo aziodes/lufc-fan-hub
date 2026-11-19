@@ -1,6 +1,6 @@
 {
  "matches": {
-  "asOf": "2026-11-08T11:55:39.809Z",
+  "asOf": "2026-11-19T14:25:17.378Z",
   "season": 2026,
   "matches": [
    {
@@ -464,7 +464,7 @@
     }
    },
    {
-    "utcDate": "2027-01-16T15:00:00Z",
+    "utcDate": "2027-01-17T16:30:00Z",
     "status": "TIMED",
     "matchday": 21,
     "competition": {
@@ -487,7 +487,7 @@
     }
    },
    {
-    "utcDate": "2027-01-23T15:00:00Z",
+    "utcDate": "2027-01-25T20:00:00Z",
     "status": "TIMED",
     "matchday": 22,
     "competition": {
@@ -510,7 +510,7 @@
     }
    },
    {
-    "utcDate": "2027-01-30T15:00:00Z",
+    "utcDate": "2027-01-31T14:00:00Z",
     "status": "TIMED",
     "matchday": 23,
     "competition": {
